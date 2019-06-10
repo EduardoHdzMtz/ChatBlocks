@@ -1,0 +1,104 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{createMode ? 'Crear bloque: QuickReply Dinamico' : 'Editar bloque: QuickReply Dinamico'}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="fromBlksQR" (ngSubmit)="saveBlockQRDin()">
+
+    <div class="form-group">
+      <label for="namestate">Nombre del bloque*</label>
+      <input type="text" id="namestate" placeholder="Solicitar_correo" class="form-control" formControlName="namestate" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['namestate'].touched && fromBlksQR.controls['namestate'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="contenido">Mensaje del bloque*</label>
+      <input type="text" id="contenido" placeholder="Introduce tu correo por favor" class="form-control" formControlName="contenido" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['contenido'].touched && fromBlksQR.controls['contenido'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="opc_nextid">Opciones de siguiente estado*</label>
+      <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid">
+        <option value="Generar automaticamente">Generar automaticamente</option>
+        <option value="Seleccionar de la lista">Seleccionar de la lista</option>
+      </select>
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['opc_nextid'].touched && fromBlksQR.controls['opc_nextid'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group" *ngIf="fromBlksQR.value.opc_nextid == 'Seleccionar de la lista'">
+      <label for="next_id">Seleccionar siguiente estado</label>
+      <select name="OS" id="next_id" placeholder="Selecciona un estado" class="form-control" formControlName="next_id" *ngIf="globals.AllBlocks">
+        <option *ngFor="let nameST of states, let index=index" [value]="nameST">{{nameST}}</option>
+      </select>
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['next_id'].touched && fromBlksQR.controls['next_id'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group" *ngIf="fromBlksQR.value.opc_nextid == 'Generar automaticamente'">
+      <label for="next_id">Siguiente estado</label>
+      <input type="text" id="next_id" placeholder="" class="form-control" formControlName="next_id" readonly="readonly" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['next_id'].touched && fromBlksQR.controls['next_id'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="typingtime">Tiempo de respuesta*</label>
+      <input type="text" id="typingtime" placeholder="2" class="form-control" formControlName="typingtime" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['typingtime'].touched && fromBlksQR.controls['typingtime'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="validacion">Validacion*</label>
+      <input type="text" id="validacion" placeholder="2" class="form-control" formControlName="validacion" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['validacion'].touched && fromBlksQR.controls['validacion'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="default_id">Siguiente estado default*</label>
+      <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="states">
+        <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+      </select>
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['default_id'].touched && fromBlksQR.controls['default_id'].errors?.required">Dato requerido.</span>
+    </div> 
+
+    <div class="form-group">
+      <label for="save_var">Variable de almacenamiento</label>
+      <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['save_var'].touched && fromBlksQR.controls['save_var'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="link1">API: URL*</label>
+      <input type="text" id="link1" placeholder="http://API" class="form-control" formControlName="link1" />
+      <input type="text" id="link2" placeholder="http://API" class="form-control" formControlName="link2" />
+      <span style="color:Red;" *ngIf="fromBlksQR.controls['link1'].touched && fromBlksQR.controls['link1'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group">
+      <label for="nomCredencial1">API: Nombre de la credenciale 1*</label>
+      <input type="text" id="nomCredencial1" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial1" />
+      <label for="credencial1"  *ngIf=" fromBlksQR.value.nomCredencial1 != '' ">API: Credenciales*</label>
+      <input type="text" id="credencial1" placeholder="SDFGFFDS" class="form-control" formControlName="credencial1" *ngIf=" fromBlksQR.value.nomCredencial1 != '' " required />
+
+      <label for="nomCredencial2">API: Nombre de la credenciale 2*</label>
+      <input type="text" id="nomCredencial2" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial2" />
+      <label for="credencial2" *ngIf=" fromBlksQR.value.nomCredencial2 != '' " >API: Credenciales*</label>
+      <input type="text" id="credencial2" placeholder="SDFGFFDS" class="form-control" formControlName="credencial2" *ngIf=" fromBlksQR.value.nomCredencial2 != '' " required />
+      
+      <label for="nomCredencial3">API: Nombre de la credenciale 3*</label>
+      <input type="text" id="nomCredencial3" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial3" />
+      <label for="credencial3" *ngIf=" fromBlksQR.value.nomCredencial3 != '' " >API: Credenciales*</label>
+      <input type="text" id="credencial3" placeholder="SDFGFFDS" class="form-control" formControlName="credencial3" *ngIf=" fromBlksQR.value.nomCredencial3 != '' " required />
+      
+      <span style="color:Red;" *ngIf=" fromBlksQR.value.nomCredencial1 != '' && fromBlksQR.controls['credencial1'].touched && fromBlksQR.controls['credencial1'].errors?.required">Dato requerido.</span>
+      <span style="color:Red;" *ngIf=" fromBlksQR.value.nomCredencial2 != '' && fromBlksQR.controls['credencial2'].touched && fromBlksQR.controls['credencial2'].errors?.required">Dato requerido.</span>
+      <span style="color:Red;" *ngIf=" fromBlksQR.value.nomCredencial3 != '' && fromBlksQR.controls['credencial3'].touched && fromBlksQR.controls['credencial3'].errors?.required">Dato requerido.</span>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <button class="btn btn-primary" (click)="saveBlockQRDin()" [disabled]="fromBlksQR.invalid">Save</button>
+</div>

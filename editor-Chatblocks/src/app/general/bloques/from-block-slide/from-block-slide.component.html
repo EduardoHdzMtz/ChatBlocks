@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{createMode ? 'Crear bloque: Carrusel' : 'Editar bloque: Carrusel'}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="fromBlksSlide" (ngSubmit)="saveBlockSlide()">
+  
+      <div class="form-group">
+        <label for="namestate">Nombre del bloque*</label>
+        <input type="text" id="namestate" placeholder="Solicitar_correo" class="form-control" formControlName="namestate" />
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['namestate'].touched && fromBlksSlide.controls['namestate'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+          <label for="opc_elm">Opciones de transicion de estado*</label>
+          <select name="OS" id="opc_elm" placeholder="Selecciona opcion" class="form-control" formControlName="opc_elm">
+            <option value="Una sola transición">Una sola transición</option>
+            <option value="Una transición por elemento">Una transición por elemento</option>
+          </select>
+          <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_elm'].touched && fromBlksSlide.controls['opc_elm'].errors?.required">Dato requerido.</span>
+        </div>
+      
+      <div class="form-group" *ngIf="fromBlksSlide.value.opc_elm == 'Una sola transición'">
+        <label for="opc_nextid">Opciones de siguiente estado*</label>
+        <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid" required>
+          <option value="Generar automaticamente">Generar automaticamente</option>
+          <option value="Seleccionar de la lista">Seleccionar de la lista</option>
+        </select>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_nextid'].touched && fromBlksSlide.controls['opc_nextid'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div class="form-group" *ngIf="fromBlksSlide.value.opc_nextid == 'Seleccionar de la lista'">
+        <label for="next_id">Seleccionar siguiente estado</label>
+        <select name="OS" id="next_id" placeholder="Selecciona un estado" class="form-control" formControlName="next_id" *ngIf="globals.AllBlocks">
+          <option *ngFor="let nameST of states, let index=index" [value]="nameST">{{nameST}}</option>
+        </select>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['next_id'].touched && fromBlksSlide.controls['next_id'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div class="form-group" *ngIf="fromBlksSlide.value.opc_nextid == 'Generar automaticamente'">
+        <label for="next_id">Siguiente estado</label>
+        <input type="text" id="next_id" placeholder="" class="form-control" formControlName="next_id" readonly="readonly" />
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['next_id'].touched && fromBlksSlide.controls['next_id'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div class="form-group">
+        <label for="typingtime">Tiempo de respuesta*</label>
+        <input type="text" id="typingtime" placeholder="2" class="form-control" formControlName="typingtime" />
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['typingtime'].touched && fromBlksSlide.controls['typingtime'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="default_id">Siguiente estado default</label>
+        <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="states">
+          <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+        </select>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['default_id'].touched && fromBlksSlide.controls['default_id'].errors?.required">Dato requerido.</span>
+      </div>  
+
+      <div class="form-group">
+        <label for="save_var">Variable de almacenamiento</label>
+        <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" />
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['save_var'].touched && fromBlksSlide.controls['save_var'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="elementos">Elementos del Carrusel</label>
+        <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="states">
+          <option *ngFor="let elemento of globals.elementosG" [value]="elemento.title">{{elemento.title}}</option>
+        </select>
+        <button mat-button (click)="agregarElemento()">Agregar</button>
+        <button mat-button (click)="editarElemento()">Editar</button>
+        <button mat-button (click)="eliminarElemento()">Eliminar</button>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['default_id'].touched && fromBlksSlide.controls['default_id'].errors?.required">Dato requerido.</span>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Cerrar</button>
+    <button class="btn btn-primary" (click)="saveBlockSlide()" [disabled]="fromBlksSlide.invalid">Guardar</button>
+  </div>

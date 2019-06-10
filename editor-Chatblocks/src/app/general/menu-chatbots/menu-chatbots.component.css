@@ -1,0 +1,30 @@
+#idtable {
+    width: 100%;
+  }
+  
+ 
+  
+  
+  .example-card {
+    padding-top: 10px;
+    max-width: 250px;
+    -webkit-box-shadow: 8px 10px 36px -7px rgba(8,0,8,1);
+    -moz-box-shadow: 8px 10px 36px -7px rgba(8,0,8,1);
+    box-shadow: 8px 10px 36px -7px rgba(8,0,8,1);
+  }
+  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+  
+  .div_cartas{
+    padding-left: 3%;
+    padding-top: 2%;
+    background: white;
+  }
+  
+  .tablaCB{
+    padding-left: 3%;
+    padding-right: 3%;
+  }

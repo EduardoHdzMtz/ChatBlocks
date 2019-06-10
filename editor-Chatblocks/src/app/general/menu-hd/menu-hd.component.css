@@ -1,0 +1,47 @@
+.example-icon {
+    padding: 0 40px;
+  }
+  
+  .example-spacer {
+    flex: 1 1 auto;
+  }
+
+#git{
+    width: 30px;
+    height: 30px;
+    padding: 5 0px;
+}
+
+.example-icon {
+  padding: 0 14px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+:host {
+  height: 100%;
+}
+
+.photo {
+  object-fit: contain;
+}
+
+.card {
+  width: 20rem;
+  margin: 0 auto;
+}
+
+#nombreU{
+text-align: center;
+}
+
+#elementoU{
+display:block;
+margin:auto;
+}

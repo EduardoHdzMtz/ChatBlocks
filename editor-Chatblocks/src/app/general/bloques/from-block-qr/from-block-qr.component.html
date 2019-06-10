@@ -1,0 +1,110 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{createMode ? 'Crear bloque: QuickReply' : 'Editar bloque: QuickReply'}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="fromBlksQR" (ngSubmit)="saveBlockQR()">
+  
+      <div class="form-group">
+        <label for="namestate">Nombre del bloque*</label>
+        <input type="text" id="namestate" placeholder="Solicitar_correo" class="form-control" formControlName="namestate" />
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['namestate'].touched && fromBlksQR.controls['namestate'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div class="form-group">
+        <label for="contenido">Mensaje del bloque*</label>
+        <input type="text" id="contenido" placeholder="Introduce tu correo por favor" class="form-control" formControlName="contenido" />
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['contenido'].touched && fromBlksQR.controls['contenido'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="opciones1">Opciones*</label>
+        <input type="text" id="opciones1" placeholder="Opcion 1" class="form-control" formControlName="opciones1" />
+        <input type="text" id="opciones2" placeholder="Opcion 2" class="form-control" formControlName="opciones2" />
+        <input type="text" id="opciones3" placeholder="Opcion 3" class="form-control" formControlName="opciones3" />
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['opciones1'].touched && fromBlksQR.controls['opciones1'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="opc_nextID1">Opciones de siguiente estado para la opcion 1*</label>
+        <select name="OS" id="opc_nextID1" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextID1">
+          <option value="Generar automaticamente">Generar automaticamente</option>
+          <option value="Seleccionar de la lista">Seleccionar de la lista</option>
+        </select>
+        
+        <select name="OS" id="next_id1" placeholder="Selecciona un estado para la opcion 1" class="form-control" formControlName="next_id1" *ngIf="fromBlksQR.value.opc_nextID1 == 'Seleccionar de la lista'">
+          <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+        </select>
+
+        <input type="text" id="next_id1" placeholder="" class="form-control" formControlName="next_id1" readonly="readonly" *ngIf="fromBlksQR.value.opc_nextID1 == 'Generar automaticamente'" />
+
+
+
+        <label *ngIf="fromBlksQR.value.opciones2 != ''" for="opc_nextID2">Opciones de siguiente estado para la opcion 2*</label>
+        <select name="OS" id="opc_nextID2" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextID2" *ngIf="fromBlksQR.value.opciones2 != ''">
+          <option value="Generar automaticamente">Generar automaticamente</option>
+          <option value="Seleccionar de la lista">Seleccionar de la lista</option>
+        </select>
+
+        <select name="OS" id="next_id2" placeholder="Selecciona un estado para la opcion 2" class="form-control" formControlName="next_id2" *ngIf="fromBlksQR.value.opciones2 != '' && fromBlksQR.value.opc_nextID2 == 'Seleccionar de la lista' " >
+          <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+        </select>
+
+        <input type="text" id="next_id2" placeholder="" class="form-control" formControlName="next_id2" readonly="readonly" *ngIf="fromBlksQR.value.opciones2 != '' && fromBlksQR.value.opc_nextID2 == 'Generar automaticamente' " />
+
+
+
+        <label *ngIf="fromBlksQR.value.opciones3 != ''" for="opc_nextID3">Opciones de siguiente estado para la opcion 3*</label>
+        <select name="OS" id="opc_nextID3" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextID3" *ngIf="fromBlksQR.value.opciones3 != ''">
+          <option value="Generar automaticamente">Generar automaticamente</option>
+          <option value="Seleccionar de la lista">Seleccionar de la lista</option>
+        </select>
+
+        <select name="OS" id="next_id3" placeholder="Selecciona un estado para la opcion 3" class="form-control" formControlName="next_id3" *ngIf="fromBlksQR.value.opciones3 != '' && fromBlksQR.value.opc_nextID3 == 'Seleccionar de la lista' " >
+          <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+        </select>
+
+        <input type="text" id="next_id3" placeholder="" class="form-control" formControlName="next_id3" readonly="readonly" *ngIf="fromBlksQR.value.opciones3 != '' && fromBlksQR.value.opc_nextID3 == 'Generar automaticamente' " />
+
+
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['opc_nextID1'].touched && fromBlksQR.controls['opc_nextID1'].errors?.required">Dato requerido.</span>
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['next_id1'].touched && fromBlksQR.controls['next_id1'].errors?.required">Dato requerido.</span>
+
+        <span style="color:Red;" *ngIf="fromBlksQR.value.opciones2 != '' && fromBlksQR.controls['opc_nextID2'].touched && fromBlksQR.controls['opc_nextID2'].errors?.required">Dato requerido.</span>
+        <span style="color:Red;" *ngIf="fromBlksQR.value.opciones2 != '' && fromBlksQR.controls['next_id2'].touched && fromBlksQR.controls['next_id2'].errors?.required">Siguiente estado para la opcion 2 requerido.</span>
+
+        <span style="color:Red;" *ngIf="fromBlksQR.value.opciones3 != '' && fromBlksQR.controls['opc_nextID3'].touched && fromBlksQR.controls['opc_nextID3'].errors?.required">Dato requerido.</span>
+        <span style="color:Red;" *ngIf="fromBlksQR.value.opciones3 != '' && fromBlksQR.controls['next_id3'].touched && fromBlksQR.controls['next_id3'].errors?.required">Siguiente estado para la opcion 3 requerido.</span>
+      </div>
+
+
+  
+      <div class="form-group">
+        <label for="typingtime">Tiempo de respuesta*</label>
+        <input type="text" id="typingtime" placeholder="2" class="form-control" formControlName="typingtime" />
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['typingtime'].touched && fromBlksQR.controls['typingtime'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="default_id">Siguiente estado default*</label>
+        <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="states">
+          <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+        </select>
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['default_id'].touched && fromBlksQR.controls['default_id'].errors?.required">Dato requerido.</span>
+      </div> 
+
+      <div class="form-group">
+        <label for="save_var">Variable de almacenamiento</label>
+        <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" />
+        <span style="color:Red;" *ngIf="fromBlksQR.controls['save_var'].touched && fromBlksQR.controls['save_var'].errors?.required">Dato requerido.</span>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+    <button class="btn btn-primary" (click)="saveBlockQR()" [disabled]="fromBlksQR.invalid">Save</button>
+  </div>
+  

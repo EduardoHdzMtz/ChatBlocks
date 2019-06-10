@@ -1,0 +1,26 @@
+<div class='general'>
+    <div class='menu'>
+        <app-menu-hd></app-menu-hd>         
+    </div>
+
+    <div *ngIf=" globals.estado == 'out' ">
+        <section id="demo" class="demo-section">
+            <app-menu-login></app-menu-login>
+        </section>
+    </div>
+
+    <div *ngIf=" globals.estado == 'in' ">
+        <app-menu-chatbots></app-menu-chatbots>
+    </div>
+        
+    <div *ngIf=" globals.estado == 'interfaz' || globals.estado == 'editar'" >
+        <div class='lienzoG'>
+            <app-construccion-cb></app-construccion-cb>
+        </div>      
+        
+        <div class='herramientas'>
+            <app-menu-herramientas></app-menu-herramientas>
+        </div>
+    </div>
+
+</div>

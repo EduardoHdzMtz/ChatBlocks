@@ -1,0 +1,189 @@
+<div cdkDropListGroup class="tamlienzo">
+
+
+        <table class="table table-striped">
+            <tbody>
+                <tr id="campo_btn2" *ngFor="let arrbloques of globals.AllBlocks , let index2 = index"  >
+                    <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="addFila(index2)">
+                      <mat-icon>add_circle</mat-icon>
+                    </button>
+                    <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="deleteFila(index2)">
+                      <mat-icon>remove_circle</mat-icon>
+                    </button>
+                      <div class="example-box" >
+                          <div cdkDropList cdkDropListOrientation="horizontal" class="example-list"
+                          [cdkDropListData]="arrbloques"
+                          (cdkDropListDropped)="drop($event)">
+                            <div  *ngFor="let bloque of arrbloques" cdkDrag>
+                            
+                            <div *ngIf="bloque.blocktype == 'informativo'" class="conf" style="background: #1f5b25da" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="bloque.blocktype == 'input'" class="conf" style="background: #6923167a" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="bloque.blocktype == 'quickReply'" class="conf" style="background: #5a2fd3" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+    
+                            <div *ngIf="bloque.blocktype == 'slide'" class="conf" style="background: rgb(166, 60, 225)" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div *ngIf="bloque.blocktype == 'informativoDinamico'" class="conf" style="background: #b11b16" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div *ngIf="bloque.blocktype == 'slideDinamico'" class="conf" style="background: #636363" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div *ngIf="bloque.blocktype == 'inputDinamico'" class="conf" style="background: #000000" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                              
+                              
+                         
+                          </div>
+                        </div>
+                      </div>
+                </tr>
+            </tbody>
+        </table>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

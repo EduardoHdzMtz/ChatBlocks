@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{createMode ? 'Crear Chatbot' : 'Guardar Chatbot'}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="fromChatBot" (ngSubmit)="saveChatBot()">
+  
+      <div class="form-group">
+        <label for="name_robot">Nombre del Chatbot*</label>
+        <input type="text" id="name_robot" placeholder="ChatBotClima" class="form-control" formControlName="name_robot" />
+        <span style="color:Red;" *ngIf="fromChatBot.controls['name_robot'].touched && fromChatBot.controls['name_robot'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div *ngIf="!this.createMode" class="form-group">
+        <label for="id_face">Id de la pagina de Facebook</label>
+        <input type="text" id="id_face" placeholder="234232324!" class="form-control" formControlName="id_face" required />
+        <span style="color:Red;" *ngIf="fromChatBot.controls['id_face'].touched && fromChatBot.controls['id_face'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div *ngIf="!this.createMode" class="form-group">
+        <label for="access_token">access_token</label>
+        <input type="text" id="access_token" placeholder="nnsdiiu9s898" class="form-control" formControlName="access_token" required />
+        <span style="color:Red;" *ngIf="fromChatBot.controls['access_token'].touched && fromChatBot.controls['access_token'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div *ngIf="!this.createMode" class="form-group">
+        <label for="api_nlp">API REGEX (URL)</label>
+          <input type="text" id="api_nlp" placeholder="http://apiRegex.com/v1" class="form-control" formControlName="api_nlp" />
+        <span style="color:Red;" *ngIf="fromChatBot.controls['api_nlp'].touched && fromChatBot.controls['api_nlp'].errors?.required">Dato requerido.</span>
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Cerrar</button>
+    <button class="btn btn-primary" (click)="saveChatBot()" [disabled]="fromChatBot.invalid">Guardar</button>
+  </div>

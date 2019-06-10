@@ -1,0 +1,26 @@
+.bg-transparent {
+    background-color: transparent;
+  }
+  
+  :host {
+    height: 100%;
+  }
+  
+  .photo {
+    object-fit: contain;
+  }
+  
+  .card {
+    width: 20rem;
+    margin: 0 auto;
+  }
+
+  #botonGL{
+    background: rgba(255, 166, 0, 0.739);
+    color: white;
+  }
+
+  #botonFB{
+    background: rgba(0, 0, 255, 0.637);
+    color: white;
+  }

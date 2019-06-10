@@ -1,0 +1,555 @@
+import { Component, OnInit } from '@angular/core';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FromBlockInfoComponent } from '../../bloques/from-block-info/from-block-info.component';
+import { FromBlockInputComponent } from '../../bloques/from-block-input/from-block-input.component';
+import { FromBlockQRComponent } from '../../bloques/from-block-qr/from-block-qr.component';
+import { FromBlockSlideComponent } from '../../bloques/from-block-slide/from-block-slide.component';
+import { FromBlockInfoDComponent } from '../../bloques/from-block-info-d/from-block-info-d.component';
+import { InterfazViewBlkInfo, InterfazViewBlkInput, InterfazViewBlkQR } from '../../bloques/interfaces/interfaz-view-blk-info';
+import { BlkInfoService } from './../../../sendToDB/blkInfo.service';
+import { BlkInputService } from './../../../sendToDB/blkInput.service';
+import { BlkQRService } from './../../../sendToDB/blkQR.service';
+import { BlkSlideService } from './../../../sendToDB/blkSlide.service';
+import { Globals } from '../../bloques/interfaces/Globals';
+import { getLocalRefs } from '@angular/core/src/render3/discovery_utils';
+import { last } from '@angular/router/src/utils/collection';
+import { load } from '@angular/core/src/render3';
+import { generate } from 'rxjs';
+import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
+import { LinksAPIService } from 'src/app/sendToDB/linksAPI.service';
+import { CredencialAPIService } from 'src/app/sendToDB/credenciales.service';
+import { BlkSlideServiceDin } from 'src/app/sendToDB/blkSlideDin.service';
+import { FromBlockSlideDComponent } from '../../bloques/from-block-slide-d/from-block-slide-d.component';
+import { FromBlockInputDComponent } from '../../bloques/from-block-input-d/from-block-input-d.component';
+import { BlkInputServiceDin } from 'src/app/sendToDB/blkIputDin.service';
+import { FromBlockQRDComponent } from '../../bloques/from-block-qrd/from-block-qrd.component';
+import { BlkQRServiceDin } from 'src/app/sendToDB/blkQRDin.service';
+@Component({
+  selector: 'app-construccion-cb',
+  templateUrl: './construccion-cb.component.html',
+  styleUrls: ['./construccion-cb.component.css'],
+})
+export class ConstruccionCBComponent implements OnInit {
+
+  createMode: boolean = true;
+  Nstates: string[] = [];
+  indexBuild: number= 0;
+  bloqueInicial: any;
+  tam: any[]=[0,0];
+  
+
+  constructor(private modalService: NgbModal,
+    private blokInputservice: BlkInputService, 
+    private blokInfoservice: BlkInfoService,
+    private blokQRservice: BlkQRService,
+    private blokSlideservice: BlkSlideService, 
+    private blokSlideDService: BlkSlideServiceDin,
+    private blokInputDService: BlkInputServiceDin,
+    private blkInfoDService: BlkInfoServiceDin,
+    private linksAPIService: LinksAPIService,
+    private blokQRDservice: BlkQRServiceDin,
+    private credencialAPIService: CredencialAPIService,
+    public globals: Globals
+    ) { }
+
+  ngOnInit() { 
+    if (typeof window.innerWidth != 'undefined'){
+      this.tam = [window.innerWidth,window.innerHeight];
+      console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
+    }
+    else if (typeof document.documentElement != 'undefined'
+        && typeof document.documentElement.clientWidth !=
+        'undefined' && document.documentElement.clientWidth != 0)
+    {
+      this.tam = [
+          document.documentElement.clientWidth,
+          document.documentElement.clientHeight
+      ];
+      alert("Caso 2-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
+    }
+
+    let shand = document.getElementsByClassName("tamlienzo") as HTMLCollectionOf<HTMLElement>;
+    let tam= this.tam[1]-60;
+    shand[0].setAttribute("style", "height: "+tam+"px;");
+
+    //  let shand2 = document.getElementsByClassName("table table-striped") as HTMLCollectionOf<HTMLElement>;
+    //let tam2= this.tam[1]-76;
+    //shand2[0].setAttribute("style", "height: "+tam2+"px;");
+
+
+    this.globals.AllBlocks=[];
+    this.globals.PenultimaEdBlks=[];
+    
+    if(this.globals.estado=='interfaz')
+      this.bloque_inicial();
+    else if(this.globals.estado=='editar'){
+      this.globals.AllBlocks.push([]);
+      this.loadTodosBlkInfo();
+    }
+      
+
+    
+    //this.loadTodosBlkInfo();
+    //this.loadTodosBlkInput();
+    //this.loadTodosBlkQR();
+  }
+
+  
+
+  bloque_inicial(){
+    this.bloqueInicial={
+      id_block: '1',
+      namestate: 'Saludo',
+      id_robot: this.globals.RobotSelect.id_robot,
+      contenido: 'Hola, espero que estes teniendo un excelente dia.',
+      next_id: '',
+      blocktype: 'informativo',
+      contenttype: 'text',
+      typingtime: '1'
+    }
+
+    this.blokInfoservice.addDatosBlkInfo(this.bloqueInicial).subscribe(response =>{
+      const datos='{"id_robot": "'+this.bloqueInicial.id_robot+'", "namestate": "'+this.bloqueInicial.namestate+'"}';
+      this.blokInfoservice.getBlk(datos).subscribe(response=> {
+        this.globals.AllBlocks.push([response[0]]);
+        this.globals.AllBlocks.push([]);
+      });
+      
+    });
+
+    
+
+    
+  }
+  
+  loadTodosBlkInfo() {
+    let ConsultaBloques:any[]=[];
+    this.blokInfoservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      console.log("-------------Consultando Bot--------------");
+      ConsultaBloques=response;
+      let max_X: number=response[0].pos_x;
+      let max_Y: number=response[0].pos_y;
+      console.log("Max_X-0: "+max_X+", Max_Y-0: "+max_Y);
+      for(let i=1;i<response.length;i++){
+        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+      }
+      console.log("Max_X-Inf: "+max_X+", Max_Y-Inf: "+max_Y);
+      this.loadTodosBlkInput(ConsultaBloques, max_X, max_Y);
+    });
+  }
+  
+  loadTodosBlkInput(ConsultaBloques: any, max_X: number, max_Y: number) {
+    this.blokInputservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+      }
+      console.log("Max_X-Inp: "+max_X+", Max_Y-Inp: "+max_Y);
+      this.loadTodosBlkQR(ConsultaBloques, max_X, max_Y);
+    });
+  }
+  
+  loadTodosBlkQR(ConsultaBloques: any, max_X: number, max_Y: number) {
+    this.blokQRservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+      }
+      console.log("Max_X-QR: "+max_X+", Max_Y-QR: "+max_Y);
+      this.loadTodosBlkSlide(ConsultaBloques, max_X, max_Y);
+    });    
+  }
+
+  loadTodosBlkSlide(ConsultaBloques: any, max_X: number, max_Y: number) {
+    this.blokSlideservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+      }
+      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
+    });    
+  }
+
+  loadTodosBlkInfoDin(ConsultaBloques: any, max_X: number, max_Y: number) {
+    let credenciales: any[]=[];
+    let links: any[]=[];
+
+    this.blkInfoDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+
+        this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++)
+            if(responseB[i].blocktype=='informativoDinamico')
+              links.push(responseB[j]);
+          
+          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+            for(let k=0;k<responseC.length;k++)
+              if(responseB[i].blocktype=='informativoDinamico')
+                credenciales.push(responseC[k]);
+
+            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
+            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
+          });
+        });
+
+        
+      }
+      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      this.loadTodosBlkSlideDin(ConsultaBloques, max_X, max_Y);
+
+    });    
+  }
+
+
+  loadTodosBlkSlideDin(ConsultaBloques: any, max_X: number, max_Y: number) {
+    let credenciales: any[]=[];
+    let links: any[]=[];
+
+    this.blokSlideDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        console.log(i+'-> resp: '+response[i].namestate);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+
+        this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++)
+            if(responseB[i].blocktype=='slideDinamico')
+              links.push(responseB[j]);
+            
+          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+            for(let k=0;k<responseC.length;k++)
+              if(responseB[i].blocktype=='slideDinamico')
+                credenciales.push(responseC[k]);
+  
+            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
+            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
+          });
+        });
+      }
+      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      this.loadTodosBlkInputDin(ConsultaBloques, max_X, max_Y);
+
+    });    
+  }
+
+  loadTodosBlkInputDin(ConsultaBloques: any, max_X: number, max_Y: number) {
+    let credenciales: any[]=[];
+    let links: any[]=[];
+
+    this.blokInputDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        console.log(i+'-> resp: '+response[i].namestate);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+
+        this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++)
+            if(responseB[i].blocktype=='inputDinamico')
+              links.push(responseB[j]);
+            
+          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+            for(let k=0;k<responseC.length;k++)
+              if(responseB[i].blocktype=='inputDinamico')
+                credenciales.push(responseC[k]);
+  
+            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
+            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
+          });
+        });
+      }
+      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      this.loadTodosBlkQRDin(ConsultaBloques, max_X, max_Y);
+
+    });    
+  }
+
+  loadTodosBlkQRDin(ConsultaBloques: any, max_X: number, max_Y: number) {
+    let credenciales: any[]=[];
+    let links: any[]=[];
+
+    this.blokQRDservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      
+      for(let i=0;i<response.length;i++){
+        ConsultaBloques.push(response[i]);
+        console.log(i+'-> resp: '+response[i].namestate);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+
+        this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++)
+            if(responseB[i].blocktype=='quickReplyDinamico')
+              links.push(responseB[j]);
+            
+          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+            for(let k=0;k<responseC.length;k++)
+              if(responseB[i].blocktype=='quickReplyDinamico')
+                credenciales.push(responseC[k]);
+  
+            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
+            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
+          });
+        });
+      }
+      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      this.reconstruirChatbot(ConsultaBloques, max_X, max_Y);
+
+    });    
+  }
+
+
+  reconstruirChatbot(ConsultaBloques: any, max_X: number, max_Y: number){
+    console.log('max_X-Final-> '+max_X+', max_Y-Final-> '+max_Y);
+    let reconstruccion: any[]=[];
+
+    for(let i=0;i<=max_Y;i++){
+      reconstruccion.push([]);
+      for(let j=0;j<=max_X;j++){
+        reconstruccion[i].push({namestate:'blk-cb-pyt1?'});
+      }
+    }
+
+    for(let i=0;i<ConsultaBloques.length;i++){
+      reconstruccion[ConsultaBloques[i].pos_y][ConsultaBloques[i].pos_x]=ConsultaBloques[i];
+    }
+
+    for(let i=max_Y;i>=0;i--){
+      for(let j=max_X;j>=0;j--){
+        if(reconstruccion[i][j].namestate=='blk-cb-pyt1?')
+          reconstruccion[i].pop();
+        else
+          break;        
+      }
+    }
+
+    
+    
+      
+    console.log("---------Reconstruccion--------");
+    for(let i=0;i<reconstruccion.length;i++){
+      for(let j=0;j<reconstruccion[i].length;j++){
+        console.log(i+'-> namestate: '+reconstruccion[i][j].namestate+', x:'+reconstruccion[i][j].pos_x+', y:'+reconstruccion[i][j].pos_y+" - xa:"+j+", ya:"+i);        
+      }
+    }
+    console.log("---------Fin--------");
+
+    this.globals.AllBlocks=reconstruccion;
+    this.globals.AllBlocks.push([]);
+    this.globals.PenultimaEdBlks=reconstruccion;
+
+
+
+
+    for(let i=0;i<ConsultaBloques.length;i++){
+      console.log(i+'-> Id_block: '+ConsultaBloques[i].id_block+', namestate: '+ConsultaBloques[i].namestate+', type: '+ConsultaBloques[i].blocktype+', x:'+ConsultaBloques[i].pos_x+', y:'+ConsultaBloques[i].pos_y);
+    }
+
+  }
+
+
+
+  handleEditClickBlk(bloque: any) {
+    let modal: any='';
+    if(bloque.blocktype=='informativo'){
+      modal=this.modalService.open(FromBlockInfoComponent);      
+    }
+    else if(bloque.blocktype=='input'){
+      modal=this.modalService.open(FromBlockInputComponent);      
+    }
+    else if(bloque.blocktype=='quickReply'){
+      modal=this.modalService.open(FromBlockQRComponent);      
+    }
+    else if(bloque.blocktype=='slide'){
+      modal=this.modalService.open(FromBlockSlideComponent);      
+    }
+    else if(bloque.blocktype=='informativoDinamico'){
+      modal=this.modalService.open(FromBlockInfoDComponent);      
+    }
+    else if(bloque.blocktype=='slideDinamico'){
+      modal=this.modalService.open(FromBlockSlideDComponent);      
+    }
+    else if(bloque.blocktype=='inputDinamico'){
+      modal=this.modalService.open(FromBlockInputDComponent);      
+    }
+    else if(bloque.blocktype=='quickReplyDinamico'){
+      modal=this.modalService.open(FromBlockQRDComponent);      
+    }
+    //const modal = this.modalService.open(FromBlockInfoComponent);
+    modal.result.then(
+      this.handleModalTodoFormClose.bind(this),
+      this.handleModalTodoFormClose.bind(this)
+    )
+    modal.componentInstance.createMode = false;
+    modal.componentInstance.bloque = bloque; 
+    this.globals.generar_Id();  
+  }
+
+  handleModalTodoFormClose(response) {    
+  }  
+
+  handleDeleteClickBlk(bloque: any, index: number) { 
+    if(bloque.blocktype=='informativo'){
+      this.blokInfoservice.deleteBlkInfo(bloque.id_block).subscribe(response=>{ 
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='input'){
+      this.blokInputservice.deleteBlkInput(bloque.id_block).subscribe(response=>{ 
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='quickReply'){
+      this.blokQRservice.deleteBlkQR(bloque.id_block).subscribe(response=>{ 
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='slide'){
+      this.blokSlideservice.deleteBlkSlide(bloque.id_block).subscribe(response=>{ 
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='informativoDinamico'){
+      this.blkInfoDService.deleteBlkInfo(bloque.id_block).subscribe(response=>{
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.linksAPIService.deleteLinksAPI(bloque.linksAPI[i].id_link).subscribe(response=>{});
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.credencialAPIService.deleteCredencialAPI(bloque.credenciales[i].id_credencial).subscribe(response=>{});
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='slideDinamico'){
+      this.blokSlideDService.deleteBlkSlide(bloque.id_block).subscribe(response=>{
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.linksAPIService.deleteLinksAPI(bloque.linksAPI[i].id_link).subscribe(response=>{});
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.credencialAPIService.deleteCredencialAPI(bloque.credenciales[i].id_credencial).subscribe(response=>{});
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='inputDinamico'){
+      this.blokInputDService.deleteBlkInput(bloque.id_block).subscribe(response=>{
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.linksAPIService.deleteLinksAPI(bloque.linksAPI[i].id_link).subscribe(response=>{});
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.credencialAPIService.deleteCredencialAPI(bloque.credenciales[i].id_credencial).subscribe(response=>{});
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='quickReplyDinamico'){
+      this.blokQRDservice.deleteBlkQR(bloque.id_block).subscribe(response=>{
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.linksAPIService.deleteLinksAPI(bloque.linksAPI[i].id_link).subscribe(response=>{});
+        for(let i=0;i<bloque.linksAPI.length;i++)
+          this.credencialAPIService.deleteCredencialAPI(bloque.credenciales[i].id_credencial).subscribe(response=>{});
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    
+  }
+
+  deleteBlkArry(bloque: any, index: number){
+    for(let i=0;i<this.globals.AllBlocks[index].length;i++){
+      if(bloque.namestate==this.globals.AllBlocks[index][i].namestate){
+        this.globals.AllBlocks[index].splice(i, 1);
+      }
+    }
+    while(true)
+      if(this.globals.AllBlocks.length>1)
+        if (this.globals.AllBlocks[this.globals.AllBlocks.length-1].length==0)
+          if(this.globals.AllBlocks[this.globals.AllBlocks.length-2].length==0)
+            this.globals.AllBlocks.pop();          
+          else
+            break;        
+        else{
+          this.globals.AllBlocks.push([]);
+          break;
+        }
+      else
+        break;
+  }  
+
+  drop(event: CdkDragDrop<string[]>) {
+    /*console.log("event.previousContainer-> "+event.previousContainer);
+    console.log("event.container.data-> "+event.container.data);
+    console.log("event.container-> "+event.container);
+    console.log("event.currentIndex-> "+event.currentIndex);
+    console.log("event.previousContainer.data-> "+event.previousContainer.data);*/
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+
+    } else {
+      transferArrayItem(event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex);
+    }
+
+    while(true)
+      if (this.globals.AllBlocks[this.globals.AllBlocks.length-1].length==0){
+        if(this.globals.AllBlocks[this.globals.AllBlocks.length-2].length==0){
+          this.globals.AllBlocks.pop();
+        }
+        else
+          break;
+      }
+      else{
+        this.globals.AllBlocks.push([]);
+        break;
+      }
+      
+      this.globals.generar_Id();
+
+       
+  }
+
+  
+
+  addFila(index: number){
+    this.globals.AllBlocks.splice((index),0,[]);
+    this.globals.generar_Id();
+  }
+
+  deleteFila(index: number){
+    if(this.globals.AllBlocks[index].length==0){
+      this.globals.AllBlocks.splice((index),1);
+      this.globals.generar_Id();
+    }      
+  }
+
+}

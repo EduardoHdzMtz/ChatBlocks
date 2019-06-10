@@ -1,0 +1,16 @@
+<div class="jumbotron bg-transparent text-center">
+    <div *ngIf="!user" class="card text-center">
+      <h6 class="card-header">
+        Iniciar sesión
+      </h6>
+      <div class="card-block">
+        <br><h4 class="card-title">Opciones de inicio de sesión</h4><br>
+        <p class="card-text">Inicia con:</p><br>
+      </div>
+      <div class="card-block">
+        <button mat-raised-button id="botonGL" class="btn btn-social-icon btn-google mx-1" (click)="signInWithGoogle()"><span class="fa fa-google"></span>  Google</button>
+        <button mat-raised-button id="botonFB" class="btn btn-social-icon btn-facebook mx-1" (click)="signInWithFB()"><span class="fa fa-facebook"></span>  Facebook</button><br><br>
+      </div>
+    </div>
+    
+  </div>

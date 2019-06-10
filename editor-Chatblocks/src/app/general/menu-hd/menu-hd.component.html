@@ -1,0 +1,49 @@
+<mat-toolbar color="primary">  
+    <mat-toolbar-row>
+      <span>ChatBloks</span>
+      <span class="example-spacer"></span>
+
+
+      <a _ngcontent-c1 aria-label="GitHub Repository" class="docs-button docs-navbar-show-small mat-icon-button" href="https://github.com/angular/material2" mat-icon-button tabindex="0" aria-disabled="false">
+            <img _ngcontent-c1 alt="GitHub" id="git" class="docs-angular-logo" src="../../../assets/gh.png">  
+      </a>
+
+      <a *ngIf=" globals.estado == 'in' " _ngcontent-c1 aria-label="GitHub Repository" class="docs-button docs-navbar-show-small mat-icon-button" href="https://developers.facebook.com/" mat-icon-button tabindex="0" aria-disabled="false">
+            <img _ngcontent-c1 alt="facebook" id="git"  class="docs-angular-logo" src="../../../assets/fb.png">  
+      </a>
+
+      <button *ngIf=" globals.estado == 'in' " mat-button [matMenuTriggerFor]="beforeMenu">
+        <mat-icon *ngIf=" globals.estado == 'in' " class="example-icon" aria-hidden="false" aria-label="Example delete icon">account_circle
+        </mat-icon>
+      </button>
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+
+            <table class="table table-striped">
+                  <thead>
+                        <tr>
+                              <th><h6 id="nombreU" class="card-header">{{ globals.user.name }}</h6></th>
+                        </tr>
+                  </thead>
+                  <tbody>
+                        <tr>
+                              <td> <img id="elementoU" class="card-img-top img-responsive photo" src="{{ globals.user.photoUrl }}"></td>
+                         </tr>
+                        <tr>
+                              <th><p id="nombreU" class="card-text">  {{ globals.user.email }}  </p></th>
+                        </tr>
+                        <tr>
+                              <button id="elementoU" class="btn btn-danger" (click)="signOut()">Salir</button>
+                        </tr>
+                  </tbody>
+            </table>
+
+
+      </mat-menu>
+
+      <button *ngIf="globals.estado=='interfaz' || globals.estado=='editar'" id="campo_btn" mat-button (click)="guardarChatBot()">
+            <mat-icon>save</mat-icon>
+      </button>
+      
+      
+    </mat-toolbar-row>
+  </mat-toolbar>
