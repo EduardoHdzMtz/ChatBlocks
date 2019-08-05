@@ -1,4 +1,5 @@
 <div cdkDropListGroup class="tamlienzo">
+   
 
 
         <table class="table table-striped">
@@ -14,6 +15,7 @@
                           <div cdkDropList cdkDropListOrientation="horizontal" class="example-list"
                           [cdkDropListData]="arrbloques"
                           (cdkDropListDropped)="drop($event)">
+                          
                             <div  *ngFor="let bloque of arrbloques" cdkDrag>
                             
                             <div *ngIf="bloque.blocktype == 'informativo'" class="conf" style="background: #1f5b25da" > 
@@ -154,36 +156,26 @@
                                 </table>
                             </div>
                               
-                              
+                            
                          
                           </div>
+                          <!--Espacio izquierdo para los tags-->
                         </div>
+
+
+                        <div class="contenedor_lineas"  *ngFor="let bloque of arrbloques , let index3 = index ">
+                            <hr *ngIf="index3 == 0 && (globals.AllBlocks.length-2) > index2" id="line_1" />
+                            <hr *ngIf="index3 == 1 && (globals.AllBlocks.length-2) > index2" id="line_2" />
+                            <hr *ngIf="index3 == 2 && (globals.AllBlocks.length-2) > index2" id="line_3" />
+                            
+                        </div>
+                        
+
+
                       </div>
                 </tr>
             </tbody>
         </table>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

@@ -5,19 +5,88 @@
   background-color: #2A6C6C;
  }
 
-#btnHerramienta{
+#btnHerramienta1, #btnHerramienta2, #btnHerramienta3, #btnHerramienta4, #btnHerramienta5, #btnHerramienta6, #btnHerramienta7{
   width: 95%;
+  color: black;  
   margin-top: 6%;
   border-radius: 0px 50px 50px 10px;
+  border: 0px;
 }
 
-#btnHerramienta:hover{
-  background:#FF5F2C;
+#btnHerramienta1:hover{
+  background: #1f5b25da !important;
   color: #fff;
   box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
   width: 98%;
   font-size: 20px;
 }
+
+#btnHerramienta2:hover{
+  background: #1E4DC2 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+#btnHerramienta3:hover{
+  background: #5a2fd3 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+#btnHerramienta4:hover{
+  background: #8770db !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+#btnHerramienta5:hover{
+  background: #b11b16 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+#btnHerramienta6:hover{
+  background: #000000 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+/*#btnHerramienta7 {
+  background-image: linear-gradient(to right, #636363 2%, white 35%);
+  -webkit-transition: width 0.2s, background 0.2s;
+  -moz-transition: width 0.2s, background 0.2s;
+  -o-transition: width 0.2s, background 0.2s;
+  transition: width 0.2s, background 0.2s;
+}
+
+
+
+#btnHerramienta7 {
+  -webkit-transition-timing-function: linear;
+  -moz-transition-timing-function: linear;
+  -o-transition-timing-function: linear;
+  transition-timing-function: linear;
+}*/
+
+#btnHerramienta7:hover{
+  background: #636363 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+
 
 h5{
   padding: 8px;
@@ -27,11 +96,22 @@ h5{
 }
 
 h6{
-  padding: 6px;
+  padding: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 0px;
   background: rgb(12, 58, 119);
   color: #fff;
 }
 
 .conenedorBTNS{
+  padding-bottom: 13px;
+  margin-top: 0px;
   background: rgb(125, 167, 125);
 }
+
+/*hr{
+  width: 112px;
+  height: 0px;
+  border-bottom: 1px solid black;
+  -webkit-transform: translateY(0px) translateX(0px) rotate(150deg); 
+}*/

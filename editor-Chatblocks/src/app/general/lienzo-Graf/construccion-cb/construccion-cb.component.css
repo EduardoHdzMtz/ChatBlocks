@@ -72,3 +72,44 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
+
+
+/*hr{
+  width: 50px;
+  height: 0px;
+  border-bottom: 1px solid black;
+  -webkit-transform: translateY(54px) translateX(-830px) rotate(90deg); 
+}*/
+
+.contenedor_lineas{  
+  position:absolute; 
+  left:200;
+  width: 0px;
+}
+
+#line_1{
+  background: red;
+  width: 50px;
+  height: 0px;
+  border-bottom: 1px solid black;
+  -webkit-transform: translateY(54px) translateX(190px) rotate(90deg); 
+
+}
+
+#line_2{
+  background: rgb(255, 255, 44);
+  width: 50px;
+  height: 0px;
+  border-bottom: 1px solid black;
+  -webkit-transform: translateY(54px) translateX(600px) rotate(90deg); 
+
+}
+
+#line_3{
+  background: rgb(28, 212, 28);
+  width: 50px;
+  height: 0px;
+  border-bottom: 1px solid black;
+  -webkit-transform: translateY(54px) translateX(1000px) rotate(90deg); 
+
+}
