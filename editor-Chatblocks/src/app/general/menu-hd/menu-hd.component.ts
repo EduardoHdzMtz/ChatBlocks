@@ -45,7 +45,7 @@ export class MenuHDComponent implements OnInit {
   }
 
   handleModalFromChatBotClose(){
-    this.globals.estado='in';
+    //this.globals.estado='in';
   }
 
   cancelarEdicion() { 

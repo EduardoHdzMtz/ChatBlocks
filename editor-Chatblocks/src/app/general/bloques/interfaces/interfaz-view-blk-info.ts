@@ -20,7 +20,8 @@ export interface InterfazViewBlkInfo {
     contenttype: string,
     typingtime: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkInfoDin {
@@ -36,7 +37,8 @@ export interface InterfazViewBlkInfoDin {
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazLinksAPI {
@@ -51,7 +53,7 @@ export interface InterfazCredencialesAPI {
     id_block: string,
     blocktype: string,
     namecredencial: string,
-    credencial: string,
+    credencial: string
 }
 
 export interface InterfazViewBlkInput {
@@ -68,7 +70,8 @@ export interface InterfazViewBlkInput {
     default_id: string,
     save_var: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkInputDin {
@@ -87,7 +90,8 @@ export interface InterfazViewBlkInputDin {
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkQR{
@@ -103,7 +107,8 @@ export interface InterfazViewBlkQR{
     default_id: string,
     save_var: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkQRDin{
@@ -121,7 +126,8 @@ export interface InterfazViewBlkQRDin{
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 
@@ -158,7 +164,8 @@ export interface InterfazViewBlkSlide{
     default_id: string,
     save_var: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkSlideDin {
@@ -175,7 +182,8 @@ export interface InterfazViewBlkSlideDin {
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 
@@ -192,7 +200,8 @@ export interface InterfazViewBlkSlideBuy{
     save_var: string,
     id_elements: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 export interface InterfazViewBlkTicket{
@@ -216,7 +225,8 @@ export interface InterfazViewBlkTicket{
     paymethod_var: string,
     nameu_var: string,
     pos_x: number,
-    pos_y: number
+    pos_y: number,
+    tags_entradas: any[];
 }
 
 

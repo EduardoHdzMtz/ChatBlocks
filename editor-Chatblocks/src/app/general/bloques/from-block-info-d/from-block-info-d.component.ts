@@ -19,7 +19,9 @@ export class FromBlockInfoDComponent implements OnInit {
   bloque: InterfazViewBlkInfoDin;
   states: string[]=[];
   tamLinks: number=0;
-  tamCredenciales: number=0;
+  tamCredenciales: number=0;  
+  edit_opcNX: string;
+  edit_NX: string;
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
@@ -462,8 +464,7 @@ export class FromBlockInfoDComponent implements OnInit {
 
 
                 credenciales.push(credencial3);
-                datosBloque.credenciales=credenciales;
-                //this.guardarDatos(datosBloque);                                
+                datosBloque.credenciales=credenciales;                               
               });
             });
             
@@ -498,14 +499,27 @@ export class FromBlockInfoDComponent implements OnInit {
     }
 
     guardarDatos(datosBloque: any){
+      datosBloque[0].tags_entradas=[]; 
       this.globals.AllBlocks.pop();
       this.globals.AllBlocks.push([datosBloque]);
       this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].opc_nextid=datosBloque.opc_nextid;
       this.globals.AllBlocks.push([]);
       let result= this.globals.generar_Id();
-
+      this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id, datosBloque.blocktype,datosBloque.namestate);
 
       this.handleSuccessfulSaveTodo(datosBloque);
+    }
+
+    crear_tag(opc_sigEstado: string, sigEstado: string, blockType: string, estado_actual: string){
+      if(opc_sigEstado=="Seleccionar de la lista"){
+        for(let i=0;i<this.globals.AllBlocks.length;i++){
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+            if(this.globals.AllBlocks[i][j].namestate == sigEstado){
+              this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);
+            }
+          }
+        }
+      }    
     }
   
   

@@ -17,6 +17,9 @@ export class FromBlockInfoComponent implements OnInit {
   createMode: boolean=true;
   bloque: InterfazViewBlkInfo;
   states: string[]=[];
+  edit_opcNX: string;
+  edit_NX: string;
+
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
@@ -47,6 +50,8 @@ export class FromBlockInfoComponent implements OnInit {
   loadBloque(bloque){
     console.log("Opc NX Edit-> "+ bloque.opc_nextID);
     this.fromBlksInfo.patchValue(bloque);
+    this.edit_opcNX=bloque.opc_nextid;
+    this.edit_NX=bloque.next_id;
   }
   
 
@@ -69,12 +74,14 @@ export class FromBlockInfoComponent implements OnInit {
 
       this.blkInfoService.addDatosBlkInfo(datosBloque).subscribe(response =>{
         const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
-        this.blkInfoService.getBlk(datos).subscribe(response=> {      
+        this.blkInfoService.getBlk(datos).subscribe(response=> {    
+          response[0].tags_entradas=[];  
           this.globals.AllBlocks.pop();
           this.globals.AllBlocks.push([response[0]]);
           this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].opc_nextid=datosBloque.opc_nextid;
           this.globals.AllBlocks.push([]);
           let result= this.globals.generar_Id();
+          this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id, datosBloque.blocktype,datosBloque.namestate);
           this.handleSuccessfulSaveTodo(datosBloque);
         });
       });
@@ -93,6 +100,7 @@ export class FromBlockInfoComponent implements OnInit {
           for(let j=0;j<this.globals.AllBlocks[i].length;j++){
             if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
               this.globals.AllBlocks[i][j]=datosBloque;
+              this.globals.AllBlocks[i][j].tags_entradas=[];
             }
           }
         }
@@ -101,6 +109,7 @@ export class FromBlockInfoComponent implements OnInit {
             console.log(i+","+j+" -> "+this.globals.AllBlocks[i][j].namestate);
           }
         }
+        this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
       });
       this.handleSuccessfulEditTodo(datosBloque);
         //.catch(err => console.error(err));
@@ -114,6 +123,57 @@ export class FromBlockInfoComponent implements OnInit {
 
   handleSuccessfulEditTodo(datos: InterfazViewBlkInfo) {
     this.activeModal.dismiss({  datos: datos, id: datos.id_block, createMode: false });
+  }
+
+  crear_tag(opc_sigEstado: string, sigEstado: string, blockType: string, estado_actual: string){
+    if(opc_sigEstado=="Seleccionar de la lista"){
+      for(let i=0;i<this.globals.AllBlocks.length;i++){
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+          if(this.globals.AllBlocks[i][j].namestate == sigEstado){
+            this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);
+          }
+        }
+      }
+    }    
+  }
+
+  editar_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
+    console.log("estado:"+sigEstado);
+    console.log("tags:");
+
+    if(opc_sigEstado=="Seleccionar de la lista" && this.edit_opcNX=="Generar automaticamente"){
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(this.globals.AllBlocks[i][j].namestate == sigEstado)
+            this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);   
+    }
+    else if(opc_sigEstado=="Generar automaticamente" && this.edit_opcNX=="Seleccionar de la lista"){
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(this.globals.AllBlocks[i][j].namestate == this.edit_NX)
+            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+              console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+              if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
+                this.globals.AllBlocks[i][j].tags_entradas[y].splice(y, 1);
+            }   
+    }
+    else if(opc_sigEstado=="Seleccionar de la lista" && this.edit_opcNX=="Seleccionar de la lista" && sigEstado!=this.edit_NX){
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+          if(this.globals.AllBlocks[i][j].namestate == this.edit_NX){
+            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+              console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+              if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
+                this.globals.AllBlocks[i][j].tags_entradas[y].splice(y, 1);
+            } 
+          }
+          if(this.globals.AllBlocks[i][j].namestate == sigEstado)
+            this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);
+          
+
+        }
+    } 
+
   }
 
 

@@ -107,19 +107,19 @@ export class ConstruccionCBComponent implements OnInit {
       next_id: '',
       blocktype: 'informativo',
       contenttype: 'text',
-      typingtime: '1'
+      typingtime: '1',
+      
     }
 
     this.blokInfoservice.addDatosBlkInfo(this.bloqueInicial).subscribe(response =>{
       const datos='{"id_robot": "'+this.bloqueInicial.id_robot+'", "namestate": "'+this.bloqueInicial.namestate+'"}';
       this.blokInfoservice.getBlk(datos).subscribe(response=> {
+        response[0].tags_entradas=[];
         this.globals.AllBlocks.push([response[0]]);
         this.globals.AllBlocks.push([]);
       });
       
-    });
-
-    
+    });    
 
     
   }
@@ -347,6 +347,7 @@ export class ConstruccionCBComponent implements OnInit {
 
     for(let i=0;i<ConsultaBloques.length;i++){
       reconstruccion[ConsultaBloques[i].pos_y][ConsultaBloques[i].pos_x]=ConsultaBloques[i];
+      reconstruccion[ConsultaBloques[i].pos_y][ConsultaBloques[i].pos_x].tags_entradas=[];
     }
 
     for(let i=max_Y;i>=0;i--){
@@ -380,8 +381,33 @@ export class ConstruccionCBComponent implements OnInit {
       console.log(i+'-> Id_block: '+ConsultaBloques[i].id_block+', namestate: '+ConsultaBloques[i].namestate+', type: '+ConsultaBloques[i].blocktype+', x:'+ConsultaBloques[i].pos_x+', y:'+ConsultaBloques[i].pos_y);
     }
 
+    this.construir_tags();
+
   }
 
+  construir_tags(){
+    console.log("------------------TAGS:");
+    for(let i=0;i<this.globals.AllBlocks.length;i++)
+      for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+        if(this.globals.AllBlocks[i][j].opc_nextid=="Seleccionar de la lista"){
+          console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
+          for(let y=0;y<this.globals.AllBlocks.length;y++)
+            for(let x=0;x<this.globals.AllBlocks[y].length;x++)
+              if(this.globals.AllBlocks[y][x].namestate==this.globals.AllBlocks[i][j].next_id){
+                console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+                this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
+                console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+                for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
+                  console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
+              }
+            }  
+              
+
+            
+
+        
+      
+  }
 
 
   handleEditClickBlk(bloque: any) {
@@ -484,6 +510,14 @@ export class ConstruccionCBComponent implements OnInit {
   }
 
   deleteBlkArry(bloque: any, index: number){
+    if(bloque.opc_nextid=='Seleccionar de la lista')
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(bloque.next_id==this.globals.AllBlocks[i][j].namestate)
+            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+              this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);    
+
+
     for(let i=0;i<this.globals.AllBlocks[index].length;i++){
       if(bloque.namestate==this.globals.AllBlocks[index][i].namestate){
         this.globals.AllBlocks[index].splice(i, 1);
@@ -550,6 +584,10 @@ export class ConstruccionCBComponent implements OnInit {
       this.globals.AllBlocks.splice((index),1);
       this.globals.generar_Id();
     }      
+  }
+
+  lista_tags(index: any){
+    alert("Lista vacia");
   }
 
 }

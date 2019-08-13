@@ -101,6 +101,7 @@ export class FromSaveCBComponent implements OnInit {
             if(this.globals.AllChatBots[i][j].id_robot==datosBot.id_robot && this.globals.AllChatBots[i][j].name_robot==datosBot.name_robot)
               this.globals.AllChatBots[i][j]=datosBot;
         this.globals.AllBlocks=[];
+        this.globals.estado='in';
       });
       this.handleSuccessfulEditTodo(datosBot);
         //.catch(err => console.error(err));

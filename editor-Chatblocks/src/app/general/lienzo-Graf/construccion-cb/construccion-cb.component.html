@@ -154,12 +154,65 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>  
+                                                        
+                            <div style="position: relative; float: left;  width: 5px; height: 10px;"></div>                           
+                            <div style="float: left;" *ngIf="(bloque.tags_entradas.length) > 0">
+                                <button class="tag_left"  style="float: left;"  [matMenuTriggerFor]="afterMenu">
+                                    <mat-icon class="icono_tag1">playlist_play</mat-icon>
+                                </button>
+                                  <mat-menu #afterMenu="matMenu" xPosition="after">
+                            
+                                        <table class="table table-striped">
+                                              <thead>
+                                                    <tr>
+                                                        <th><h6 id="nombreU" class="card-header">Estados de entrada</h6></th>
+                                                    </tr>
+                                              </thead>
+                                              <tbody>
+                                                    <tr *ngFor="let tags of bloque.tags_entradas">
+                                                          <th><p id="nombreU" class="card-text">  {{ tags }}  </p></th>
+                                                    </tr>
+                                              </tbody>
+                                        </table>    
+                            
+                                  </mat-menu>
+                            
+
+
+
+
+                                <hr id="linea_tag_1" style="position: relative; background: gray; float: right; width: 5px; height: 1px; top:3px;"/>
                             </div>
-                              
+                            
+                            <div style="position: relative; float: right;  width: 5px; height: 10px;"></div> 
+                            <div style="float: right;" *ngIf="bloque.opc_nextid == 'Seleccionar de la lista'">
+                                <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
+                                <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
+                                    <mat-icon class="icono_tag2">play_arrow</mat-icon>
+                                </button>
+                                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                            
+                                    <table class="table table-striped">
+                                          <thead>
+                                                <tr>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr>
+                                                      <th><p id="nombreU" class="card-text">  {{ bloque.next_id }}  </p></th>
+                                                </tr>
+                                          </tbody>
+                                    </table>    
+                        
+                              </mat-menu>
+                            </div>
+                            
                             
                          
                           </div>
-                          <!--Espacio izquierdo para los tags-->
+                            
                         </div>
 
 
