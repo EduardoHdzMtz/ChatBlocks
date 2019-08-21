@@ -93,6 +93,7 @@ export class FromBlockInfoComponent implements OnInit {
       datosBloque.contenttype='text';
       datosBloque.pos_x=this.bloque.pos_x;
       datosBloque.pos_y=this.bloque.pos_y;
+      datosBloque.tags_entradas=this.bloque.tags_entradas;
       //todo.updateAt = new Date();    
       
       this.blkInfoService.updateBlkInfo(datosBloque).subscribe(response=>{
@@ -100,7 +101,7 @@ export class FromBlockInfoComponent implements OnInit {
           for(let j=0;j<this.globals.AllBlocks[i].length;j++){
             if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
               this.globals.AllBlocks[i][j]=datosBloque;
-              this.globals.AllBlocks[i][j].tags_entradas=[];
+              this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
             }
           }
         }
@@ -154,7 +155,7 @@ export class FromBlockInfoComponent implements OnInit {
             for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
               console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
               if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
-                this.globals.AllBlocks[i][j].tags_entradas[y].splice(y, 1);
+                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
             }   
     }
     else if(opc_sigEstado=="Seleccionar de la lista" && this.edit_opcNX=="Seleccionar de la lista" && sigEstado!=this.edit_NX){
@@ -164,7 +165,7 @@ export class FromBlockInfoComponent implements OnInit {
             for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
               console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
               if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
-                this.globals.AllBlocks[i][j].tags_entradas[y].splice(y, 1);
+                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
             } 
           }
           if(this.globals.AllBlocks[i][j].namestate == sigEstado)

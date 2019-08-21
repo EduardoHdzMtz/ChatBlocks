@@ -63,6 +63,8 @@ export class FromBlockInfoDComponent implements OnInit {
   loadBloque(bloque){
     console.log("Opc NX Edit-> "+ bloque.opc_nextID);
     this.fromBlksInfo.patchValue(bloque);
+    this.edit_opcNX=bloque.opc_nextid;
+    this.edit_NX=bloque.next_id;
       
 
     let links: any[]=[];
@@ -284,6 +286,7 @@ export class FromBlockInfoDComponent implements OnInit {
         datosBloque.contenttype='text';
         datosBloque.pos_x=this.bloque.pos_x;
         datosBloque.pos_y=this.bloque.pos_y;
+        datosBloque.tags_entradas=this.bloque.tags_entradas;
 
         console.log('ACTUALIZANDO EL BLOQUE SLIDE DINAMICO 1');
         let link1={
@@ -484,6 +487,7 @@ export class FromBlockInfoDComponent implements OnInit {
             for(let j=0;j<this.globals.AllBlocks[i].length;j++){
               if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
                 this.globals.AllBlocks[i][j]=datosBloque;
+                this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
               }
             }
           }
@@ -492,6 +496,7 @@ export class FromBlockInfoDComponent implements OnInit {
               console.log(i+","+j+" -> "+this.globals.AllBlocks[i][j].namestate);
             }
           }
+          this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
         });
         this.handleSuccessfulEditTodo(datosBloque);
           //.catch(err => console.error(err));
@@ -499,7 +504,7 @@ export class FromBlockInfoDComponent implements OnInit {
     }
 
     guardarDatos(datosBloque: any){
-      datosBloque[0].tags_entradas=[]; 
+      datosBloque.tags_entradas=[]; 
       this.globals.AllBlocks.pop();
       this.globals.AllBlocks.push([datosBloque]);
       this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].opc_nextid=datosBloque.opc_nextid;
@@ -520,6 +525,45 @@ export class FromBlockInfoDComponent implements OnInit {
           }
         }
       }    
+    }
+
+    editar_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
+      console.log("estado:"+sigEstado);
+      console.log("tags:");
+  
+      if(opc_sigEstado=="Seleccionar de la lista" && this.edit_opcNX=="Generar automaticamente"){
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+            if(this.globals.AllBlocks[i][j].namestate == sigEstado)
+              this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);   
+      }
+      else if(opc_sigEstado=="Generar automaticamente" && this.edit_opcNX=="Seleccionar de la lista"){
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+            if(this.globals.AllBlocks[i][j].namestate == this.edit_NX)
+              for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+                console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+              }   
+      }
+      else if(opc_sigEstado=="Seleccionar de la lista" && this.edit_opcNX=="Seleccionar de la lista" && sigEstado!=this.edit_NX){
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+            if(this.globals.AllBlocks[i][j].namestate == this.edit_NX){
+              for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+                console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+              } 
+            }
+            if(this.globals.AllBlocks[i][j].namestate == sigEstado)
+              this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);
+            
+  
+          }
+      } 
+  
     }
   
   

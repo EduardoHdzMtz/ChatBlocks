@@ -17,9 +17,10 @@ export class Globals {
     
 
     //Datos usuario
-    estado: string='out'
+    estado: string='in'
     //estado: string='interfaz'
-    user: any='';
+    user: any= {email: 'chatbots.proyecto@gmail.com'};
+    //user: any='';
 
     generar_Id(){
         console.log("generar Id global");

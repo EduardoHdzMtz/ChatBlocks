@@ -32,6 +32,7 @@ export class MenuChatbotsComponent implements OnInit {
   ngOnInit() {
     this.loadTodosChatbots();
   }
+  
 
   loadTodosChatbots() {
     this.robotService.getAll_ByUser(this.globals.user.email).subscribe(response=> {
@@ -104,7 +105,6 @@ export class MenuChatbotsComponent implements OnInit {
 
     this.blokInfoDService.deleteBlkInfoBot(bot.id_robot).subscribe(response=>{}); 
   }
-
 
   recorrerRobots(i: number){
     console.log("IndexInto->"+i);

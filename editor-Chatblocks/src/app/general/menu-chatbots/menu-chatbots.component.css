@@ -28,3 +28,16 @@
     padding-left: 3%;
     padding-right: 3%;
   }
+
+
+
+  #connector_canvas{
+    position: relative;
+    background: red;
+    width:100%;
+    height:100%;
+    stroke:#5c96bc;
+    stroke-width:2;
+    float: right;
+  }
+

@@ -400,13 +400,33 @@ export class ConstruccionCBComponent implements OnInit {
                 for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
                   console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
               }
-            }  
+            } 
+
+    //this.posicion_bloques();
               
+  }
 
-            
+   hola(bloque: any, index, index2){
+     console.log("Bloque: "+bloque.namestate+", index: "+index+" , "+index2);
+     
+   }
 
-        
+  posicion_bloques(index2: any){
+    console.log("----------COSNTRUCCION DE LINEAS-------");
+    let shand = document.getElementsByClassName("connector_canvas");
+    //shand[0].setAttribute("style", "height: "+this.tam[1]+"px;");
+    /*for(let i=0;i<this.globals.AllBlocks.length;i++){
+      for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+        if(this.globals.AllBlocks[i])
+
+    }*/
       
+    //shand[0].insertAdjacentHTML('beforeend', '<div id="linea"  style="background: red; position:absolute; margin: 0; width: 1px; height: 50px; border-bottom: 1px solid black; -webkit-transform: translateY(0px) translateX(20px) rotate(45deg); " ></div>');
+    console.log("Tam SVG: "+shand.length);
+    //for(let i=1;i<4;i++)
+      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="300" y1="50.999998092651367" x2="53.01136016845703" y2="103.98863220214844"></line>');
+      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="300" y1="30.999998092651367" x2="53.01136016845703" y2="103.98863220214844"></line>');
+      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="'+10*index2+'" y1="10.999998092651367" x2="30.01136016845703" y2="35.98863220214844"></line>');
   }
 
 
@@ -513,10 +533,13 @@ export class ConstruccionCBComponent implements OnInit {
     if(bloque.opc_nextid=='Seleccionar de la lista')
       for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-          if(bloque.next_id==this.globals.AllBlocks[i][j].namestate)
-            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
-              this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);    
-
+          if(bloque.next_id==this.globals.AllBlocks[i][j].namestate){
+            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+              if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate)
+                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1); 
+            }
+                 
+          }
 
     for(let i=0;i<this.globals.AllBlocks[index].length;i++){
       if(bloque.namestate==this.globals.AllBlocks[index][i].namestate){
@@ -545,9 +568,19 @@ export class ConstruccionCBComponent implements OnInit {
     console.log("event.currentIndex-> "+event.currentIndex);
     console.log("event.previousContainer.data-> "+event.previousContainer.data);*/
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      console.log("SE MOVIO UN BLOQUE");
+      console.log("Datos:");
+      console.log("event.container.data: "+event.container.data);
+      console.log("event.previousIndex: "+event.previousIndex);
+      console.log("event.currentIndex: "+event.currentIndex);
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);      
 
     } else {
+      console.log("SE TRANSFIRIO UN BLOQUE");
+      console.log("Datos:");
+      console.log("event.container.data: "+event.container.data);
+      console.log("event.previousIndex: "+event.previousIndex);
+      console.log("event.currentIndex: "+event.currentIndex);
       transferArrayItem(event.previousContainer.data,
           event.container.data,
           event.previousIndex,
@@ -586,8 +619,5 @@ export class ConstruccionCBComponent implements OnInit {
     }      
   }
 
-  lista_tags(index: any){
-    alert("Lista vacia");
-  }
 
 }

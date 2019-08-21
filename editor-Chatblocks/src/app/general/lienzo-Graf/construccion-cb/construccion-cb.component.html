@@ -1,24 +1,42 @@
 <div cdkDropListGroup class="tamlienzo">
-   
 
 
-        <table class="table table-striped">
+        <table class="table table-striped" >
             <tbody>
                 <tr id="campo_btn2" *ngFor="let arrbloques of globals.AllBlocks , let index2 = index"  >
-                    <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="addFila(index2)">
-                      <mat-icon>add_circle</mat-icon>
-                    </button>
-                    <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="deleteFila(index2)">
-                      <mat-icon>remove_circle</mat-icon>
-                    </button>
-                      <div class="example-box" >
+
+                        <table *ngIf="(globals.AllBlocks.length-1) > index2" cellspacing="0" cellpadding="0" border="0px" style="border: hidden; background: white; margin : 0; padding : 0; border : 0; border-collapse : collapse; ">
+                            <tbody style="border: hidden; background: white; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">                                
+                                <tr style="border: hidden; background: white; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
+                                
+                                    <td style="border: hidden; background: white;">
+                                        <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="addFila(index2)">
+                                            <mat-icon >add_circle</mat-icon>
+                                        </button>
+                                        <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="deleteFila(index2)">
+                                        <mat-icon>remove_circle</mat-icon>
+                                        </button></td>
+                                
+                                    <td *ngIf="index2 > 0 && globals.AllBlocks[index2-1].length > 0 && arrbloques.length > 0" style="border: hidden; width: 100%; height: 97px; background: yellow; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
+                                        <svg class="connector_canvas" style="float: right;">
+                                            <line x1="10" y1="10.999998092651367" x2="30.01136016845703" y2="35.98863220214844"></line>                                            
+                                        </svg>
+                                        {{posicion_bloques(index2)}}                                        
+                                    </td>  
+
+                                </tr>                                
+                            </tbody>                                
+                        </table>
+                   
+                    
+                      <div class="example-box" style="margin : 0; padding : 0; border : 0;">
                           <div cdkDropList cdkDropListOrientation="horizontal" class="example-list"
                           [cdkDropListData]="arrbloques"
                           (cdkDropListDropped)="drop($event)">
                           
-                            <div  *ngFor="let bloque of arrbloques" cdkDrag>
-                            
+                            <div  *ngFor="let bloque of arrbloques , let index3 = index" cdkDrag>
                             <div *ngIf="bloque.blocktype == 'informativo'" class="conf" style="background: #1f5b25da" > 
+                                {{hola(bloque,index2, index3)}}
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
@@ -211,24 +229,21 @@
                             
                             
                          
-                          </div>
-                            
-                        </div>
-
-
-                        <div class="contenedor_lineas"  *ngFor="let bloque of arrbloques , let index3 = index ">
-                            <hr *ngIf="index3 == 0 && (globals.AllBlocks.length-2) > index2" id="line_1" />
-                            <hr *ngIf="index3 == 1 && (globals.AllBlocks.length-2) > index2" id="line_2" />
-                            <hr *ngIf="index3 == 2 && (globals.AllBlocks.length-2) > index2" id="line_3" />
+                          </div>                          
                             
                         </div>
                         
-
-
                       </div>
+
+                      
+                      
+
                 </tr>
+                
             </tbody>
+            
         </table>
+        
     
     
     </div>
