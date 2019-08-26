@@ -13,10 +13,6 @@ import { BlkInputService } from './../../../sendToDB/blkInput.service';
 import { BlkQRService } from './../../../sendToDB/blkQR.service';
 import { BlkSlideService } from './../../../sendToDB/blkSlide.service';
 import { Globals } from '../../bloques/interfaces/Globals';
-import { getLocalRefs } from '@angular/core/src/render3/discovery_utils';
-import { last } from '@angular/router/src/utils/collection';
-import { load } from '@angular/core/src/render3';
-import { generate } from 'rxjs';
 import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
 import { LinksAPIService } from 'src/app/sendToDB/linksAPI.service';
 import { CredencialAPIService } from 'src/app/sendToDB/credenciales.service';
@@ -431,18 +427,15 @@ export class ConstruccionCBComponent implements OnInit {
               
   }
 
-   hola(bloque: any, index, index2){
-     console.log("Bloque: "+bloque.namestate+", index: "+index+" , "+index2);
-     
-   }
 
   posicion_bloques(index2: any){
     //console.log("----------COSNTRUCCION DE LINEAS-------");
-    let shand = document.getElementsByClassName("connector_canvas");
+    //document.getElementById("limpiar").innerHTML="";
+    //document.getElementsByClassName("connector_canvas").
+    let shand = document.getElementsByClassName("connector_canvas");    
     let bloques_pos = document.getElementsByClassName("conf");
     let num_lienzos=0;
     let cont_lienzos=0;
-    let num_bloques=0;
     let cont_bloques=0;
     let cont_por_fila=0;
     
@@ -454,69 +447,65 @@ export class ConstruccionCBComponent implements OnInit {
     //}
       
     //shand[0].insertAdjacentHTML('beforeend', '<div id="linea"  style="background: red; position:absolute; margin: 0; width: 1px; height: 50px; border-bottom: 1px solid black; -webkit-transform: translateY(0px) translateX(20px) rotate(45deg); " ></div>');
-    console.log("Tam SVG: "+shand.length);
-    console.log("Index2: "+index2);
-    console.log("bloques: "+bloques_pos.length); 
+    //console.log("Tam SVG: "+shand.length);
+    //console.log("Index2: "+index2);
+    //console.log("bloques: "+bloques_pos.length); 
 
     for(let i=0;i<index2;i++){
-      num_bloques=num_bloques+this.globals.AllBlocks[i].length;
-      if(i > 0 && this.globals.AllBlocks[i-1].length > 0 && this.globals.AllBlocks[i].length > 0)
-      num_lienzos=num_lienzos+1;      
+      if(i > 0 && this.globals.AllBlocks[i-1].length > 0 && this.globals.AllBlocks[i].length > 0){
+        shand[num_lienzos].innerHTML="";
+        num_lienzos=num_lienzos+1;
+      }      
     }
-
+    shand[num_lienzos].innerHTML="";
     let sig_estados: any;
     let opc_sig_estados: any;
     let posicion;
 
-    console.log("-----------Tam arr:"+(this.globals.AllBlocks.length-2))  ;
-    console.log("-----------index2:"+index2);
+    //console.log("-----------Tam arr:"+(this.globals.AllBlocks.length-2))  ;
+    //console.log("-----------index2:"+index2);
     
     if((this.globals.AllBlocks.length-2)==index2)
-      for(let i=0;i<(this.globals.AllBlocks.length-1);i++){
+      for(let i=0;i<(this.globals.AllBlocks.length-1);i++){        
         cont_por_fila=cont_por_fila+this.globals.AllBlocks[i].length;
-        if(this.globals.AllBlocks[i+1].length > 0){        
+        if(this.globals.AllBlocks[i+1].length > 0 && this.globals.AllBlocks[i].length > 0){        
         
           for(let j=0;j<this.globals.AllBlocks[i].length;j++){          
-            console.log("@@@-Nom_estado "+cont_bloques+": "+this.globals.AllBlocks[i][j].namestate);
-            posicion = bloques_pos[cont_bloques].getBoundingClientRect();
-            console.log(posicion.top, posicion.right, posicion.bottom, posicion.left);
-            shand[cont_lienzos].insertAdjacentHTML('beforeend', '<line x1="'+(posicion.right-470)+'" y1="0" x2="30.01136016845703" y2="35.98863220214844"></line>');
+            //console.log("@@@-Nom_estado "+cont_bloques+": "+this.globals.AllBlocks[i][j].namestate);
+            posicion = bloques_pos[j+cont_bloques].getBoundingClientRect();
+            //console.log(posicion.top, posicion.right, posicion.bottom, posicion.left);
+            //shand[cont_lienzos].insertAdjacentHTML('beforeend', '<line x1="'+(posicion.right-470)+'" y1="0" x2="30.01136016845703" y2="35.98863220214844"></line>');
 
             opc_sig_estados=this.globals.AllBlocks[i][j].opc_nextid.split(",");
             sig_estados=this.globals.AllBlocks[i][j].next_id.split(",");
             for(let x=0;x<opc_sig_estados.length;x++){
-              console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
+              //console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
               if(opc_sig_estados[x] == "Generar automaticamente"){
-                console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
-                this.buscar_sig_estado(sig_estados[x], i+1, bloques_pos, cont_bloques);               
+                //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
+                //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
+                this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
           
               }
             }
 
-            cont_bloques=cont_bloques+1;
+            //cont_bloques=cont_bloques+1;
           }
           cont_lienzos=cont_lienzos+1;
         }
-      }
-
-
-     
-    
-    
-    
-    //console.log("cont_index: "+cont_lienzos);
-
-
-
-      
+        cont_bloques=cont_bloques+this.globals.AllBlocks[i].length;
+      }      
   
 }
 
-buscar_sig_estado(sig_estado: string, i: number, bloques_pos: any, cont_bloques: number){
-  /*let posicion;
+buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number){
+  let posicion;
+  let pos;
   for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-    if(sig_estado == this.globals.AllBlocks[i][j].namestate)
-      posicion=bloques_pos[cont_bloques+i+1];*/
+    if(sig_estado == this.globals.AllBlocks[i][j].namestate){
+      posicion=bloques_pos[cont_por_fila+j].getBoundingClientRect();      
+      shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
+    }
+       
 }
 
 
@@ -557,7 +546,8 @@ buscar_sig_estado(sig_estado: string, i: number, bloques_pos: any, cont_bloques:
     this.globals.generar_Id();  
   }
 
-  handleModalTodoFormClose(response) {    
+  handleModalTodoFormClose(response) {
+
   }  
 
   handleDeleteClickBlk(bloque: any, index: number) { 

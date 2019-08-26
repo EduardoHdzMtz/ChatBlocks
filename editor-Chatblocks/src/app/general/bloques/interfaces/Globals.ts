@@ -135,6 +135,8 @@ export class Globals {
             }      
           }
         }
+
+        
       }
 
       validarCont(contNextArr,i){

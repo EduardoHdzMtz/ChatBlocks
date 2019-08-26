@@ -18,10 +18,8 @@
                                         </button></td>
                                 
                                     <td *ngIf="index2 > 0 && globals.AllBlocks[index2-1].length > 0 && arrbloques.length > 0" style="border: hidden; width: 100%; height: 97px; background: white; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
-                                        <svg class="connector_canvas" style="float: right;">
-                                            <line x1="10" y1="10.999998092651367" x2="30.01136016845703" y2="35.98863220214844"></line>                                            
-                                        </svg>
-                                        {{posicion_bloques(index2)}}                                        
+                                        <svg class="connector_canvas" style="float: right;"></svg>
+                                                                       
                                     </td>  
 
                                 </tr>                                
@@ -38,7 +36,6 @@
                           
                             <div  *ngFor="let bloque of arrbloques , let index3 = index" cdkDrag>
                             <div *ngIf="bloque.blocktype == 'informativo'" class="conf" style="background: #1f5b25da" > 
-                                {{hola(bloque,index2, index3)}}
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
@@ -262,7 +259,9 @@
                         </div>
                         
                       </div>
-
+                      <div *ngIf="index2 > 0 && globals.AllBlocks[index2-1].length > 0 && arrbloques.length > 0">
+                        {{posicion_bloques(index2)}}                                        
+                      </div> 
                       
                       
 
