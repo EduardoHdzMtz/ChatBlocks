@@ -16,6 +16,8 @@ export class FromBlockQRComponent implements OnInit {
   createMode: boolean=true;
   bloque: InterfazViewBlkQR;
   states: string[]=[];
+  edit_opcNX: string;
+  edit_NX: string;
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
@@ -59,6 +61,9 @@ export class FromBlockQRComponent implements OnInit {
     let nx_Id=this.descomponerOPC(bloque.next_id);
     let opcnxID=this.descomponerOPC(bloque.opc_nextid);
 
+    this.edit_opcNX=bloque.opc_nextid;
+    this.edit_NX=bloque.next_id;
+
     let bloque2={
       id_block: bloque.id_block,
     namestate: bloque.namestate,
@@ -76,7 +81,7 @@ export class FromBlockQRComponent implements OnInit {
     blocktype: bloque.blocktype,
     typingtime: bloque.typingtime,
     default_id: bloque.default_id,
-    save_var: bloque.save_var
+    save_var: bloque.save_var,
     }
     this.fromBlksQR.patchValue(bloque2);    
   }
@@ -146,11 +151,13 @@ export class FromBlockQRComponent implements OnInit {
       this.blkQRService.addDatosBlkQR(datosBloque).subscribe(response =>{
         const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
         this.blkQRService.getBlk(datos).subscribe(response=> {
+          response[0].tags_entradas=[];
           this.globals.AllBlocks.pop();
           this.globals.AllBlocks.push([response[0]]);
           console.log('Nuevo QR-> '+this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].opc_nextid+', name: '+this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].namestate);
           this.globals.AllBlocks.push([]);
           this.globals.generar_Id();
+          this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id, datosBloque.namestate);
           this.handleSuccessfulSaveTodo(datosBloque);
         });
       });
@@ -160,7 +167,7 @@ export class FromBlockQRComponent implements OnInit {
       let cadOPC: string='';
       let cadNextID: string='';
       let cadOPCNextID: string='';
-      let datosBloque: InterfazViewBlkQR= this.fromBlksQR.value;
+      let datosBloque: InterfazViewBlkQR= this.fromBlksQR.value;      
 
       cadOPC=this.fromBlksQR.value.opciones1;
       cadNextID=this.fromBlksQR.value.next_id1;
@@ -184,7 +191,8 @@ export class FromBlockQRComponent implements OnInit {
       datosBloque.opc_nextid=cadOPCNextID;
       datosBloque.blocktype='quickReply';
       datosBloque.pos_x=0;
-      datosBloque.pos_y=this.globals.AllBlocks.length;      
+      datosBloque.pos_y=this.globals.AllBlocks.length;  
+      datosBloque.tags_entradas=this.bloque.tags_entradas;    
 
       //todo.updateAt = new Date();
       this.blkQRService.updateBlkQR(datosBloque).subscribe(response=>{
@@ -192,9 +200,11 @@ export class FromBlockQRComponent implements OnInit {
           for(let j=0;j<this.globals.AllBlocks[i].length;j++){
             if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
               this.globals.AllBlocks[i][j]=datosBloque;
+              this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
             }
           }
         }
+        this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
       });
       //this.todoService.editTodo(todo)
       this.handleSuccessfulEditTodo(datosBloque);
@@ -209,6 +219,48 @@ export class FromBlockQRComponent implements OnInit {
 
   handleSuccessfulEditTodo(datos: InterfazViewBlkQR) {
     this.activeModal.dismiss({  datos: datos, id: datos.id_block, createMode: false });
+  }
+
+  crear_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
+    let arr_opc_sigEstado = opc_sigEstado.split(",");
+    let arr_sigEstado = sigEstado.split(",");
+
+    for(let i=0;i<arr_sigEstado.length;i++){
+      if(arr_opc_sigEstado[i]=="Seleccionar de la lista"){
+        for(let x=0;x<this.globals.AllBlocks.length;x++){
+          for(let y=0;y<this.globals.AllBlocks[x].length;y++){
+            if(this.globals.AllBlocks[x][y].namestate == arr_sigEstado[i]){
+              this.globals.AllBlocks[x][y].tags_entradas.push(estado_actual);
+            }
+          }
+        }
+      }
+    }    
+  }
+
+  editar_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
+    console.log("----------...estado:"+sigEstado);
+    console.log("tags:");
+
+    let arr_edit_opc = this.edit_opcNX.split(",");
+    let arr_edit_nx = this.edit_NX.split(",");
+
+
+    for(let x=0;x<arr_edit_opc.length;x++)
+      if(arr_edit_opc[x]=="Seleccionar de la lista")
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(this.globals.AllBlocks[i][j].namestate == arr_edit_nx[x])
+            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+              console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+              if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
+                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+            } 
+          
+    this.crear_tag(opc_sigEstado, sigEstado, estado_actual);
+
+      
+
   }
 
 }

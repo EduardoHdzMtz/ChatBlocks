@@ -17,7 +17,7 @@
                                         <mat-icon>remove_circle</mat-icon>
                                         </button></td>
                                 
-                                    <td *ngIf="index2 > 0 && globals.AllBlocks[index2-1].length > 0 && arrbloques.length > 0" style="border: hidden; width: 100%; height: 97px; background: yellow; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
+                                    <td *ngIf="index2 > 0 && globals.AllBlocks[index2-1].length > 0 && arrbloques.length > 0" style="border: hidden; width: 100%; height: 97px; background: white; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
                                         <svg class="connector_canvas" style="float: right;">
                                             <line x1="10" y1="10.999998092651367" x2="30.01136016845703" y2="35.98863220214844"></line>                                            
                                         </svg>
@@ -27,12 +27,14 @@
                                 </tr>                                
                             </tbody>                                
                         </table>
+
+                        <div *ngIf="arrbloques.length == 0 && index2 == globals.AllBlocks.length-1" style="height: 50px; width: 20px;"></div>
                    
                     
                       <div class="example-box" style="margin : 0; padding : 0; border : 0;">
                           <div cdkDropList cdkDropListOrientation="horizontal" class="example-list"
                           [cdkDropListData]="arrbloques"
-                          (cdkDropListDropped)="drop($event)">
+                          (cdkDropListDropped)="drop($event)">                          
                           
                             <div  *ngFor="let bloque of arrbloques , let index3 = index" cdkDrag>
                             <div *ngIf="bloque.blocktype == 'informativo'" class="conf" style="background: #1f5b25da" > 
@@ -204,7 +206,7 @@
                             </div>
                             
                             <div style="position: relative; float: right;  width: 5px; height: 10px;"></div> 
-                            <div style="float: right;" *ngIf="bloque.opc_nextid == 'Seleccionar de la lista'">
+                            <div style="float: right;" *ngIf="bloque.opc_nextid == 'Seleccionar de la lista' && bloque.blocktype != 'quickReply'">
                                 <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
                                 <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
                                     <mat-icon class="icono_tag2">play_arrow</mat-icon>
@@ -221,6 +223,32 @@
                                                 <tr>
                                                       <th><p id="nombreU" class="card-text">  {{ bloque.next_id }}  </p></th>
                                                 </tr>
+                                          </tbody>
+                                    </table>    
+                        
+                              </mat-menu>
+                            </div>
+
+                            <div style="float: right;" *ngIf="bloque.opc_nextid.includes('Seleccionar de la lista') && bloque.blocktype == 'quickReply'">
+                                <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
+                                <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
+                                    <mat-icon class="icono_tag2">play_arrow</mat-icon>
+                                </button>
+                                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                            
+                                    <table class="table table-striped">
+                                          <thead>
+                                                <tr>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
+                                                </tr>
+                                          </thead>
+                                          <tbody style="width: 100%;">
+                                              <div style="width: 100%;" *ngFor="let tags_salida of bloque.next_id.split(',') , let indexTags = index ">
+                                                    <tr style="width: 100%;" *ngIf="(bloque.opc_nextid.split(','))[indexTags] == 'Seleccionar de la lista'">
+                                                            <th><p id="nombreU" class="card-text">  {{ tags_salida }}  </p></th>
+                                                      </tr>
+                                              </div>
+                                                
                                           </tbody>
                                     </table>    
                         

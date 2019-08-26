@@ -104,6 +104,7 @@ export class ConstruccionCBComponent implements OnInit {
       namestate: 'Saludo',
       id_robot: this.globals.RobotSelect.id_robot,
       contenido: 'Hola, espero que estes teniendo un excelente dia.',
+      opc_nextid: 'Generar automaticamente',
       next_id: '',
       blocktype: 'informativo',
       contenttype: 'text',
@@ -114,6 +115,7 @@ export class ConstruccionCBComponent implements OnInit {
     this.blokInfoservice.addDatosBlkInfo(this.bloqueInicial).subscribe(response =>{
       const datos='{"id_robot": "'+this.bloqueInicial.id_robot+'", "namestate": "'+this.bloqueInicial.namestate+'"}';
       this.blokInfoservice.getBlk(datos).subscribe(response=> {
+        response[0].opc_nextid='Generar automaticamente'; 
         response[0].tags_entradas=[];
         this.globals.AllBlocks.push([response[0]]);
         this.globals.AllBlocks.push([]);
@@ -387,7 +389,7 @@ export class ConstruccionCBComponent implements OnInit {
 
   construir_tags(){
     console.log("------------------TAGS:");
-    for(let i=0;i<this.globals.AllBlocks.length;i++)
+    /*for(let i=0;i<this.globals.AllBlocks.length;i++)
       for(let j=0;j<this.globals.AllBlocks[i].length;j++)
         if(this.globals.AllBlocks[i][j].opc_nextid=="Seleccionar de la lista"){
           console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
@@ -400,9 +402,32 @@ export class ConstruccionCBComponent implements OnInit {
                 for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
                   console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
               }
-            } 
+            } */
 
-    //this.posicion_bloques();
+    let arr_opc_nextid: any;
+    let arr_next_id: any;
+
+    for(let i=0;i<this.globals.AllBlocks.length;i++)
+      for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+        arr_opc_nextid=this.globals.AllBlocks[i][j].opc_nextid.split(",");
+        arr_next_id=this.globals.AllBlocks[i][j].next_id.split(",");
+        console.log("arr_opc_nextid: "+arr_opc_nextid.length);
+        console.log("arr_nextid: "+arr_next_id.length);
+        for(let cont_nx=0;cont_nx<arr_next_id.length;cont_nx++)
+
+          if(arr_opc_nextid[cont_nx]=="Seleccionar de la lista"){
+            console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
+            for(let y=0;y<this.globals.AllBlocks.length;y++)
+              for(let x=0;x<this.globals.AllBlocks[y].length;x++)
+                if(this.globals.AllBlocks[y][x].namestate==arr_next_id[cont_nx]){
+                  console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+                  this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
+                  console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+                  for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
+                    console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
+                }
+            } 
+      }         
               
   }
 
@@ -412,22 +437,88 @@ export class ConstruccionCBComponent implements OnInit {
    }
 
   posicion_bloques(index2: any){
-    console.log("----------COSNTRUCCION DE LINEAS-------");
+    //console.log("----------COSNTRUCCION DE LINEAS-------");
     let shand = document.getElementsByClassName("connector_canvas");
+    let bloques_pos = document.getElementsByClassName("conf");
+    let num_lienzos=0;
+    let cont_lienzos=0;
+    let num_bloques=0;
+    let cont_bloques=0;
+    let cont_por_fila=0;
+    
     //shand[0].setAttribute("style", "height: "+this.tam[1]+"px;");
-    /*for(let i=0;i<this.globals.AllBlocks.length;i++){
-      for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-        if(this.globals.AllBlocks[i])
+    //for(let i=0;i<this.globals.AllBlocks.length;i++){
+      //for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+        //if(this.globals.AllBlocks[i])
 
-    }*/
+    //}
       
     //shand[0].insertAdjacentHTML('beforeend', '<div id="linea"  style="background: red; position:absolute; margin: 0; width: 1px; height: 50px; border-bottom: 1px solid black; -webkit-transform: translateY(0px) translateX(20px) rotate(45deg); " ></div>');
     console.log("Tam SVG: "+shand.length);
-    //for(let i=1;i<4;i++)
-      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="300" y1="50.999998092651367" x2="53.01136016845703" y2="103.98863220214844"></line>');
-      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="300" y1="30.999998092651367" x2="53.01136016845703" y2="103.98863220214844"></line>');
-      shand[index2-1].insertAdjacentHTML('beforeend', '<line x1="'+10*index2+'" y1="10.999998092651367" x2="30.01136016845703" y2="35.98863220214844"></line>');
-  }
+    console.log("Index2: "+index2);
+    console.log("bloques: "+bloques_pos.length); 
+
+    for(let i=0;i<index2;i++){
+      num_bloques=num_bloques+this.globals.AllBlocks[i].length;
+      if(i > 0 && this.globals.AllBlocks[i-1].length > 0 && this.globals.AllBlocks[i].length > 0)
+      num_lienzos=num_lienzos+1;      
+    }
+
+    let sig_estados: any;
+    let opc_sig_estados: any;
+    let posicion;
+
+    console.log("-----------Tam arr:"+(this.globals.AllBlocks.length-2))  ;
+    console.log("-----------index2:"+index2);
+    
+    if((this.globals.AllBlocks.length-2)==index2)
+      for(let i=0;i<(this.globals.AllBlocks.length-1);i++){
+        cont_por_fila=cont_por_fila+this.globals.AllBlocks[i].length;
+        if(this.globals.AllBlocks[i+1].length > 0){        
+        
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++){          
+            console.log("@@@-Nom_estado "+cont_bloques+": "+this.globals.AllBlocks[i][j].namestate);
+            posicion = bloques_pos[cont_bloques].getBoundingClientRect();
+            console.log(posicion.top, posicion.right, posicion.bottom, posicion.left);
+            shand[cont_lienzos].insertAdjacentHTML('beforeend', '<line x1="'+(posicion.right-470)+'" y1="0" x2="30.01136016845703" y2="35.98863220214844"></line>');
+
+            opc_sig_estados=this.globals.AllBlocks[i][j].opc_nextid.split(",");
+            sig_estados=this.globals.AllBlocks[i][j].next_id.split(",");
+            for(let x=0;x<opc_sig_estados.length;x++){
+              console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
+              if(opc_sig_estados[x] == "Generar automaticamente"){
+                console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
+                this.buscar_sig_estado(sig_estados[x], i+1, bloques_pos, cont_bloques);               
+          
+              }
+            }
+
+            cont_bloques=cont_bloques+1;
+          }
+          cont_lienzos=cont_lienzos+1;
+        }
+      }
+
+
+     
+    
+    
+    
+    //console.log("cont_index: "+cont_lienzos);
+
+
+
+      
+  
+}
+
+buscar_sig_estado(sig_estado: string, i: number, bloques_pos: any, cont_bloques: number){
+  /*let posicion;
+  for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+    if(sig_estado == this.globals.AllBlocks[i][j].namestate)
+      posicion=bloques_pos[cont_bloques+i+1];*/
+}
+
 
 
   handleEditClickBlk(bloque: any) {
