@@ -18,6 +18,7 @@ export class FromBlockQRComponent implements OnInit {
   states: string[]=[];
   edit_opcNX: string;
   edit_NX: string;
+  edit_nom_estado: string;
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
@@ -63,6 +64,7 @@ export class FromBlockQRComponent implements OnInit {
 
     this.edit_opcNX=bloque.opc_nextid;
     this.edit_NX=bloque.next_id;
+    this.edit_nom_estado=bloque.namestate;
 
     let bloque2={
       id_block: bloque.id_block,
@@ -250,17 +252,50 @@ export class FromBlockQRComponent implements OnInit {
       if(arr_edit_opc[x]=="Seleccionar de la lista")
         for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-          if(this.globals.AllBlocks[i][j].namestate == arr_edit_nx[x])
-            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
-              console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
-              if(this.globals.AllBlocks[i][j].tags_entradas[y]==estado_actual)
-                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
-            } 
+          if(this.globals.AllBlocks[i][j].namestate == arr_edit_nx[x]){
+            if(this.edit_nom_estado == estado_actual)
+              this.eliminar_tag(estado_actual, i, j);
+            else
+              this.eliminar_tag(this.edit_nom_estado, i, j);
+          } 
           
     this.crear_tag(opc_sigEstado, sigEstado, estado_actual);
+    
+    let arr_sigEstado;
+    if(this.edit_nom_estado != estado_actual){
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+          arr_sigEstado = this.globals.AllBlocks[i][j].next_id.split(",");
+          for(let x=0;x<arr_sigEstado.length;x++)
+            if(arr_sigEstado[x]==this.edit_nom_estado){
+              if(arr_sigEstado.length>1)
+                this.editar_nom(i, j, x, estado_actual, arr_sigEstado);
+              else
+                this.globals.AllBlocks[i][j].next_id=estado_actual;                
+            }          
+        }
+    }
+    
 
-      
+  }
 
+  editar_nom(i, j, pos_nx, estado_actual, arr_sigEstado){
+    arr_sigEstado[pos_nx]=estado_actual;
+    let next_id='';
+    let x=0;
+    for(x=0;x<(arr_sigEstado.length-1);x++){
+      next_id=next_id+arr_sigEstado[x]+',';
+    }
+    next_id=next_id+arr_sigEstado[x+1];
+    this.globals.AllBlocks[i][j].next_id=next_id;
+  }
+
+  eliminar_tag(nom_estado, i, j){
+    for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+      console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+      if(this.globals.AllBlocks[i][j].tags_entradas[y]==nom_estado)
+        this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+    }
   }
 
 }

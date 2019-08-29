@@ -32,8 +32,8 @@ export class AppComponent implements OnInit {
     let shand = document.getElementsByClassName("general") as HTMLCollectionOf<HTMLElement>;
     shand[0].setAttribute("style", "height: "+this.tam[1]+"px;");
 
-    let shand2 = document.getElementsByClassName("lienzoG") as HTMLCollectionOf<HTMLElement>;
-    shand2[0].setAttribute("style", "height: "+this.tam[1]+"px;");
+    //let shand2 = document.getElementsByClassName("lienzoG") as HTMLCollectionOf<HTMLElement>;
+    //shand2[0].setAttribute("style", "height: "+this.tam[1]+"px;");
     
 
   }

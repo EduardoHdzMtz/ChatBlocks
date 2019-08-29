@@ -135,7 +135,6 @@ export class Globals {
             }      
           }
         }
-
         
       }
 

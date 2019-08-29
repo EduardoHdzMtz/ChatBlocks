@@ -68,7 +68,7 @@ export class ConstruccionCBComponent implements OnInit {
 
     let shand = document.getElementsByClassName("tamlienzo") as HTMLCollectionOf<HTMLElement>;
     let tam= this.tam[1]-60;
-    shand[0].setAttribute("style", "height: "+tam+"px;");
+    shand[0].setAttribute("style", "height: "+tam+"px; overflow: auto;");
 
     //  let shand2 = document.getElementsByClassName("table table-striped") as HTMLCollectionOf<HTMLElement>;
     //let tam2= this.tam[1]-76;
@@ -429,7 +429,7 @@ export class ConstruccionCBComponent implements OnInit {
 
 
   posicion_bloques(index2: any){
-    //console.log("----------COSNTRUCCION DE LINEAS-------");
+    console.log("----------COSNTRUCCION DE LINEAS-------");
     //document.getElementById("limpiar").innerHTML="";
     //document.getElementsByClassName("connector_canvas").
     let shand = document.getElementsByClassName("connector_canvas");    
