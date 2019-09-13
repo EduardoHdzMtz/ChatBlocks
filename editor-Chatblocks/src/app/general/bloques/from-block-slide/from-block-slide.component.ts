@@ -20,6 +20,10 @@ export class FromBlockSlideComponent implements OnInit {
   elementos: InterfazElementosS;
   states: string[]=[];
   bloqueS: any='';
+  bandera_Elementos: boolean;
+  edit_opcNX: string;
+  edit_NX: string;
+  edit_nom_estado: string;
   
 
   constructor(
@@ -33,6 +37,8 @@ export class FromBlockSlideComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    this.bandera_Elementos=true;
+    this.globals.bandera_slide_nx= "Una transición por elemento";
     for(let i=0;i<this.globals.AllBlocks.length;i++){
       for(let j=0;j<this.globals.AllBlocks[i].length;j++){
         this.states.push(this.globals.AllBlocks[i][j].namestate);
@@ -49,7 +55,8 @@ export class FromBlockSlideComponent implements OnInit {
       next_id: [''],
       typingtime: ['', Validators.required],
       default_id: [''],
-      save_var: ['', Validators.required]
+      save_var: ['', Validators.required],
+      elementos:['']
     });
     if (!this.createMode) {
       this.loadBloque(this.bloque); 
@@ -58,6 +65,11 @@ export class FromBlockSlideComponent implements OnInit {
 
   loadBloque(bloque){
     this.fromBlksSlide.patchValue(bloque);
+    this.globals.elementosG=bloque.elementos;
+
+    this.edit_opcNX=bloque.opc_nextid;
+    this.edit_NX=bloque.next_id;
+    this.edit_nom_estado=bloque.namestate;
   }
   
 
@@ -75,7 +87,7 @@ export class FromBlockSlideComponent implements OnInit {
       datosBloque.blocktype='slide';      
       datosBloque.pos_x=0;      
       datosBloque.pos_y=this.globals.AllBlocks.length-1;
-      let cadNI: string=''
+      let cadNI: string='';
       
       if(this.fromBlksSlide.value.opc_elm == 'Una sola transición'){
         datosBloque.next_id=this.fromBlksSlide.value.next_id;
@@ -91,11 +103,13 @@ export class FromBlockSlideComponent implements OnInit {
       //todo.updateAt = new Date();
       //this.todoService.saveTodo(todo)
       this.blkSlideService.addDatosBlkSlide(datosBloque).subscribe(response =>{
+        console.log("GUARDANDO BLOQUE SLIDE")
         const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
         this.blkSlideService.getBlk(datos).subscribe(response=> {
           datosBloque.id_block=response[0].id_block;
           this.bloqueS=datosBloque;
           this.bloqueS.elementos=this.globals.elementosG;
+
 
           this.guardarElementos(0);          
 
@@ -130,7 +144,8 @@ export class FromBlockSlideComponent implements OnInit {
     }
   }
   else{
-    alert("Debes tener al menos un elemento generado");
+    if(this.bandera_Elementos)
+      alert("Debes tener al menos un elemento generado");
   }
     
   
@@ -141,11 +156,17 @@ export class FromBlockSlideComponent implements OnInit {
   guardarElementos(cont:number){
     console.log('Se estan guardando los elementos');
     if(cont < this.bloqueS.elementos.length){
-
+      console.log("--------ELEMENTO GUARDADO:");
+      console.log("id_block:"+this.bloqueS.id_block);
       this.bloqueS.elementos[cont].id_block=this.bloqueS.id_block;
       this.elementoService.addDatosElementos(this.bloqueS.elementos[cont]).subscribe(response=> {
         const datos='{"id_block": "'+this.bloqueS.id_block+'", "title": "'+this.bloqueS.elementos[cont].title+'"}';
+        
+        console.log("DATOS:"+datos);
         this.elementoService.getElementosDt(datos).subscribe(responseA=> {
+          console.log("BOTONES: "+responseA);
+          console.log("BOTONES2: "+responseA[0]);
+          console.log("BOTONES2: "+responseA[0].id_elements);
           this.bloqueS.elementos[cont].id_elements=responseA[0].id_elements;
           this.bloqueS.elementos[cont].botones[0].id_elemento=responseA[0].id_elements;
 
@@ -180,7 +201,8 @@ export class FromBlockSlideComponent implements OnInit {
       this.globals.AllBlocks.push([this.bloqueS]);
       this.globals.AllBlocks.push([]);
       this.globals.generar_Id();
-      this.handleSuccessfulSaveTodo(this.bloqueS); 
+      this.handleSuccessfulSaveTodo(this.bloqueS);
+      this.globals.elementosG=[]; 
       return;
     }
           
@@ -206,6 +228,10 @@ export class FromBlockSlideComponent implements OnInit {
   agregarElemento(){
     
     if(this.globals.elementosG.length < 11){
+      if(this.fromBlksSlide.value.opc_elm != '')
+        this.globals.bandera_slide_nx=this.fromBlksSlide.value.opc_elm;
+
+      this.bandera_Elementos=false;
       const modal=this.modalService.open(ElementosComponent);
       modal.result.then(
         this.handleModalFromChatBotCloseADD.bind(this),
@@ -219,13 +245,34 @@ export class FromBlockSlideComponent implements OnInit {
 
 
   handleModalFromChatBotCloseADD(){
-
+    this.bandera_Elementos=true;
         
   }
 
-  editarElemento(){
+  editarElemento(elemento: any){
+    console.log("(((((( ELM: "+elemento);
+    if(elemento!=''){
+      let i: number=0;
+      for(i=0;i<this.globals.elementosG.length;i++)
+        if(elemento == this.globals.elementosG[i].title)
+          break;
+      console.log("@@@@@@ CONTADOR: "+i);
+          
 
+      let modal=this.modalService.open(ElementosComponent);   
+      modal.result.then(
+        this.handleModalTodoFormClose.bind(this),
+        this.handleModalTodoFormClose.bind(this)
+      )
+      modal.componentInstance.createMode = false;
+      modal.componentInstance.elemento = this.globals.elementosG[i];
+      //alert("editando elemento:"+ this.globals.elementosG[i].title);
+    }
   }
+
+  handleModalTodoFormClose(response) {
+
+  }  
 
   eliminarElemento(){
 

@@ -148,7 +148,7 @@ export interface InterfazElementosS{
     subtitle: string,
     opc_nextid: string,
     nextid: string,
-    botones: any[]    
+    botones: any[];    
 }
 
 export interface InterfazViewBlkSlide{

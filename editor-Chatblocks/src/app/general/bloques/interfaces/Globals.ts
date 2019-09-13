@@ -11,16 +11,17 @@ export class Globals {
     AllChatBots: any[]=[];
     PenultimaEdBlks: any[]=[];
     elementosG: any[]=[];
+    bandera_slide_nx: any;
     
     
     RobotSelect: InterfazChatBot; 
     
 
     //Datos usuario
-    estado: string='out'
-    //estado: string='interfaz'
-    //user: any= {email: 'chatbots.proyecto@gmail.com'};
-    user: any='';
+    //estado: string='out'
+    estado: string='in'
+    user: any= {email: 'chatbots.proyecto@gmail.com'};
+    //user: any='';
 
     generar_Id(){
         //console.log("generar Id global");

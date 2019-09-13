@@ -12,6 +12,8 @@ import { BlkInfoService } from './../../../sendToDB/blkInfo.service';
 import { BlkInputService } from './../../../sendToDB/blkInput.service';
 import { BlkQRService } from './../../../sendToDB/blkQR.service';
 import { BlkSlideService } from './../../../sendToDB/blkSlide.service';
+import { ElementoService } from './../../../sendToDB/elementos.service';
+import { BotonesService } from './../../../sendToDB/botones.service';
 import { Globals } from '../../bloques/interfaces/Globals';
 import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
 import { LinksAPIService } from 'src/app/sendToDB/linksAPI.service';
@@ -47,6 +49,8 @@ export class ConstruccionCBComponent implements OnInit {
     private linksAPIService: LinksAPIService,
     private blokQRDservice: BlkQRServiceDin,
     private credencialAPIService: CredencialAPIService,
+    private elementoService: ElementoService,
+    private botonesService: BotonesService,
     public globals: Globals
     ) { }
 
@@ -174,12 +178,34 @@ export class ConstruccionCBComponent implements OnInit {
   loadTodosBlkSlide(ConsultaBloques: any, max_X: number, max_Y: number) {
     this.blokSlideservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       for(let i=0;i<response.length;i++){
-        ConsultaBloques.push(response[i]);
+        let bloque=response[i];
+        let elementos: any[]=[];
+        let cont_elm: number=0;
         console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
           max_Y=response[i].pos_y;
+        
+        this.elementoService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++)
+            if(responseB[j].blocktype=='slide'){
+              elementos.push(responseB[j]);
+              let botones: any[]=[];
+              this.botonesService.getAll_ByELM(responseB[j].id_elements).subscribe(responseC=> {
+                for(let k=0;k<responseC.length;k++){
+                  botones.push(responseC[k]);
+                }                 
+    
+                console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+                elementos[cont_elm].botones=botones;
+                cont_elm=cont_elm+1;
+              });
+              
+            }       
+          bloque.elementos=elementos;
+          ConsultaBloques.push(bloque);
+        });
       }
       console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
@@ -192,6 +218,8 @@ export class ConstruccionCBComponent implements OnInit {
 
     this.blkInfoDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       for(let i=0;i<response.length;i++){
+        credenciales=[];
+        links=[];
         ConsultaBloques.push(response[i]);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
@@ -200,7 +228,7 @@ export class ConstruccionCBComponent implements OnInit {
 
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
-            if(responseB[i].blocktype=='informativoDinamico')
+            if(responseB[j].blocktype=='informativoDinamico')
               links.push(responseB[j]);
           
           this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
@@ -230,6 +258,8 @@ export class ConstruccionCBComponent implements OnInit {
     this.blokSlideDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       
       for(let i=0;i<response.length;i++){
+        credenciales=[];
+        links=[];
         ConsultaBloques.push(response[i]);
         console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
@@ -266,6 +296,8 @@ export class ConstruccionCBComponent implements OnInit {
     this.blokInputDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       
       for(let i=0;i<response.length;i++){
+        credenciales=[];
+        links=[];
         ConsultaBloques.push(response[i]);
         console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
@@ -302,6 +334,8 @@ export class ConstruccionCBComponent implements OnInit {
     this.blokQRDservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       
       for(let i=0;i<response.length;i++){
+        credenciales=[];
+        links=[];
         ConsultaBloques.push(response[i]);
         console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
@@ -429,7 +463,7 @@ export class ConstruccionCBComponent implements OnInit {
 
 
   posicion_bloques(index2: any){
-    console.log("----------COSNTRUCCION DE LINEAS-------");
+    //console.log("----------COSNTRUCCION DE LINEAS-------");
     //document.getElementById("limpiar").innerHTML="";
     //document.getElementsByClassName("connector_canvas").
     let shand = document.getElementsByClassName("connector_canvas");    
@@ -536,6 +570,7 @@ buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any
     else if(bloque.blocktype=='quickReplyDinamico'){
       modal=this.modalService.open(FromBlockQRDComponent);      
     }
+    
     //const modal = this.modalService.open(FromBlockInfoComponent);
     modal.result.then(
       this.handleModalTodoFormClose.bind(this),

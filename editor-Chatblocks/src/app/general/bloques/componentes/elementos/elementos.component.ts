@@ -26,11 +26,17 @@ export class ElementosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    for(let i=0;i<this.globals.AllBlocks.length;i++){
+      for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+        this.states.push(this.globals.AllBlocks[i][j].namestate);
+      }
+    }
+
     this.fromElementos=this.formBuilder.group({
       title: ['', Validators.required],
       subtitle: ['', Validators.required],
       image_url: ['',Validators.required],
-      opc_nextid: ['',Validators.required],
+      opc_nextid: [''],
       next_id: [''],
       btn1Title: ['', Validators.required],
       btn1Type: ['', Validators.required],
@@ -46,8 +52,38 @@ export class ElementosComponent implements OnInit {
   }
 
   loadBloque(elemento){
-    console.log("Opc NX Edit-> "+ elemento.opc_nextID);
-    this.fromElementos.patchValue(elemento);
+    console.log("TITULO ELM-> "+ elemento.title);
+    console.log("BOTON-> ");
+    console.log("TITULO-> "+ elemento.botones[0].titlebutton);
+    //this.fromElementos.patchValue(elemento);
+    let elemento_copia={
+      title: elemento.title,
+      subtitle: elemento.subtitle,
+      image_url: elemento.image_url,
+      opc_nextid: elemento.opc_nextid,
+      next_id: elemento.next_id,
+      btn1Title: elemento.botones[0].titlebutton,
+      btn1Type: elemento.botones[0].typebutton,
+      btn1Cont: elemento.botones[0].contentbutton,
+      btn2Title: '',
+      btn2Type: '',
+      btn2Cont: ''
+    }
+
+    if(elemento.botones.length == 2)
+      this.cargar_Datos_btn2(elemento_copia, elemento.botones[1]);
+    else
+      this.fromElementos.patchValue(elemento_copia);
+
+
+
+  }
+
+  cargar_Datos_btn2(elemento_copia: any, boton_2: any){
+    elemento_copia.btn2Title=boton_2.titlebutton;
+    elemento_copia.btn2Type=boton_2.typebutton;
+    elemento_copia.btn2Cont=boton_2.contentbutton;
+    this.fromElementos.patchValue(elemento_copia);
   }
 
   saveElemento(){
@@ -98,7 +134,7 @@ export class ElementosComponent implements OnInit {
         console.log(i+'-> For1-> '+botones[i].titlebutton);
       }
       console.log('BTN 1-> '+botones[0].titlebutton);
-      console.log('BTN 2-> '+botones[1].titlebutton);
+      //console.log('BTN 2-> '+botones[1].titlebutton);
       elementos.botones=botones;
       this.globals.elementosG.push(elementos);
       //this.globals.bloqueS.push(elementos);
@@ -107,7 +143,7 @@ export class ElementosComponent implements OnInit {
         console.log('--------------------');
         console.log(i+'-> '+this.globals.elementosG[i].title);
         console.log('Boton 1-> '+this.globals.elementosG[i].botones[0].titlebutton);
-        console.log('Boton 2-> '+this.globals.elementosG[i].botones[1].titlebutton);
+        //console.log('Boton 2-> '+this.globals.elementosG[i].botones[1].titlebutton);
       }
       console.log('--------------------');
       this.handleSuccessfulSaveTodo(elementos);

@@ -181,6 +181,8 @@ module.exports = function(app) {
     app.delete('/api/bloqueSlideDinamico/newBlk/:id_robot', bloqueslideDin.deleteByIdBot);
 
     
+    app.post('/api/elementos', elementos.create);
+
     app.get('/api/elementos', elementos.findAll);
 
     app.put('/api/elementos', elementos.update);
@@ -193,6 +195,8 @@ module.exports = function(app) {
 
     app.delete('/api/elementos/newELM/:id_block', elementos.deleteByIdBlk);
 
+    
+    app.post('/api/botones', botones.create);
     
     app.get('/api/botones', botones.findAll);
 

@@ -25,9 +25,9 @@
         <span style="color:Red;" *ngIf="fromElementos.controls['image_url'].touched && fromElementos.controls['image_url'].errors?.required">Dato requerido.</span>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" *ngIf="this.globals.bandera_slide_nx == 'Una transición por elemento'">
           <label for="opc_nextid">Opciones de siguiente estado*</label>
-          <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid">
+          <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid" required>
             <option value="Generar automaticamente">Generar automaticamente</option>
             <option value="Seleccionar de la lista">Seleccionar de la lista</option>
           </select>
@@ -52,11 +52,14 @@
       <div class="form-group">
         <label for="btn1Title">BOTON 1:</label>
         <label for="btn1Title">Titulo</label>
-        <input type="text" id="btn1Title" placeholder="Consultar" class="form-control" formControlName="btn1Title" />
+        <input type="text" id="btn1Title" placeholder="Titulo del boton" class="form-control" formControlName="btn1Title" />
         <label for="btn1Type">Tipo</label>
-        <input type="text" id="btn1Type" placeholder="Consultar" class="form-control" formControlName="btn1Type" />
+        <select name="OS" id="btn1Type" placeholder="Selecciona opcion" class="form-control" formControlName="btn1Type">
+          <option value="postback">postback</option>
+          <option value="web_url">web_url</option>
+        </select>
         <label for="btn1Cont">Contenido</label>
-        <input type="text" id="btn1Cont" placeholder="Consultar" class="form-control" formControlName="btn1Cont" />
+        <input type="text" id="btn1Cont" placeholder="Contenido del boton" class="form-control" formControlName="btn1Cont" />
         <span style="color:Red;" *ngIf="fromElementos.controls['btn1Title'].touched && fromElementos.controls['btn1Title'].errors?.required">Completar todos los campos del boton.</span>
         <span style="color:Red;" *ngIf="fromElementos.controls['btn1Type'].touched && fromElementos.controls['btn1Type'].errors?.required">Completar todos los campos del boton.</span>
         <span style="color:Red;" *ngIf="fromElementos.controls['btn1Cont'].touched && fromElementos.controls['btn1Cont'].errors?.required">Completar todos los campos del boton.</span>
@@ -67,11 +70,17 @@
         <label for="btn2Title">Titulo</label>
         <input type="text" id="btn2Title" placeholder="Consultar" class="form-control" formControlName="btn2Title" />
         <label for="btn2Type">Tipo</label>
-        <input type="text" id="btn2Type" placeholder="Consultar" class="form-control" formControlName="btn2Type" *ngIf="fromElementos.value.btn2Title == ''"/>
-        <input type="text" id="btn2Type" placeholder="Consultar" class="form-control" formControlName="btn2Type" *ngIf="fromElementos.value.btn2Title != ''" required />
+        <select name="OS" id="btn2Type" placeholder="Selecciona una opción de boton" class="form-control" formControlName="btn2Type" *ngIf="fromElementos.value.btn2Title == ''">
+          <option value="postback">postback</option>
+          <option value="web_url">web_url</option>
+        </select>
+        <select name="OS" id="btn2Type" placeholder="Selecciona una opción de boton" class="form-control" formControlName="btn2Type" *ngIf="fromElementos.value.btn2Title != ''" required>
+          <option value="postback">postback</option>
+          <option value="web_url">web_url</option>
+        </select>
         <label for="btn2Cont">Contenido</label>
-        <input type="text" id="btn2Cont" placeholder="Consultar" class="form-control" formControlName="btn2Cont" *ngIf="fromElementos.value.btn2Title == ''" />
-        <input type="text" id="btn2Cont" placeholder="Consultar" class="form-control" formControlName="btn2Cont" *ngIf="fromElementos.value.btn2Title != ''" required />
+        <input type="text" id="btn2Cont" placeholder="Contenido del boton" class="form-control" formControlName="btn2Cont" *ngIf="fromElementos.value.btn2Title == ''" />
+        <input type="text" id="btn2Cont" placeholder="Contenido del boton" class="form-control" formControlName="btn2Cont" *ngIf="fromElementos.value.btn2Title != ''" required />
         <span style="color:Red;" *ngIf=" fromElementos.value.btn2Title != '' && fromElementos.controls['btn2Type'].touched && fromElementos.controls['btn2Type'].errors?.required">Dato requerido.</span>
         <span style="color:Red;" *ngIf=" fromElementos.value.btn2Title != '' && fromElementos.controls['btn2Cont'].touched && fromElementos.controls['btn2Cont'].errors?.required">Dato requerido.</span>
       </div>

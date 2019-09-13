@@ -9,9 +9,9 @@ exports.create = (req, res) => {
                 "title": req.body.title,
                 "image_url": req.body.image_url,
                 "subtitle": req.body.subtitle,
-				"id_block": req.body.id_block.next_id,
-				"opc_nextid": req.body.id_block.opc_nextid,
-				"nextid": req.body.id_block.nextid
+				"id_block": req.body.id_block,
+				"opc_nextid": req.body.opc_nextid,
+				"nextid": req.body.nextid,
             }
         ).then(elementos => {
 				// Send created customer to client
@@ -76,7 +76,7 @@ exports.findElemento = (req, res) => {
 	const id_blk= obj.id_block;
 	const tl= obj.title;
 	Elementos2.findAll({
-		where: { id_block: id_blk, namestate: tl }
+		where: { id_block: id_blk, title: tl }
 	}).then(elementos => {
 			// Send All Customers to Client
 			res.json(elementos.sort(function(c1, c2){return c1.id - c2.id}));

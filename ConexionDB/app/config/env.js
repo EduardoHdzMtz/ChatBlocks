@@ -1,5 +1,5 @@
 const env = {
-    database: 'ChatBlocksVF',
+    database: 'BotsPruebas',
     username: 'postgres',
     password: '2011080606',
     host: 'localhost',

@@ -19,8 +19,9 @@
             <option value="Una sola transición">Una sola transición</option>
             <option value="Una transición por elemento">Una transición por elemento</option>
           </select>
+          
           <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_elm'].touched && fromBlksSlide.controls['opc_elm'].errors?.required">Dato requerido.</span>
-        </div>
+      </div>
       
       <div class="form-group" *ngIf="fromBlksSlide.value.opc_elm == 'Una sola transición'">
         <label for="opc_nextid">Opciones de siguiente estado*</label>
@@ -67,13 +68,13 @@
 
       <div class="form-group">
         <label for="elementos">Elementos del Carrusel</label>
-        <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="states">
+        <select name="OS" id="elementos" placeholder="Selecciona un estado" class="form-control" formControlName="elementos" *ngIf="states">
           <option *ngFor="let elemento of globals.elementosG" [value]="elemento.title">{{elemento.title}}</option>
         </select>
         <button mat-button (click)="agregarElemento()">Agregar</button>
-        <button mat-button (click)="editarElemento()">Editar</button>
-        <button mat-button (click)="eliminarElemento()">Eliminar</button>
-        <span style="color:Red;" *ngIf="fromBlksSlide.controls['default_id'].touched && fromBlksSlide.controls['default_id'].errors?.required">Dato requerido.</span>
+        <button mat-button (click)="editarElemento(fromBlksSlide.value.elementos)">Editar</button>
+        <button mat-button (click)="eliminarElemento(fromBlksSlide.value.elementos)">Eliminar</button>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['elementos'].touched && fromBlksSlide.controls['elementos'].errors?.required">Dato requerido.</span>
       </div>
 
     </form>
