@@ -18,10 +18,10 @@ export class Globals {
     
 
     //Datos usuario
-    //estado: string='out'
-    estado: string='in'
-    user: any= {email: 'chatbots.proyecto@gmail.com'};
-    //user: any='';
+    estado: string='out'
+    //estado: string='in'
+    //user: any= {email: 'chatbots.proyecto@gmail.com'};
+    user: any='';
 
     generar_Id(){
         let contNextArr=0;
