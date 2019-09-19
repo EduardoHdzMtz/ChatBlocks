@@ -73,16 +73,16 @@ export class FromBlockSlideComponent implements OnInit {
   }
   
 
-  saveBlockSlide() {
+  saveBlockSlide(c_e: string) {
     if(this.globals.elementosG.length > 0){
     if (this.fromBlksSlide.invalid) {
       return;
     }
     
-    if (this.createMode){
+    if (this.createMode && c_e == 'crear'){
       let datosBloque: InterfazViewBlkSlide = this.fromBlksSlide.value;
       
-      datosBloque.id_block = '2';
+      datosBloque.id_block = 'sin almacenar';
       datosBloque.id_robot=this.globals.RobotSelect.id_robot;      
       datosBloque.blocktype='slide';      
       datosBloque.pos_x=0;      
@@ -93,54 +93,43 @@ export class FromBlockSlideComponent implements OnInit {
         datosBloque.next_id=this.fromBlksSlide.value.next_id;
       }
       else if(this.fromBlksSlide.value.opc_elm == 'Una transición por elemento'){
-        cadNI=this.globals.elementosG[0].nextid;
+        cadNI=this.globals.elementosG[0].next_id;
         for(let i=1;i<this.globals.elementosG.length;i++){
-          cadNI=cadNI+','+this.globals.elementosG[i].nextid;
+          cadNI=cadNI+','+this.globals.elementosG[i].next_id;
         }
         datosBloque.next_id=cadNI;
       }
-      
-      //todo.updateAt = new Date();
-      //this.todoService.saveTodo(todo)
+
       this.blkSlideService.addDatosBlkSlide(datosBloque).subscribe(response =>{
         console.log("GUARDANDO BLOQUE SLIDE")
         const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
         this.blkSlideService.getBlk(datos).subscribe(response=> {
+          response[0].tags_entradas=[];
           datosBloque.id_block=response[0].id_block;
           this.bloqueS=datosBloque;
           this.bloqueS.elementos=this.globals.elementosG;
 
 
-          this.guardarElementos(0);          
-
-
-          //this.globals.AllBlocks.pop();
-          //this.globals.AllBlocks.push([response[0]]);
-          //this.globals.AllBlocks.push([]);
-          //this.globals.generar_Id();
-          //this.handleSuccessfulSaveTodo(datosBloque);
+          this.guardarElementos(0);
         });
       });
-      
-      //.catch(err => console.error(err));
     } 
-    else{
-      /*let datosBloque: InterfazViewBlkSlide = this.fromBlksSlide.value;
-      datosBloque.id_block = this.bloque.id_block;      
+    else if(c_e == 'crear'){
+      let datosBloque: InterfazViewBlkSlide = this.fromBlksSlide.value;
+      datosBloque.id_block = this.bloque.id_block; 
       datosBloque.id_robot=this.bloque.id_robot;
       datosBloque.blocktype='slide';
-      datosBloque.pos_x=0;
-      datosBloque.pos_y=this.globals.AllBlocks.length;
+      datosBloque.pos_x=this.bloque.pos_x;
+      datosBloque.pos_y=this.bloque.pos_y;
+      this.bloqueS=datosBloque;
+      this.bloqueS.elementos=this.globals.elementosG;
       //todo.updateAt = new Date();
+      console.log("PASO_1");
       this.blkSlideService.updateBlkSlide(datosBloque).subscribe(response=>{
-        for(let i=0;i<this.globals.AllBlocks.length;i++){
-          if(this.globals.AllBlocks[i].id_block == datosBloque.id_block && this.globals.AllBlocks[i].blocktype == datosBloque.blocktype){
-            this.globals.AllBlocks[i]=datosBloque;
-          }
-        }
+        this.guardar_edicion_ELM();
       });
       this.handleSuccessfulEditTodo(datosBloque);
-        //.catch(err => console.error(err));*/
+        //.catch(err => console.error(err));
     }
   }
   else{
@@ -148,7 +137,102 @@ export class FromBlockSlideComponent implements OnInit {
       alert("Debes tener al menos un elemento generado");
   }
     
-  
+  }
+
+  guardar_edicion_ELM(){
+    console.log("PASO_2");
+    for(let i=0;i<this.bloqueS.elementos.length;i++){
+      console.log("PASO_3");
+      if(this.bloqueS.elementos[i].id_elements == 'sin almacenar')
+        this.crear_elemento(i);
+      else
+        this.editar_elemento(i);
+    }
+
+    let recorrido_elementos='sin_encontrar';
+    for(let i=0;i<this.bloque.elementos.length;i++){
+      recorrido_elementos='sin_encontrar';
+      for(let j=0;j<this.bloqueS.elementos.length;j++)
+        if(this.bloqueS.elementos[j].id_elements == this.bloque.elementos[i].id_elements)
+          recorrido_elementos='encontrado'
+      if(recorrido_elementos == 'sin_encontrar')
+        this.elimina_elementos(i);
+        
+    }
+      
+
+
+    for(let i=0;i<this.globals.AllBlocks.length;i++){
+      if(this.globals.AllBlocks[i].id_block == this.bloqueS.id_block && this.globals.AllBlocks[i].blocktype == this.bloqueS.blocktype){
+        this.globals.AllBlocks[i]=this.bloqueS;
+      }
+    }
+  }
+
+  elimina_elementos(i: number){
+    this.elementoService.deleteElementos(this.bloque.elementos[i].id_elements).subscribe(response=> {
+      this.botonesService.deleteBotonELM(this.bloque.elementos[i].id_elements).subscribe(response=> {});
+    });
+  }
+
+  editar_elemento(i: number){
+    this.elementoService.updateElementos(this.bloqueS.elementos[i]).subscribe(response=>{
+      this.botonesService.updateBoton(this.bloqueS.elementos[i].botones[0]).subscribe(response=> {
+        for(let j=0;j<this.bloque.elementos.length;j++)
+        if(this.bloque.elementos[j].id_elements == this.bloqueS.elementos[i].id_elements){
+          if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 2)
+            this.botonesService.updateBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {});
+          else if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 1)
+            this.botonesService.deleteBoton(this.bloque.elementos[j].botones[1].id_boton).subscribe(response=> {});
+          else if(this.bloque.elementos[j].botones.length == 1 && this.bloqueS.elementos[i].botones.length == 2)
+            this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {
+              const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[1].titlebutton+'"}';
+              this.botonesService.getBotonDt(datos).subscribe(responseB=> {
+                this.bloqueS.elementos[i].botones[1].id_boton=responseB[0].id_boton;
+              });
+            });
+          }
+      });
+    });    
+  }
+
+  crear_elemento(i: number){
+    console.log("PASO_4");
+    this.bloqueS.elementos[i].id_block=this.bloque.id_block;
+    this.elementoService.addDatosElementos(this.bloqueS.elementos[i]).subscribe(response=> {
+      console.log("PASO_5");
+      const datos='{"id_block": "'+this.bloqueS.id_block+'", "title": "'+this.bloqueS.elementos[i].title+'"}';
+      
+      console.log("DATOS:"+datos);
+      this.elementoService.getElementosDt(datos).subscribe(responseA=> {
+        console.log("PASO_6");
+        //console.log("BOTONES: "+responseA);
+        //console.log("BOTONES2: "+responseA[0]);
+        //console.log("BOTONES2: "+responseA[0].id_elements);
+        this.bloqueS.elementos[i].id_elements=responseA[0].id_elements;
+        this.bloqueS.elementos[i].botones[0].id_elemento=responseA[0].id_elements;
+
+        this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[0]).subscribe(response=> {
+          console.log("PASO_7");
+          const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[0].titlebutton+'"}';
+          this.botonesService.getBotonDt(datos).subscribe(responseB=> {
+            this.bloqueS.elementos[i].botones[0].id_boton=responseB[0].id_boton;
+
+            if(this.bloqueS.elementos[i].botones.length==2){
+              this.bloqueS.elementos[i].botones[1].id_elemento=responseA[0].id_elements;
+              this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {
+                const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[1].titlebutton+'"}';
+                this.botonesService.getBotonDt(datos).subscribe(responseC=> {
+                  this.bloqueS.elementos[i].botones[1].id_boton=responseC[0].id_boton;
+                });
+              });          
+            }
+
+          });
+        });
+      });
+    });
+
   }
 
 
@@ -175,7 +259,7 @@ export class FromBlockSlideComponent implements OnInit {
             this.botonesService.getBotonDt(datos).subscribe(responseB=> {
               this.bloqueS.elementos[cont].botones[0].id_boton=responseB[0].id_boton;
 
-              if(this.bloqueS.elementos[cont].botones.length==2){  
+              if(this.bloqueS.elementos[cont].botones.length==2){
                 
                 this.bloqueS.elementos[cont].botones[1].id_elemento=responseA[0].id_elements;
                 this.botonesService.addDatosBoton(this.bloqueS.elementos[cont].botones[1]).subscribe(response=> {
@@ -201,11 +285,37 @@ export class FromBlockSlideComponent implements OnInit {
       this.globals.AllBlocks.push([this.bloqueS]);
       this.globals.AllBlocks.push([]);
       this.globals.generar_Id();
+      this.crear_tag(this.bloqueS.opc_nextid, this.bloqueS.next_id, this.bloqueS.namestate);
       this.handleSuccessfulSaveTodo(this.bloqueS);
       this.globals.elementosG=[]; 
       return;
     }
           
+  }
+
+  crear_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
+    let arr_opc_sigEstado = opc_sigEstado.split(",");
+    let arr_sigEstado = sigEstado.split(",");
+
+    if(this.bloqueS.opc_elm=='Una sola transición' && this.bloqueS.opc_nextid== 'Seleccionar de la lista')
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(this.globals.AllBlocks[i][j].namestate == sigEstado)
+            this.globals.AllBlocks[i][j].tags_entradas.push(estado_actual);
+    
+    else if(this.bloqueS.opc_elm=='Una transición por elemento'){
+      for(let i=0;i<this.bloqueS.elementos.length;i++){
+        if(this.bloqueS.elementos[i]=="Seleccionar de la lista"){
+          for(let x=0;x<this.globals.AllBlocks.length;x++){
+            for(let y=0;y<this.globals.AllBlocks[x].length;y++){
+              if(this.globals.AllBlocks[x][y].namestate == this.bloqueS.elementos[i].next_id){
+                this.globals.AllBlocks[x][y].tags_entradas.push(estado_actual);
+              }
+            }
+          }
+        }
+      }  
+    } 
   }
 
   
@@ -250,14 +360,12 @@ export class FromBlockSlideComponent implements OnInit {
   }
 
   editarElemento(elemento: any){
-    console.log("(((((( ELM: "+elemento);
     if(elemento!=''){
+      this.globals.bandera_slide_nx=this.fromBlksSlide.value.opc_elm;
       let i: number=0;
       for(i=0;i<this.globals.elementosG.length;i++)
         if(elemento == this.globals.elementosG[i].title)
-          break;
-      console.log("@@@@@@ CONTADOR: "+i);
-          
+          break;          
 
       let modal=this.modalService.open(ElementosComponent);   
       modal.result.then(
@@ -266,7 +374,6 @@ export class FromBlockSlideComponent implements OnInit {
       )
       modal.componentInstance.createMode = false;
       modal.componentInstance.elemento = this.globals.elementosG[i];
-      //alert("editando elemento:"+ this.globals.elementosG[i].title);
     }
   }
 
@@ -274,8 +381,13 @@ export class FromBlockSlideComponent implements OnInit {
 
   }  
 
-  eliminarElemento(){
-
+  eliminarElemento(elemento: any){
+    if(elemento!=''){
+      let i: number=0;
+      for(i=0;i<this.globals.elementosG.length;i++)
+        if(elemento == this.globals.elementosG[i].title)
+          this.globals.elementosG.splice(i, 1);
+    }
   }
 
 }

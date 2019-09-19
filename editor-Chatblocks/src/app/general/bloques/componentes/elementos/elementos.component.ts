@@ -93,11 +93,43 @@ export class ElementosComponent implements OnInit {
     
     if (this.createMode){
       let elementos: InterfazElementosS= this.fromElementos.value;
-      //let boton1: InterfazBotones= this.fromElementos.value;
-      //let boton2: InterfazBotones= this.fromElementos.value;
       let botones: any[]=[];
-      elementos.id_elements='1';
-      elementos.id_block='1';
+      elementos.id_elements='sin almacenar';
+      elementos.id_block='sin almacenar';
+      elementos.blocktype='slide';
+
+      let boton1={
+        id_boton:'sin almacenar',
+        id_elemento:'sin almacenar',
+        titlebutton:this.fromElementos.value.btn1Title,
+        typebutton:this.fromElementos.value.btn1Type,
+        contentbutton:this.fromElementos.value.btn1Cont
+      };
+
+      botones.push(boton1);
+
+      if(this.fromElementos.value.btn2Title!=''){
+
+        let boton2={
+          id_boton:'sin almacenar',
+          id_elemento:'sin almacenar',
+          titlebutton:this.fromElementos.value.btn2Title,
+          typebutton:this.fromElementos.value.btn2Type,
+          contentbutton:this.fromElementos.value.btn2Cont
+        }
+
+        botones.push(boton2);
+      }
+      elementos.botones=botones;
+      this.globals.elementosG.push(elementos);
+      this.handleSuccessfulSaveTodo(elementos);
+
+    } else{
+      let elementos: InterfazElementosS= this.fromElementos.value;
+      let botones: any[]=[];
+      
+      elementos.id_elements=this.elemento.id_elements;
+      elementos.id_block=this.elemento.id_block;
       elementos.blocktype='slide';
 
       let boton1={
@@ -127,54 +159,7 @@ export class ElementosComponent implements OnInit {
         botones.push(boton2);
       }
 
-      //botones[0]=boton1;
-      console.log('Boton 1-> '+boton1.titlebutton);
-
-      for(let i=0;i<botones.length;i++){
-        console.log(i+'-> For1-> '+botones[i].titlebutton);
-      }
-      console.log('BTN 1-> '+botones[0].titlebutton);
-      //console.log('BTN 2-> '+botones[1].titlebutton);
-      elementos.botones=botones;
-      this.globals.elementosG.push(elementos);
-      //this.globals.bloqueS.push(elementos);
-      console.log('----------elementos------');
-      for(let i=0;i<this.globals.elementosG.length;i++){
-        console.log('--------------------');
-        console.log(i+'-> '+this.globals.elementosG[i].title);
-        console.log('Boton 1-> '+this.globals.elementosG[i].botones[0].titlebutton);
-        //console.log('Boton 2-> '+this.globals.elementosG[i].botones[1].titlebutton);
-      }
-      console.log('--------------------');
-      this.handleSuccessfulSaveTodo(elementos);
-
-    } else{
-      let elementos: InterfazElementosS= this.fromElementos.value;
-      let boton1: InterfazBotones;
-      let boton2: InterfazBotones;
-      let botones: InterfazBotones[];
-      elementos.id_elements=this.elemento.id_elements;
-      elementos.id_block=this.elemento.id_block;
-      elementos.blocktype='slide';
-
-      boton1.id_boton=this.elemento.botones[0].id_boton;
-      boton1.id_elemento=this.elemento.botones[0].id_elemento;
-      boton1.titlebutton=this.fromElementos.value.btn1Title;
-      boton1.typebutton=this.fromElementos.value.btn1Type;
-      boton1.contentbutton=this.fromElementos.value.btn1Cont;
-      botones.push(boton1);
-
-      if(this.fromElementos.value.btn2Title!=''){
-        boton2.id_boton=this.elemento.botones[1].id_boton;
-        boton2.id_elemento=this.elemento.botones[1].id_elemento;
-        boton2.titlebutton=this.fromElementos.value.btn2Title;
-        boton2.typebutton=this.fromElementos.value.btn2Type;
-        boton2.contentbutton=this.fromElementos.value.btn2Cont;
-        botones.push(boton2);
-      }
-
-      elementos.botones=botones;
-      this.globals.elementosG.push(elementos);  
+      elementos.botones=botones;       
       
       for(let i=0;i<this.globals.elementosG.length;i++){
         if(this.globals.elementosG[i].id_elements==elementos.id_elements)

@@ -147,7 +147,7 @@ export interface InterfazElementosS{
     image_url: string,
     subtitle: string,
     opc_nextid: string,
-    nextid: string,
+    next_id: string,
     botones: any[];    
 }
 
