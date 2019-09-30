@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class BlkSlideServiceDin {
-  private DataBaseUrl = 'http://localhost:8080/api/bloqueSlideDinamico';  
-  private DataBaseUrl2 = 'http://localhost:8080/api/bloqueSlideDinamico/newBlk';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueSlideDinamico';  
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueSlideDinamico/newBlk';
   constructor( 
     private http: HttpClient
   ) { }

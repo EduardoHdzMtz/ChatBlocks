@@ -11,9 +11,9 @@ const httpOptions={
   providedIn: 'root'
 })
 export class CredencialAPIService {
-  private DataBaseUrl = 'http://localhost:8080/api/credencialesAPI';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/credencialesAPI/newCD';
-  private DataBaseUrl3 = 'http://localhost:8080/api/linksAPI/contruccion';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/credencialesAPI';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/credencialesAPI/newCD';
+  private DataBaseUrl3 = 'http://148.204.64.142:8081/api/linksAPI/contruccion';
   constructor( 
     private http: HttpClient
   ) { }

@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class BlkQRService {
-  private DataBaseUrl = 'http://localhost:8080/api/bloqueQR';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/bloqueQR/newBlk';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueQR';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueQR/newBlk';
   constructor( 
     private http: HttpClient
   ) { }

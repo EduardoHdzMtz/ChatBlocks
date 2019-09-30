@@ -203,7 +203,30 @@
                             </div>
                             
                             <div style="position: relative; float: right;  width: 5px; height: 10px;"></div> 
-                            <div style="float: right;" *ngIf="bloque.opc_nextid == 'Seleccionar de la lista' && bloque.blocktype != 'quickReply'">
+                            <div style="float: right;" *ngIf="bloque.opc_nextid == 'Seleccionar de la lista' && bloque.blocktype != 'quickReply' && bloque.blocktype !='slide' ">
+                                <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
+                                <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
+                                    <mat-icon class="icono_tag2">play_arrow</mat-icon>
+                                </button>
+                                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                            
+                                    <table class="table table-striped">
+                                          <thead>
+                                                <tr>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
+                                                </tr>
+                                          </thead>
+                                          <tbody>
+                                                <tr>
+                                                      <th><p id="nombreU" class="card-text">  {{ bloque.next_id }}  </p></th>
+                                                </tr>
+                                          </tbody>
+                                    </table>    
+                        
+                              </mat-menu>
+                            </div>
+
+                            <div style="float: right;" *ngIf="bloque.blocktype=='slide' && bloque.opc_elm=='Una sola transición' && bloque.opc_nextid== 'Seleccionar de la lista'">
                                 <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
                                 <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
                                     <mat-icon class="icono_tag2">play_arrow</mat-icon>
@@ -243,6 +266,32 @@
                                               <div style="width: 100%;" *ngFor="let tags_salida of bloque.next_id.split(',') , let indexTags = index ">
                                                     <tr style="width: 100%;" *ngIf="(bloque.opc_nextid.split(','))[indexTags] == 'Seleccionar de la lista'">
                                                             <th><p id="nombreU" class="card-text">  {{ tags_salida }}  </p></th>
+                                                      </tr>
+                                              </div>
+                                                
+                                          </tbody>
+                                    </table>    
+                        
+                              </mat-menu>
+                            </div>
+
+                            <div style="float: right;" *ngIf="bloque.blocktype=='slide' && bloque.opc_elm=='Una transición por elemento' && bloque.tag_salida">
+                                <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
+                                <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
+                                    <mat-icon class="icono_tag2">play_arrow</mat-icon>
+                                </button>
+                                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                            
+                                    <table class="table table-striped">
+                                          <thead>
+                                                <tr>
+                                                    <th><h6 id="nombreU" class="card-header">Estados de salida</h6></th>
+                                                </tr>
+                                          </thead>
+                                          <tbody style="width: 100%;">
+                                              <div style="width: 100%;" *ngFor="let elemento of bloque.elementos , let indexTags = index ">
+                                                    <tr style="width: 100%;" *ngIf="elemento.opc_nextid == 'Seleccionar de la lista'">
+                                                            <th><p id="nombreU" class="card-text">  {{ elemento.nextid }}  </p></th>
                                                       </tr>
                                               </div>
                                                 

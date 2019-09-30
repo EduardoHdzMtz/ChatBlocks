@@ -419,46 +419,58 @@ export class ConstruccionCBComponent implements OnInit {
 
   construir_tags(){
     console.log("------------------TAGS:");
-    /*for(let i=0;i<this.globals.AllBlocks.length;i++)
-      for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-        if(this.globals.AllBlocks[i][j].opc_nextid=="Seleccionar de la lista"){
-          console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
-          for(let y=0;y<this.globals.AllBlocks.length;y++)
-            for(let x=0;x<this.globals.AllBlocks[y].length;x++)
-              if(this.globals.AllBlocks[y][x].namestate==this.globals.AllBlocks[i][j].next_id){
-                console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
-                this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
-                console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
-                for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
-                  console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
-              }
-            } */
 
-    let arr_opc_nextid: any;
-    let arr_next_id: any;
 
     for(let i=0;i<this.globals.AllBlocks.length;i++)
       for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-        arr_opc_nextid=this.globals.AllBlocks[i][j].opc_nextid.split(",");
-        arr_next_id=this.globals.AllBlocks[i][j].next_id.split(",");
-        console.log("arr_opc_nextid: "+arr_opc_nextid.length);
-        console.log("arr_nextid: "+arr_next_id.length);
-        for(let cont_nx=0;cont_nx<arr_next_id.length;cont_nx++)
-
-          if(arr_opc_nextid[cont_nx]=="Seleccionar de la lista"){
-            console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
-            for(let y=0;y<this.globals.AllBlocks.length;y++)
-              for(let x=0;x<this.globals.AllBlocks[y].length;x++)
-                if(this.globals.AllBlocks[y][x].namestate==arr_next_id[cont_nx]){
-                  console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
-                  this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
-                  console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
-                  for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
-                    console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
-                }
-            } 
+        if((this.globals.AllBlocks[i][j].blocktype=='informativo' || this.globals.AllBlocks[i][j].blocktype=='input' || this.globals.AllBlocks[i][j].blocktype=='quickReply' || this.globals.AllBlocks[i][j].blocktype=='informativoDinamico' || this.globals.AllBlocks[i][j].blocktype=='slideDinamico' || this.globals.AllBlocks[i][j].blocktype=='inputDinamico' || this.globals.AllBlocks[i][j].blocktype=='quickReplyDinamico') && this.globals.AllBlocks[i][j].opc_nextid== 'Seleccionar de la lista'){
+          this.generar_tag_caso1(i,j);
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='slide'){
+          this.globals.AllBlocks[i][j].tag_salida=false;
+          if(this.globals.AllBlocks[i][j].opc_elm=='Una sola transición' && this.globals.AllBlocks[i][j].opc_nextid== 'Seleccionar de la lista')
+          this.generar_tag_caso1(i,j);
+          else if(this.globals.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
+            for(let elm=0;elm<this.globals.AllBlocks[i][j].elementos.length;elm++)
+              if(this.globals.AllBlocks[i][j].elementos[elm].opc_nextid == "Seleccionar de la lista"){
+                this.globals.AllBlocks[i][j].tag_salida=true;
+                for(let f=0;f<this.globals.AllBlocks.length;f++)
+                  for(let k=0;k<this.globals.AllBlocks[f].length;k++)
+                    if(this.globals.AllBlocks[i][j].elementos[elm].nextid == this.globals.AllBlocks[f][k].namestate){
+                      this.globals.AllBlocks[f][k].tags_entradas.push(this.globals.AllBlocks[i][j].namestate+" -> "+this.globals.AllBlocks[i][j].elementos[elm].title);
+                      break;
+                    }
+              }
+          }
+        }
+        
+          
       }         
               
+  }
+
+  generar_tag_caso1(i: number, j: number){
+    let arr_opc_nextid: any;
+    let arr_next_id: any;
+
+    arr_opc_nextid=this.globals.AllBlocks[i][j].opc_nextid.split(",");
+    arr_next_id=this.globals.AllBlocks[i][j].next_id.split(",");
+    console.log("arr_opc_nextid: "+arr_opc_nextid.length);
+    console.log("arr_nextid: "+arr_next_id.length);
+    for(let cont_nx=0;cont_nx<arr_next_id.length;cont_nx++)
+
+      if(arr_opc_nextid[cont_nx]=="Seleccionar de la lista"){
+        console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
+        for(let y=0;y<this.globals.AllBlocks.length;y++)
+          for(let x=0;x<this.globals.AllBlocks[y].length;x++)
+            if(this.globals.AllBlocks[y][x].namestate==arr_next_id[cont_nx]){
+              console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+              this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
+              console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+              for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
+                console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
+            }
+      } 
   }
 
 
@@ -509,19 +521,31 @@ export class ConstruccionCBComponent implements OnInit {
             posicion = bloques_pos[j+cont_bloques].getBoundingClientRect();
             //console.log(posicion.top, posicion.right, posicion.bottom, posicion.left);
             //shand[cont_lienzos].insertAdjacentHTML('beforeend', '<line x1="'+(posicion.right-470)+'" y1="0" x2="30.01136016845703" y2="35.98863220214844"></line>');
-
-            opc_sig_estados=this.globals.AllBlocks[i][j].opc_nextid.split(",");
-            sig_estados=this.globals.AllBlocks[i][j].next_id.split(",");
-            for(let x=0;x<opc_sig_estados.length;x++){
-              //console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
-              if(opc_sig_estados[x] == "Generar automaticamente"){
-                //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
-                //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
-                this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
-          
+            if((this.globals.AllBlocks[i][j].blocktype=='informativo' || this.globals.AllBlocks[i][j].blocktype=='input' || this.globals.AllBlocks[i][j].blocktype=='quickReply' || this.globals.AllBlocks[i][j].blocktype=='informativoDinamico' || this.globals.AllBlocks[i][j].blocktype=='slideDinamico' || this.globals.AllBlocks[i][j].blocktype=='inputDinamico' || this.globals.AllBlocks[i][j].blocktype=='quickReplyDinamico') || (this.globals.AllBlocks[i][j].blocktype=='slide' && this.globals.AllBlocks[i][j].opc_elm=='Una sola transición' && this.globals.AllBlocks[i][j].opc_nextid== 'Generar automaticamente')){
+              opc_sig_estados=this.globals.AllBlocks[i][j].opc_nextid.split(",");
+              sig_estados=this.globals.AllBlocks[i][j].next_id.split(",");
+              for(let x=0;x<opc_sig_estados.length;x++){
+                //console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
+                if(opc_sig_estados[x] == "Generar automaticamente"){
+                  //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
+                  //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
+                  this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
+                  
+                } 
               }
             }
+            else if(this.globals.AllBlocks[i][j].blocktype=='slide' && this.globals.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
+              for(let x=0;x<this.globals.AllBlocks[i][j].elementos.length;x++){
+                //console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
+                if(this.globals.AllBlocks[i][j].elementos[x].opc_nextid == "Generar automaticamente"){
+                  //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
+                  //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
+                  this.buscar_sig_estado(this.globals.AllBlocks[i][j].elementos[x].nextid, i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
+                  
+                } 
+              }
 
+            }
             //cont_bloques=cont_bloques+1;
           }
           cont_lienzos=cont_lienzos+1;
@@ -529,18 +553,18 @@ export class ConstruccionCBComponent implements OnInit {
         cont_bloques=cont_bloques+this.globals.AllBlocks[i].length;
       }      
   
-}
+  }
 
-buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number){
-  let posicion;
-  let pos;
-  for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-    if(sig_estado == this.globals.AllBlocks[i][j].namestate){
-      posicion=bloques_pos[cont_por_fila+j].getBoundingClientRect();      
-      shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
-    }
+  buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number){
+    let posicion;
+    let pos;
+    for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+      if(sig_estado == this.globals.AllBlocks[i][j].namestate){
+        posicion=bloques_pos[cont_por_fila+j].getBoundingClientRect();      
+        shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
+      }
        
-}
+  }
 
 
 
@@ -597,12 +621,15 @@ buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any
       });
     }
     else if(bloque.blocktype=='quickReply'){
-      this.blokQRservice.deleteBlkQR(bloque.id_block).subscribe(response=>{ 
+      this.blokQRservice.deleteBlkQR(bloque.id_block).subscribe(response=>{        
         this.deleteBlkArry(bloque, index);
       });
     }
     else if(bloque.blocktype=='slide'){
       this.blokSlideservice.deleteBlkSlide(bloque.id_block).subscribe(response=>{ 
+        this.elementoService.deleteElementosBLK(bloque.id_block).subscribe (response=>{});
+        for(let i=0;i<bloque.elementos.length;i++)
+          this.botonesService.deleteBotonELM(bloque.elementos[i].id_elements).subscribe (response=>{});
         this.deleteBlkArry(bloque, index);
       });
     }
@@ -646,16 +673,31 @@ buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any
   }
 
   deleteBlkArry(bloque: any, index: number){
-    if(bloque.opc_nextid=='Seleccionar de la lista')
-      for(let i=0;i<this.globals.AllBlocks.length;i++)
-        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-          if(bloque.next_id==this.globals.AllBlocks[i][j].namestate){
-            for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
-              if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate)
-                this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1); 
-            }
+    if(((bloque.blocktype=='informativo' || bloque.blocktype=='input' || bloque.blocktype=='informativoDinamico' || bloque.blocktype=='slideDinamico' || bloque.blocktype=='inputDinamico' || bloque.blocktype=='quickReplyDinamico') && bloque.opc_nextid== 'Seleccionar de la lista') || (bloque.blocktype=='slide' && bloque.opc_elm=='Una sola transición' && bloque.opc_nextid== 'Seleccionar de la lista'))
+      if(bloque.opc_nextid=='Seleccionar de la lista')
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+            if(bloque.next_id==this.globals.AllBlocks[i][j].namestate){
+              for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate)
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1); 
+              
                  
-          }
+            }
+    else if(bloque.blocktype=='slide' && bloque.opc_elm=='Una transición por elemento'){
+      for(let elm=0;elm<bloque.elementos.length;elm++)
+        if(bloque.elementos[i].opc_nextid == "Seleccionar de la lista")
+          for(let i=0;i<this.globals.AllBlocks.length;i++)
+            for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+              if(bloque.elementos[elm].nextid == this.globals.AllBlocks[i][j].namestate){
+                for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+                  if(this.globals.AllBlocks[i][j].tags_entradas[y] == (bloque.namestate+" -> "+bloque.elementos[elm].title)){
+                    this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+                    break;
+                  }
+                break;   
+              }
+    }
 
     for(let i=0;i<this.globals.AllBlocks[index].length;i++){
       if(bloque.namestate==this.globals.AllBlocks[index][i].namestate){

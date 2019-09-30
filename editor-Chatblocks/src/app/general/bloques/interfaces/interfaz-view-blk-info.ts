@@ -147,7 +147,7 @@ export interface InterfazElementosS{
     image_url: string,
     subtitle: string,
     opc_nextid: string,
-    next_id: string,
+    nextid: string,
     botones: any[];    
 }
 
@@ -165,6 +165,7 @@ export interface InterfazViewBlkSlide{
     save_var: string,
     pos_x: number,
     pos_y: number,
+    tag_salida: boolean,
     tags_entradas: any[];
 }
 

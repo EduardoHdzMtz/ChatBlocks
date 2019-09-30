@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class ChatbotService {
-  private DataBaseUrl = 'http://localhost:8080/api/chatbotsDB';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/chatbotsDB/new';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/chatbotsDB';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/chatbotsDB/new';
   constructor( 
     private http: HttpClient
   ) { }

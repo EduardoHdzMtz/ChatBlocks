@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class BlkQRServiceDin {
-  private DataBaseUrl = 'http://localhost:8080/api/bloqueQRDinamico';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/bloqueQRDinamico/newBlk';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueQRDinamico';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueQRDinamico/newBlk';
   constructor( 
     private http: HttpClient
   ) { }

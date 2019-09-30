@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class BlkInputService {
-  private DataBaseUrl = 'http://localhost:8080/api/bloqueInput';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/bloqueInput/newBlk';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueInput';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueInput/newBlk';
   constructor( 
     private http: HttpClient
   ) { }

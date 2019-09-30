@@ -11,8 +11,8 @@ const httpOptions={
   providedIn: 'root'
 })
 export class BotonesService {
-  private DataBaseUrl = 'http://localhost:8080/api/botones';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/botones/newBTN';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/botones';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/botones/newBTN';
   constructor( 
     private http: HttpClient
   ) { }

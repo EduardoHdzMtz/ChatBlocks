@@ -2,10 +2,10 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
- 
+//origin: 'http://148.204.64.142:8080',
 const cors = require('cors')
 const corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: 'http://148.204.64.142:8080',
     optionsSuccessStatus: 200
 }
  
@@ -22,7 +22,7 @@ app.use(cors(corsOptions))
 require('./app/route/opc.route.js')(app);
  
 // Create a Server
-var server = app.listen(8080, function () {
+var server = app.listen(8081, function () {
     let host = server.address().address
     let port = server.address().port
     

@@ -6,13 +6,13 @@ import { InterfazViewBlkInfo } from '../general/bloques/interfaces/interfaz-view
 const httpOptions={
     headers: new HttpHeaders({'Content-Type':'application/json'})
 }
-
+//148.204.64.142
 @Injectable({
   providedIn: 'root'
 })
 export class BlkInfoService {
-  private DataBaseUrl = 'http://localhost:8080/api/bloqueInfo';  // URL to web api
-  private DataBaseUrl2 = 'http://localhost:8080/api/bloqueInfo/newBlk';
+  private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueInfo';  // URL to web api
+  private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueInfo/newBlk';
   constructor( 
     private http: HttpClient
   ) { }
