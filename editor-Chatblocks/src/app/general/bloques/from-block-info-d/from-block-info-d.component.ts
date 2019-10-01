@@ -104,7 +104,7 @@ export class FromBlockInfoDComponent implements OnInit {
       next_id: bloque.next_id,
       typingtime: bloque.typingtime,
       link1: links[0],
-      link2: links[0],
+      link2: links[1],
       nomCredencial1: nomC[0],
       credencial1: credenciales[0],
       nomCredencial2: nomC[1],
@@ -123,7 +123,7 @@ export class FromBlockInfoDComponent implements OnInit {
       }
       
       if (this.createMode){
-        console.log('CREAR')
+        console.log('CREANDO BLOQUE INFODIN');
         let datosBloque: InterfazViewBlkInfoDin = this.fromBlksInfo.value;
         let credenciales: any[]=[];
         let links: any[]=[];
@@ -154,7 +154,7 @@ export class FromBlockInfoDComponent implements OnInit {
         }
         datosBloque.linksAPI=links;
 
-        if(this.fromBlksInfo.value.nomCredencial2 != ''){
+        if(this.fromBlksInfo.value.nomCredencial1 != ''){
           let credencial1={
             id_credencial: '13',
             id_block: '1',
@@ -189,6 +189,7 @@ export class FromBlockInfoDComponent implements OnInit {
 
         console.log("Opc NX-> "+ datosBloque.opc_nextid);
         console.log("NX-> "+ datosBloque.next_id);
+        console.log('GUARDANDO BLOQUE INFODIN');
         //todo.updateAt = new Date();
   
         this.blkInfoDinService.addDatosBlkInfo(datosBloque).subscribe(response =>{
@@ -196,34 +197,43 @@ export class FromBlockInfoDComponent implements OnInit {
           this.blkInfoDinService.getBlk(datos).subscribe(responseA=> {
             datosBloque.id_block=responseA[0].id_block;
             datosBloque.linksAPI[0].id_block=datosBloque.id_block;
-
+            console.log('PASO 1');
             
             this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[0]).subscribe(response =>{
               //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[0].links+'"}';
               //console.log('Consulta: id_block-> '+datosBloque.id_block+', links-> '+datosBloque.linksAPI[0].links);
               //console.log('consulta-> '+datos);
-              this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseB=> {                
+              console.log('PASO 2');
+              this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseB=> {
+                console.log('PASO 3');                
                 for(let i=0;i<responseB.length;i++)
                   if(responseB[i].links == datosBloque.linksAPI[0].links && responseB[i].blocktype=='informativoDinamico')
                     datosBloque.linksAPI[0].id_link=responseB[i].id_link;
-
-                if(datosBloque.linksAPI.length==2){
-                  datosBloque.linksAPI[1].id_block=datosBloque.id_block;
-                  this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[1]).subscribe(response =>{
-                    //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[1].links+'"}';
-                    this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseC=> {
-                      for(let i=0;i<responseC.length;i++)
-                        if(responseC[i].links == datosBloque.linksAPI[1].links && responseC[i].blocktype=='informativoDinamico')
-                          datosBloque.linksAPI[1].id_link=responseC[i].id_link;
-
-                    });
-                  });
+                if(datosBloque.linksAPI.length==1 && credenciales.length==0){
+                  this.guardarDatos(datosBloque);
                 }
-                if(credenciales.length > 0){
-                datosBloque.credenciales[0].id_block=datosBloque.id_block;
-                this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[0]).subscribe(response =>{
-                  //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[0].credencial+'"}';
-                  this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseD=> {
+                else{
+                  if(datosBloque.linksAPI.length==2){
+                    datosBloque.linksAPI[1].id_block=datosBloque.id_block;
+                    this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[1]).subscribe(response =>{
+                      console.log('PASO 4');
+                      //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[1].links+'"}';
+                      this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseC=> {
+                        console.log('PASO 5');
+                        for(let i=0;i<responseC.length;i++)
+                          if(responseC[i].links == datosBloque.linksAPI[1].links && responseC[i].blocktype=='informativoDinamico')
+                            datosBloque.linksAPI[1].id_link=responseC[i].id_link;
+
+                      });
+                    });
+                  }
+                  if(credenciales.length > 0){
+                  datosBloque.credenciales[0].id_block=datosBloque.id_block;
+                  this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[0]).subscribe(response =>{
+                    console.log('PASO 6');
+                    //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[0].credencial+'"}';
+                    this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseD=> {
+                    console.log('PASO 7');
                     for(let i=0;i<responseD.length;i++)
                         if(responseD[i].credencial == datosBloque.credenciales[0].credencial && responseD[i].blocktype=='informativoDinamico')
                           datosBloque.credenciales[0].id_credencial=responseD[i].id_credencial;
@@ -233,6 +243,7 @@ export class FromBlockInfoDComponent implements OnInit {
                     if(credenciales.length>1){
                       datosBloque.credenciales[1].id_block=datosBloque.id_block;
                       this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[1]).subscribe(response =>{
+                        console.log('PASO 9');
                         //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[1].credencial+'"}';
                         this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseE=> {
                           for(let i=0;i<responseE.length;i++)
@@ -244,6 +255,7 @@ export class FromBlockInfoDComponent implements OnInit {
                           if(credenciales.length==3){
                             datosBloque.credenciales[2].id_block=datosBloque.id_block;
                             this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[2]).subscribe(response =>{
+                              console.log('PASO 10');
                               //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[2].credencial+'"}';
                               this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseF=> {
                                 for(let i=0;i<responseF.length;i++)
@@ -269,6 +281,7 @@ export class FromBlockInfoDComponent implements OnInit {
                   });
                 });
               }
+            }
 
               });
             });
@@ -506,6 +519,7 @@ export class FromBlockInfoDComponent implements OnInit {
     }
 
     guardarDatos(datosBloque: any){
+      console.log('PASO 11');
       datosBloque.tags_entradas=[]; 
       this.globals.AllBlocks.pop();
       this.globals.AllBlocks.push([datosBloque]);
@@ -513,7 +527,6 @@ export class FromBlockInfoDComponent implements OnInit {
       this.globals.AllBlocks.push([]);
       let result= this.globals.generar_Id();
       this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
-
       this.handleSuccessfulSaveTodo(datosBloque);
     }
 

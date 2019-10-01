@@ -63,7 +63,7 @@ export class FromBlockInputComponent implements OnInit {
       datosBloque.blocktype='input';
       datosBloque.contenttype='text';
       datosBloque.pos_x=0;
-      datosBloque.pos_y=this.globals.AllBlocks.length;
+      datosBloque.pos_y=this.globals.AllBlocks.length-1;
       //todo.updateAt = new Date();
       //this.todoService.saveTodo(todo)
 
@@ -88,8 +88,8 @@ export class FromBlockInputComponent implements OnInit {
       datosBloque.id_robot=this.bloque.id_robot;          
       datosBloque.blocktype='input';
       datosBloque.contenttype='text';
-      datosBloque.pos_x=0;
-      datosBloque.pos_y=this.globals.AllBlocks.length-1;
+      datosBloque.pos_x=this.bloque.pos_x;
+      datosBloque.pos_y=this.bloque.pos_y;
       datosBloque.tags_entradas=this.bloque.tags_entradas;
       //todo.updateAt = new Date();
       

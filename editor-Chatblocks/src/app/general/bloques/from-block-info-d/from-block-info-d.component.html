@@ -9,19 +9,19 @@
   
       <div class="form-group">
         <label for="namestate">Nombre del bloque*</label>
-        <input type="text" id="namestate" placeholder="Saludo" class="form-control" formControlName="namestate" />
+        <input type="text" id="namestate" placeholder="Bloque_dinamico" class="form-control" formControlName="namestate" />
         <span style="color:Red;" *ngIf="fromBlksInfo.controls['namestate'].touched && fromBlksInfo.controls['namestate'].errors?.required">Dato requerido.</span>
       </div>
   
       <div class="form-group">
         <label for="contenido">Mensaje del bloque*</label>
-        <input type="text" id="contenido" placeholder="Hola!" class="form-control" formControlName="contenido" />
+        <input type="text" id="contenido" placeholder="Mensaje dinamicos" class="form-control" formControlName="contenido" />
         <span style="color:Red;" *ngIf="fromBlksInfo.controls['contenido'].touched && fromBlksInfo.controls['contenido'].errors?.required">Dato requerido.</span>
       </div>
   
       <div class="form-group">
         <label for="opc_nextid">Opciones de siguiente estado*</label>
-        <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid">
+        <select name="OS" id="opc_nextid" placeholder="Selecciona una opcion" class="form-control" formControlName="opc_nextid">
           <option value="Generar automaticamente">Generar automaticamente</option>
           <option value="Seleccionar de la lista">Seleccionar de la lista</option>
         </select>
@@ -44,7 +44,13 @@
   
       <div class="form-group">
         <label for="typingtime">Tiempo de respuesta*</label>
-        <input type="text" id="typingtime" placeholder="4" class="form-control" formControlName="typingtime" />
+        <select name="OS" id="typingtime" placeholder="Selecciona una opción" class="form-control" formControlName="typingtime">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
         <span style="color:Red;" *ngIf="fromBlksInfo.controls['typingtime'].touched && fromBlksInfo.controls['typingtime'].errors?.required">Dato requerido.</span>
       </div>
 
@@ -56,19 +62,19 @@
       </div>
 
       <div class="form-group">
-        <label for="nomCredencial1">API: Nombre de la credenciale 1*</label>
+        <label for="nomCredencial1">API: Nombre de la credencial 1*</label>
         <input type="text" id="nomCredencial1" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial1" />
-        <label for="credencial1"  *ngIf=" fromBlksInfo.value.nomCredencial1 != '' ">API: Credenciales*</label>
+        <label for="credencial1"  *ngIf=" fromBlksInfo.value.nomCredencial1 != '' ">ID de la credenciales*</label>
         <input type="text" id="credencial1" placeholder="SDFGFFDS" class="form-control" formControlName="credencial1" *ngIf=" fromBlksInfo.value.nomCredencial1 != '' " required />
 
-        <label for="nomCredencial2">API: Nombre de la credenciale 2*</label>
+        <label for="nomCredencial2">API: Nombre de la credencial 2*</label>
         <input type="text" id="nomCredencial2" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial2" />
-        <label for="credencial2" *ngIf=" fromBlksInfo.value.nomCredencial2 != '' " >API: Credenciales*</label>
+        <label for="credencial2" *ngIf=" fromBlksInfo.value.nomCredencial2 != '' " >ID de la credenciales*</label>
         <input type="text" id="credencial2" placeholder="SDFGFFDS" class="form-control" formControlName="credencial2" *ngIf=" fromBlksInfo.value.nomCredencial2 != '' " required />
         
         <label for="nomCredencial3">API: Nombre de la credenciale 3*</label>
         <input type="text" id="nomCredencial3" placeholder="NOM_ID" class="form-control" formControlName="nomCredencial3" />
-        <label for="credencial3" *ngIf=" fromBlksInfo.value.nomCredencial3 != '' " >API: Credenciales*</label>
+        <label for="credencial3" *ngIf=" fromBlksInfo.value.nomCredencial3 != '' " >ID de la credenciales*</label>
         <input type="text" id="credencial3" placeholder="SDFGFFDS" class="form-control" formControlName="credencial3" *ngIf=" fromBlksInfo.value.nomCredencial3 != '' " required />
         
         <span style="color:Red;" *ngIf=" fromBlksInfo.value.nomCredencial1 != '' && fromBlksInfo.controls['credencial1'].touched && fromBlksInfo.controls['credencial1'].errors?.required">Dato requerido.</span>

@@ -10,7 +10,7 @@
                                 <tr style="border: hidden; background: white; margin : 0; padding : 0; border-spacing : 0 0; border-collapse : collapse; ">
                                 
                                     <td style="border: hidden; background: white;">
-                                        <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="addFila(index2)">
+                                        <button class="boton_add_circle" *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="addFila(index2)">
                                             <mat-icon >add_circle</mat-icon>
                                         </button>
                                         <button *ngIf="(globals.AllBlocks.length-1) > index2" mat-button (click)="deleteFila(index2)">

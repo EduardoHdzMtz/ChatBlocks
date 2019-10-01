@@ -27,7 +27,7 @@ export class MenuHerramientasComponent implements OnInit {
   ngOnInit() {
     if (typeof window.innerWidth != 'undefined'){
       this.tam = [window.innerWidth,window.innerHeight];
-      console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
+      //console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
     }
     else if (typeof document.documentElement != 'undefined'
         && typeof document.documentElement.clientWidth !=

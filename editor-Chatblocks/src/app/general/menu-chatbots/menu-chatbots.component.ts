@@ -39,12 +39,12 @@ export class MenuChatbotsComponent implements OnInit {
       this.globals.AllChatBots=[];
       let ChatbotsList: any[]=[];
       ChatbotsList=response;
-      for(let j=0; j<ChatbotsList.length;j++)
-          console.log("Chatbot J: "+j+" -> "+ChatbotsList[j].name_robot);
+      //for(let j=0; j<ChatbotsList.length;j++)
+          //console.log("Chatbot J: "+j+" -> "+ChatbotsList[j].name_robot);
       this.globals.AllChatBots.push([]);
-      console.log("Tam allCB:"+this.globals.AllChatBots.length);
+      /*console.log("Tam allCB:"+this.globals.AllChatBots.length);
       console.log("Tam allCBIn:"+this.globals.AllChatBots[0].length);
-      console.log("Tam ChatbotsList:"+ChatbotsList.length);
+      console.log("Tam ChatbotsList:"+ChatbotsList.length);*/
       let cont=0;
       for(let i=1; i<=ChatbotsList.length; i++){
         this.globals.AllChatBots[cont].push(ChatbotsList[i-1]);
@@ -55,13 +55,13 @@ export class MenuChatbotsComponent implements OnInit {
               
       }
 
-      console.log("Tam allCB:"+this.globals.AllChatBots.length);
+      /*console.log("Tam allCB:"+this.globals.AllChatBots.length);
       console.log("Tam allCBIn:"+this.globals.AllChatBots[0].length);
       console.log("Tam ChatbotsList:"+ChatbotsList.length);
       
       for(let i=0; i<this.globals.AllChatBots.length;i++)
         for(let j=0; j<this.globals.AllChatBots[i].length;j++)
-          console.log("Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);
+          console.log("Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);*/
     });
   }
 
@@ -79,8 +79,8 @@ export class MenuChatbotsComponent implements OnInit {
   }
 
   eliminarChatbot(robot: any, index: number){
-    console.log("Index-> "+index);
-    console.log("Tam ini-> "+this.globals.AllChatBots.length);
+    //console.log("Index-> "+index);
+    //console.log("Tam ini-> "+this.globals.AllChatBots.length);
     this.DeleteBLKS(robot);
     this.robotService.deleteBot(robot.id_robot).subscribe(response=>{
 
@@ -107,23 +107,23 @@ export class MenuChatbotsComponent implements OnInit {
   }
 
   recorrerRobots(i: number){
-    console.log("IndexInto->"+i);
+    /*console.log("IndexInto->"+i);
     for(let i=0; i<this.globals.AllChatBots.length;i++)
         for(let j=0; j<this.globals.AllChatBots[i].length;j++)
-          console.log("Antes-Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);
+          console.log("Antes-Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);*/
 
 
     //if(this.globals.AllChatBots.length-1>2){
       for(let y=i;y<(this.globals.AllChatBots.length-1);y++){
-        console.log("Tam: "+this.globals.AllChatBots.length+", i: "+i+", y: "+y)
+        //console.log("Tam: "+this.globals.AllChatBots.length+", i: "+i+", y: "+y)
         this.globals.AllChatBots[y].push(this.globals.AllChatBots[y+1][0]);
         this.globals.AllChatBots[y+1].splice(0, 1);
       }
     //}
 
-    for(let i=0; i<this.globals.AllChatBots.length;i++)
+    /*for(let i=0; i<this.globals.AllChatBots.length;i++)
         for(let j=0; j<this.globals.AllChatBots[i].length;j++)
-          console.log("Despues-Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);
+          console.log("Despues-Chatbot "+i+", "+j+" -> "+this.globals.AllChatBots[i][j].name_robot);*/
   }
 
   editarChatbot(robot: any, index: number){

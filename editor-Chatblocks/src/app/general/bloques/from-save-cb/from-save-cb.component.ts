@@ -137,12 +137,12 @@ export class FromSaveCBComponent implements OnInit {
   actualizar_Slide(fila: number, columna: number){
     let cadNI: string='';
 
-    if(this.globals.AllBlocks[fila][columna].opc_elm == 'Una transición por elemento')
+    if(this.globals.AllBlocks[fila][columna].opc_elm == 'Una transición por elemento'){
       cadNI=this.globals.AllBlocks[fila][columna].elementos[0].nextid;
-      for(let i=1;i<this.globals.AllBlocks[fila][columna].elementos.length;i++){
+      for(let i=1;i<this.globals.AllBlocks[fila][columna].elementos.length;i++)
         cadNI=cadNI+','+this.globals.AllBlocks[fila][columna].elementos[i].nextid;
-      }
-      this.globals.AllBlocks[fila][columna].next_id=cadNI;    
+      this.globals.AllBlocks[fila][columna].next_id=cadNI; 
+    }
   }
 
 

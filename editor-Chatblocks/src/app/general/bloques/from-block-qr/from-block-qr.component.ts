@@ -192,8 +192,8 @@ export class FromBlockQRComponent implements OnInit {
       datosBloque.next_id=cadNextID;
       datosBloque.opc_nextid=cadOPCNextID;
       datosBloque.blocktype='quickReply';
-      datosBloque.pos_x=0;
-      datosBloque.pos_y=this.globals.AllBlocks.length;  
+      datosBloque.pos_x=this.bloque.pos_x;
+      datosBloque.pos_y=this.bloque.pos_y;  
       datosBloque.tags_entradas=this.bloque.tags_entradas;    
 
       //todo.updateAt = new Date();

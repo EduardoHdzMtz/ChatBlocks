@@ -57,7 +57,7 @@ export class ConstruccionCBComponent implements OnInit {
   ngOnInit() { 
     if (typeof window.innerWidth != 'undefined'){
       this.tam = [window.innerWidth,window.innerHeight];
-      console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
+      //console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
     }
     else if (typeof document.documentElement != 'undefined'
         && typeof document.documentElement.clientWidth !=
@@ -129,19 +129,19 @@ export class ConstruccionCBComponent implements OnInit {
   loadTodosBlkInfo() {
     let ConsultaBloques:any[]=[];
     this.blokInfoservice.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
-      console.log("-------------Consultando Bot--------------");
+      //console.log("-------------Consultando Bot--------------");
       ConsultaBloques=response;
       let max_X: number=response[0].pos_x;
       let max_Y: number=response[0].pos_y;
-      console.log("Max_X-0: "+max_X+", Max_Y-0: "+max_Y);
+      //console.log("Max_X-0: "+max_X+", Max_Y-0: "+max_Y);
       for(let i=1;i<response.length;i++){
-        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
           max_Y=response[i].pos_y;
       }
-      console.log("Max_X-Inf: "+max_X+", Max_Y-Inf: "+max_Y);
+      //console.log("Max_X-Inf: "+max_X+", Max_Y-Inf: "+max_Y);
       this.loadTodosBlkInput(ConsultaBloques, max_X, max_Y);
     });
   }
@@ -156,7 +156,7 @@ export class ConstruccionCBComponent implements OnInit {
         if(max_Y<response[i].pos_y)
           max_Y=response[i].pos_y;
       }
-      console.log("Max_X-Inp: "+max_X+", Max_Y-Inp: "+max_Y);
+      //console.log("Max_X-Inp: "+max_X+", Max_Y-Inp: "+max_Y);
       this.loadTodosBlkQR(ConsultaBloques, max_X, max_Y);
     });
   }
@@ -170,7 +170,7 @@ export class ConstruccionCBComponent implements OnInit {
         if(max_Y<response[i].pos_y)
           max_Y=response[i].pos_y;
       }
-      console.log("Max_X-QR: "+max_X+", Max_Y-QR: "+max_Y);
+      //console.log("Max_X-QR: "+max_X+", Max_Y-QR: "+max_Y);
       this.loadTodosBlkSlide(ConsultaBloques, max_X, max_Y);
     });    
   }
@@ -181,7 +181,7 @@ export class ConstruccionCBComponent implements OnInit {
         let bloque=response[i];
         let elementos: any[]=[];
         let cont_elm: number=0;
-        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -197,7 +197,7 @@ export class ConstruccionCBComponent implements OnInit {
                   botones.push(responseC[k]);
                 }                 
     
-                console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+                //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
                 elementos[cont_elm].botones=botones;
                 cont_elm=cont_elm+1;
               });
@@ -207,7 +207,7 @@ export class ConstruccionCBComponent implements OnInit {
           ConsultaBloques.push(bloque);
         });
       }
-      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
     });    
   }
@@ -236,7 +236,7 @@ export class ConstruccionCBComponent implements OnInit {
               if(responseB[i].blocktype=='informativoDinamico')
                 credenciales.push(responseC[k]);
 
-            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
             ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
             ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
           });
@@ -244,7 +244,7 @@ export class ConstruccionCBComponent implements OnInit {
 
         
       }
-      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkSlideDin(ConsultaBloques, max_X, max_Y);
 
     });    
@@ -261,7 +261,7 @@ export class ConstruccionCBComponent implements OnInit {
         credenciales=[];
         links=[];
         ConsultaBloques.push(response[i]);
-        console.log(i+'-> resp: '+response[i].namestate);
+        //console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -277,13 +277,13 @@ export class ConstruccionCBComponent implements OnInit {
               if(responseB[i].blocktype=='slideDinamico')
                 credenciales.push(responseC[k]);
   
-            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
             ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
             ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
           });
         });
       }
-      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkInputDin(ConsultaBloques, max_X, max_Y);
 
     });    
@@ -299,7 +299,7 @@ export class ConstruccionCBComponent implements OnInit {
         credenciales=[];
         links=[];
         ConsultaBloques.push(response[i]);
-        console.log(i+'-> resp: '+response[i].namestate);
+        //console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -315,13 +315,13 @@ export class ConstruccionCBComponent implements OnInit {
               if(responseB[i].blocktype=='inputDinamico')
                 credenciales.push(responseC[k]);
   
-            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
             ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
             ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
           });
         });
       }
-      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkQRDin(ConsultaBloques, max_X, max_Y);
 
     });    
@@ -337,7 +337,7 @@ export class ConstruccionCBComponent implements OnInit {
         credenciales=[];
         links=[];
         ConsultaBloques.push(response[i]);
-        console.log(i+'-> resp: '+response[i].namestate);
+        //console.log(i+'-> resp: '+response[i].namestate);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -353,13 +353,13 @@ export class ConstruccionCBComponent implements OnInit {
               if(responseB[i].blocktype=='quickReplyDinamico')
                 credenciales.push(responseC[k]);
   
-            console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
             ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
             ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
           });
         });
       }
-      console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
+      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.reconstruirChatbot(ConsultaBloques, max_X, max_Y);
 
     });    
@@ -367,7 +367,7 @@ export class ConstruccionCBComponent implements OnInit {
 
 
   reconstruirChatbot(ConsultaBloques: any, max_X: number, max_Y: number){
-    console.log('max_X-Final-> '+max_X+', max_Y-Final-> '+max_Y);
+    //console.log('max_X-Final-> '+max_X+', max_Y-Final-> '+max_Y);
     let reconstruccion: any[]=[];
 
     for(let i=0;i<=max_Y;i++){
@@ -394,13 +394,13 @@ export class ConstruccionCBComponent implements OnInit {
     
     
       
-    console.log("---------Reconstruccion--------");
-    for(let i=0;i<reconstruccion.length;i++){
-      for(let j=0;j<reconstruccion[i].length;j++){
-        console.log(i+'-> namestate: '+reconstruccion[i][j].namestate+', x:'+reconstruccion[i][j].pos_x+', y:'+reconstruccion[i][j].pos_y+" - xa:"+j+", ya:"+i);        
-      }
-    }
-    console.log("---------Fin--------");
+    //console.log("---------Reconstruccion--------");
+    //for(let i=0;i<reconstruccion.length;i++){
+      //for(let j=0;j<reconstruccion[i].length;j++){
+        //console.log(i+'-> namestate: '+reconstruccion[i][j].namestate+', x:'+reconstruccion[i][j].pos_x+', y:'+reconstruccion[i][j].pos_y+" - xa:"+j+", ya:"+i);        
+      //}
+    //}
+    //console.log("---------Fin--------");
 
     this.globals.AllBlocks=reconstruccion;
     this.globals.AllBlocks.push([]);
@@ -409,16 +409,16 @@ export class ConstruccionCBComponent implements OnInit {
 
 
 
-    for(let i=0;i<ConsultaBloques.length;i++){
-      console.log(i+'-> Id_block: '+ConsultaBloques[i].id_block+', namestate: '+ConsultaBloques[i].namestate+', type: '+ConsultaBloques[i].blocktype+', x:'+ConsultaBloques[i].pos_x+', y:'+ConsultaBloques[i].pos_y);
-    }
+    //for(let i=0;i<ConsultaBloques.length;i++){
+      //console.log(i+'-> Id_block: '+ConsultaBloques[i].id_block+', namestate: '+ConsultaBloques[i].namestate+', type: '+ConsultaBloques[i].blocktype+', x:'+ConsultaBloques[i].pos_x+', y:'+ConsultaBloques[i].pos_y);
+    //}
 
     this.construir_tags();
 
   }
 
   construir_tags(){
-    console.log("------------------TAGS:");
+    //console.log("------------------TAGS:");
 
 
     for(let i=0;i<this.globals.AllBlocks.length;i++)
@@ -455,20 +455,20 @@ export class ConstruccionCBComponent implements OnInit {
 
     arr_opc_nextid=this.globals.AllBlocks[i][j].opc_nextid.split(",");
     arr_next_id=this.globals.AllBlocks[i][j].next_id.split(",");
-    console.log("arr_opc_nextid: "+arr_opc_nextid.length);
-    console.log("arr_nextid: "+arr_next_id.length);
+    //console.log("arr_opc_nextid: "+arr_opc_nextid.length);
+    //console.log("arr_nextid: "+arr_next_id.length);
     for(let cont_nx=0;cont_nx<arr_next_id.length;cont_nx++)
 
       if(arr_opc_nextid[cont_nx]=="Seleccionar de la lista"){
-        console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
+        //console.log("Seleccionar de la lista: "+this.globals.AllBlocks[i][j].namestate);
         for(let y=0;y<this.globals.AllBlocks.length;y++)
           for(let x=0;x<this.globals.AllBlocks[y].length;x++)
             if(this.globals.AllBlocks[y][x].namestate==arr_next_id[cont_nx]){
-              console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+              //console.log("tam: "+this.globals.AllBlocks[y][x].tags_entradas.length);
               this.globals.AllBlocks[y][x].tags_entradas.push(this.globals.AllBlocks[i][j].namestate)
-              console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
-              for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
-                console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
+              //console.log("tam1: "+this.globals.AllBlocks[y][x].tags_entradas.length);
+              //for(let pp=0;pp<this.globals.AllBlocks[y][x].tags_entradas.length;pp++)
+                //console.log("entrada: "+this.globals.AllBlocks[y][x].tags_entradas[pp]);
             }
       } 
   }
@@ -557,11 +557,14 @@ export class ConstruccionCBComponent implements OnInit {
 
   buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number){
     let posicion;
-    let pos;
+    let pos_boton = document.getElementsByClassName("boton_add_circle");
+    let posicion_btn = pos_boton[0].getBoundingClientRect();    
+    
     for(let j=0;j<this.globals.AllBlocks[i].length;j++)
       if(sig_estado == this.globals.AllBlocks[i][j].namestate){
         posicion=bloques_pos[cont_por_fila+j].getBoundingClientRect();      
-        shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
+        //shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
+        shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-posicion_btn.right-215)+'" y1="0" x2="'+(posicion.right-posicion_btn.right-215)+'" y2="97"></line>');
       }
        
   }
@@ -726,19 +729,19 @@ export class ConstruccionCBComponent implements OnInit {
     console.log("event.currentIndex-> "+event.currentIndex);
     console.log("event.previousContainer.data-> "+event.previousContainer.data);*/
     if (event.previousContainer === event.container) {
-      console.log("SE MOVIO UN BLOQUE");
+      /*console.log("SE MOVIO UN BLOQUE");
       console.log("Datos:");
       console.log("event.container.data: "+event.container.data);
       console.log("event.previousIndex: "+event.previousIndex);
-      console.log("event.currentIndex: "+event.currentIndex);
+      console.log("event.currentIndex: "+event.currentIndex);*/
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);      
 
     } else {
-      console.log("SE TRANSFIRIO UN BLOQUE");
+      /*console.log("SE TRANSFIRIO UN BLOQUE");
       console.log("Datos:");
       console.log("event.container.data: "+event.container.data);
       console.log("event.previousIndex: "+event.previousIndex);
-      console.log("event.currentIndex: "+event.currentIndex);
+      console.log("event.currentIndex: "+event.currentIndex);*/
       transferArrayItem(event.previousContainer.data,
           event.container.data,
           event.previousIndex,
