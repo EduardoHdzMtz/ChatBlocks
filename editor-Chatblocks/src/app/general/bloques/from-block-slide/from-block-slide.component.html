@@ -23,28 +23,28 @@
           <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_elm'].touched && fromBlksSlide.controls['opc_elm'].errors?.required">Dato requerido.</span>
       </div>
       
-      <div class="form-group" *ngIf="fromBlksSlide.value.opc_elm == 'Una sola transición'">
-        <label for="opc_nextid">Opciones de siguiente estado*</label>
-        <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid" required>
+      
+      <div class="form-group" >
+
+        <label for="opc_nextid" *ngIf="fromBlksSlide.value.opc_elm == 'Una sola transición'">Opciones de siguiente estado*</label>
+        <select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid" *ngIf="fromBlksSlide.value.opc_elm == 'Una sola transición'">
           <option value="Generar automaticamente">Generar automaticamente</option>
           <option value="Seleccionar de la lista">Seleccionar de la lista</option>
         </select>
-        <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_nextid'].touched && fromBlksSlide.controls['opc_nextid'].errors?.required">Dato requerido.</span>
-      </div>
-  
-      <div class="form-group" *ngIf="fromBlksSlide.value.opc_nextid == 'Seleccionar de la lista' && fromBlksSlide.value.opc_elm == 'Una sola transición'">
-        <label for="next_id">Seleccionar siguiente estado</label>
-        <select name="OS" id="next_id" placeholder="Selecciona un estado" class="form-control" formControlName="next_id" *ngIf="globals.AllBlocks">
+
+        <label for="next_id" *ngIf="fromBlksSlide.value.opc_nextid == 'Seleccionar de la lista' && fromBlksSlide.value.opc_elm == 'Una sola transición'">Seleccionar siguiente estado</label>
+        <select name="OS" id="next_id" placeholder="Selecciona un estado" class="form-control" formControlName="next_id" *ngIf="globals.AllBlocks && fromBlksSlide.value.opc_nextid == 'Seleccionar de la lista' && fromBlksSlide.value.opc_elm == 'Una sola transición'">
           <option *ngFor="let nameST of states, let index=index" [value]="nameST">{{nameST}}</option>
         </select>
+
+        <label for="next_id" *ngIf="fromBlksSlide.value.opc_nextid == 'Generar automaticamente' && fromBlksSlide.value.opc_elm == 'Una sola transición'">Siguiente estado</label>
+        <input type="text" id="next_id" placeholder="" class="form-control" formControlName="next_id" readonly="readonly" *ngIf="fromBlksSlide.value.opc_nextid == 'Generar automaticamente' && fromBlksSlide.value.opc_elm == 'Una sola transición'"/>
+
+
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['opc_nextid'].touched && fromBlksSlide.controls['opc_nextid'].errors?.required">Dato requerido.</span>
         <span style="color:Red;" *ngIf="fromBlksSlide.controls['next_id'].touched && fromBlksSlide.controls['next_id'].errors?.required">Dato requerido.</span>
       </div>
-  
-      <div class="form-group" *ngIf="fromBlksSlide.value.opc_nextid == 'Generar automaticamente' && fromBlksSlide.value.opc_elm == 'Una sola transición'">
-        <label for="next_id">Siguiente estado</label>
-        <input type="text" id="next_id" placeholder="" class="form-control" formControlName="next_id" readonly="readonly" />
-        <span style="color:Red;" *ngIf="fromBlksSlide.controls['next_id'].touched && fromBlksSlide.controls['next_id'].errors?.required">Dato requerido.</span>
-      </div>
+      
   
       <div class="form-group">
         <label for="typingtime">Tiempo de respuesta*</label>

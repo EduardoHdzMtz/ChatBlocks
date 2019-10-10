@@ -233,7 +233,7 @@ export class ConstruccionCBComponent implements OnInit {
           
           this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
             for(let k=0;k<responseC.length;k++)
-              if(responseB[i].blocktype=='informativoDinamico')
+              if(responseC[k].blocktype=='informativoDinamico')
                 credenciales.push(responseC[k]);
 
             //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
@@ -269,12 +269,12 @@ export class ConstruccionCBComponent implements OnInit {
 
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
-            if(responseB[i].blocktype=='slideDinamico')
+            if(responseB[j].blocktype=='slideDinamico')
               links.push(responseB[j]);
             
           this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
             for(let k=0;k<responseC.length;k++)
-              if(responseB[i].blocktype=='slideDinamico')
+              if(responseC[k].blocktype=='slideDinamico')
                 credenciales.push(responseC[k]);
   
             //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
@@ -307,12 +307,12 @@ export class ConstruccionCBComponent implements OnInit {
 
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
-            if(responseB[i].blocktype=='inputDinamico')
+            if(responseB[j].blocktype=='inputDinamico')
               links.push(responseB[j]);
             
           this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
             for(let k=0;k<responseC.length;k++)
-              if(responseB[i].blocktype=='inputDinamico')
+              if(responseC[k].blocktype=='inputDinamico')
                 credenciales.push(responseC[k]);
   
             //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
@@ -345,12 +345,12 @@ export class ConstruccionCBComponent implements OnInit {
 
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
-            if(responseB[i].blocktype=='quickReplyDinamico')
+            if(responseB[j].blocktype=='quickReplyDinamico')
               links.push(responseB[j]);
             
           this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
             for(let k=0;k<responseC.length;k++)
-              if(responseB[i].blocktype=='quickReplyDinamico')
+              if(responseC[k].blocktype=='quickReplyDinamico')
                 credenciales.push(responseC[k]);
   
             //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
@@ -429,18 +429,19 @@ export class ConstruccionCBComponent implements OnInit {
         else if(this.globals.AllBlocks[i][j].blocktype=='slide'){
           this.globals.AllBlocks[i][j].tag_salida=false;
           if(this.globals.AllBlocks[i][j].opc_elm=='Una sola transición' && this.globals.AllBlocks[i][j].opc_nextid== 'Seleccionar de la lista')
-          this.generar_tag_caso1(i,j);
+            this.generar_tag_caso1(i,j);
           else if(this.globals.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
             for(let elm=0;elm<this.globals.AllBlocks[i][j].elementos.length;elm++)
-              if(this.globals.AllBlocks[i][j].elementos[elm].opc_nextid == "Seleccionar de la lista"){
-                this.globals.AllBlocks[i][j].tag_salida=true;
-                for(let f=0;f<this.globals.AllBlocks.length;f++)
-                  for(let k=0;k<this.globals.AllBlocks[f].length;k++)
-                    if(this.globals.AllBlocks[i][j].elementos[elm].nextid == this.globals.AllBlocks[f][k].namestate){
-                      this.globals.AllBlocks[f][k].tags_entradas.push(this.globals.AllBlocks[i][j].namestate+" -> "+this.globals.AllBlocks[i][j].elementos[elm].title);
-                      break;
-                    }
-              }
+              for(let cont_btn=0;cont_btn<this.globals.AllBlocks[i][j].elementos[elm].botones.length;cont_btn++)
+                if(this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista"){
+                  this.globals.AllBlocks[i][j].tag_salida=true;
+                  for(let f=0;f<this.globals.AllBlocks.length;f++)
+                    for(let k=0;k<this.globals.AllBlocks[f].length;k++)
+                      if(this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].contentbutton == this.globals.AllBlocks[f][k].namestate){
+                        this.globals.AllBlocks[f][k].tags_entradas.push(this.globals.AllBlocks[i][j].namestate+" -> "+this.globals.AllBlocks[i][j].elementos[elm].title+" -> "+this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].contentbutton);
+                        break;
+                      }
+                }
           }
         }
         
@@ -507,11 +508,16 @@ export class ConstruccionCBComponent implements OnInit {
     let sig_estados: any;
     let opc_sig_estados: any;
     let posicion;
+    let pos_boton;
+    let posicion_btn;
 
     //console.log("-----------Tam arr:"+(this.globals.AllBlocks.length-2))  ;
     //console.log("-----------index2:"+index2);
     
-    if((this.globals.AllBlocks.length-2)==index2)
+    if((this.globals.AllBlocks.length-2)==index2){
+      pos_boton = document.getElementsByClassName("boton_add_circle");
+      posicion_btn = pos_boton[0].getBoundingClientRect();
+
       for(let i=0;i<(this.globals.AllBlocks.length-1);i++){        
         cont_por_fila=cont_por_fila+this.globals.AllBlocks[i].length;
         if(this.globals.AllBlocks[i+1].length > 0 && this.globals.AllBlocks[i].length > 0){        
@@ -529,20 +535,20 @@ export class ConstruccionCBComponent implements OnInit {
                 if(opc_sig_estados[x] == "Generar automaticamente"){
                   //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
                   //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
-                  this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
+                  this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);      
                   
                 } 
               }
             }
             else if(this.globals.AllBlocks[i][j].blocktype=='slide' && this.globals.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
               for(let x=0;x<this.globals.AllBlocks[i][j].elementos.length;x++){
-                //console.log("@@@@@-OPC_sig "+x+": "+opc_sig_estados[x]);
-                if(this.globals.AllBlocks[i][j].elementos[x].opc_nextid == "Generar automaticamente"){
-                  //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
-                  //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
-                  this.buscar_sig_estado(this.globals.AllBlocks[i][j].elementos[x].nextid, i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila);      
-                  
-                } 
+                for(let cont_btn=0;cont_btn<this.globals.AllBlocks[i][j].elementos[x].botones.length;cont_btn++)
+                  if(this.globals.AllBlocks[i][j].elementos[x].botones[cont_btn].opc_nextid == "Generar automaticamente"){
+                    //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
+                    //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
+                    this.buscar_sig_estado(this.globals.AllBlocks[i][j].elementos[x].botones[cont_btn].contentbutton, i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);      
+                    
+                  } 
               }
 
             }
@@ -552,19 +558,22 @@ export class ConstruccionCBComponent implements OnInit {
         }
         cont_bloques=cont_bloques+this.globals.AllBlocks[i].length;
       }      
+
+    }
+      
   
   }
 
-  buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number){
+  buscar_sig_estado(sig_estado: string, i: number, shand: any, posicion_right: any, posicion_left: any, bloques_pos: any, cont_por_fila: number, posicion_btn: any){
     let posicion;
-    let pos_boton = document.getElementsByClassName("boton_add_circle");
-    let posicion_btn = pos_boton[0].getBoundingClientRect();    
+    //let pos_boton = document.getElementsByClassName("boton_add_circle");
+    //let posicion_btn = pos_boton[0].getBoundingClientRect();    
     
     for(let j=0;j<this.globals.AllBlocks[i].length;j++)
       if(sig_estado == this.globals.AllBlocks[i][j].namestate){
         posicion=bloques_pos[cont_por_fila+j].getBoundingClientRect();      
         //shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-530)+'" y1="0" x2="'+(posicion.right-530)+'" y2="97"></line>');
-        shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-posicion_btn.right-215)+'" y1="0" x2="'+(posicion.right-posicion_btn.right-215)+'" y2="97"></line>');
+        shand.insertAdjacentHTML('beforeend', '<line x1="'+(posicion_right-posicion_btn-215)+'" y1="0" x2="'+(posicion.right-posicion_btn-215)+'" y2="97"></line>');
       }
        
   }

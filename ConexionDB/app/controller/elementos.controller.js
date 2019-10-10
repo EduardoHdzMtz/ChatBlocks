@@ -10,8 +10,6 @@ exports.create = (req, res) => {
                 "image_url": req.body.image_url,
                 "subtitle": req.body.subtitle,
 				"id_block": req.body.id_block,
-				"opc_nextid": req.body.opc_nextid,
-				"nextid": req.body.nextid,
             }
         ).then(elementos => {
 				// Send created customer to client

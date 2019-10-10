@@ -7,6 +7,7 @@ import { FromBlockSlideComponent } from '../bloques/from-block-slide/from-block-
 
 import { InterfazViewBlkInfo } from '../bloques/interfaces/interfaz-view-blk-info';
 import { FromBlockInfoDComponent } from '../bloques/from-block-info-d/from-block-info-d.component';
+import { FromBlockTicketComponent } from '../bloques/from-block-ticket/from-block-ticket.component';
 import { FromBlockSlideDComponent } from '../bloques/from-block-slide-d/from-block-slide-d.component';
 import { FromBlockInputDComponent } from '../bloques/from-block-input-d/from-block-input-d.component';
 import { FromBlockQRDComponent } from '../bloques/from-block-qrd/from-block-qrd.component';
@@ -90,7 +91,15 @@ export class MenuHerramientasComponent implements OnInit {
   handleModalFromBlockSlideClose(){
   }
 
-  addBlockTicket(){}
+  addBlockTicket(){
+    const modal=this.modalService.open(FromBlockTicketComponent)
+    modal.result.then(
+      this.handleModalFromBlockSlideClose.bind(this),
+      this.handleModalFromBlockSlideClose.bind(this)
+    )
+  }
+
+
   addBlockSlideBuy(){}
 
   addBlockInfoD(){

@@ -129,7 +129,8 @@ export function provideConfig() {
     FromBlockInfoDComponent,
     FromBlockSlideDComponent,
     FromBlockInputDComponent,
-    FromBlockQRDComponent
+    FromBlockQRDComponent,
+    FromBlockTicketComponent
   ]
 })
 export class AppModule { }

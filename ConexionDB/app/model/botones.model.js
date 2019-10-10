@@ -12,6 +12,9 @@ module.exports = (sequelize, Sequelize) => {
         contentbutton:{
 		    type: Sequelize.STRING
         },
+        opc_nextid:{
+          type: Sequelize.STRING
+        }
     },
     {
         sequelize,

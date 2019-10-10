@@ -32,19 +32,38 @@ export class ElementosComponent implements OnInit {
       }
     }
 
-    this.fromElementos=this.formBuilder.group({
-      title: ['', Validators.required],
-      subtitle: ['', Validators.required],
-      image_url: ['',Validators.required],
-      opc_nextid: [''],
-      nextid: [''],
-      btn1Title: ['', Validators.required],
-      btn1Type: ['', Validators.required],
-      btn1Cont: ['', Validators.required],
-      btn2Title: [''],
-      btn2Type: [''],
-      btn2Cont: ['']
-    });
+    if(this.globals.bandera_slide_nx == 'Una transición por elemento'){
+      this.fromElementos=this.formBuilder.group({
+        title: ['', Validators.required],
+        subtitle: ['', Validators.required],
+        image_url: ['',Validators.required],
+        btn1Title: ['', Validators.required],
+        btn1Type: ['postback', Validators.required],
+        opc_nextid1: [''],
+        btn1Cont: [''],
+        btn2Title: [''],
+        btn2Type: [''],
+        opc_nextid2: [''],
+        btn2Cont: ['']
+      });
+    }
+    else{
+      this.fromElementos=this.formBuilder.group({
+        title: ['', Validators.required],
+        subtitle: ['', Validators.required],
+        image_url: ['',Validators.required],
+        btn1Title: ['', Validators.required],
+        btn1Type: ['', Validators.required],
+        opc_nextid1: [''],
+        btn1Cont: [''],
+        btn2Title: [''],
+        btn2Type: [''],
+        opc_nextid2: [''],
+        btn2Cont: ['']
+      });
+    }
+
+    
 
     if (!this.createMode) {
       this.loadBloque(this.elemento); 
@@ -56,18 +75,37 @@ export class ElementosComponent implements OnInit {
     console.log("BOTON-> ");
     console.log("TITULO-> "+ elemento.botones[0].titlebutton);
     //this.fromElementos.patchValue(elemento);
-    let elemento_copia={
-      title: elemento.title,
-      subtitle: elemento.subtitle,
-      image_url: elemento.image_url,
-      opc_nextid: elemento.opc_nextid,
-      nextid: elemento.nextid,
-      btn1Title: elemento.botones[0].titlebutton,
-      btn1Type: elemento.botones[0].typebutton,
-      btn1Cont: elemento.botones[0].contentbutton,
-      btn2Title: '',
-      btn2Type: '',
-      btn2Cont: ''
+    let elemento_copia: any;
+    if(this.globals.bandera_slide_nx == 'Una transición por elemento'){
+      elemento_copia={
+        title: elemento.title,
+        subtitle: elemento.subtitle,
+        image_url: elemento.image_url,
+        btn1Title: elemento.botones[0].titlebutton,
+        btn1Type: 'postback',
+        opc_nextid1: elemento.botones[0].opc_nextid,
+        btn1Cont: elemento.botones[0].contentbutton,
+        btn2Title: '',
+        btn2Type: '',
+        opc_nextid2: '',
+        btn2Cont: ''
+      }
+    }
+    else{
+      elemento_copia={
+        title: elemento.title,
+        subtitle: elemento.subtitle,
+        image_url: elemento.image_url,
+        btn1Title: elemento.botones[0].titlebutton,
+        btn1Type: elemento.botones[0].typebutton,
+        opc_nextid1: elemento.botones[0].opc_nextid,
+        btn1Cont: elemento.botones[0].contentbutton,
+        btn2Title: '',
+        btn2Type: '',
+        opc_nextid2: '',
+        btn2Cont: ''
+      }
+
     }
 
     if(elemento.botones.length == 2)
@@ -82,110 +120,144 @@ export class ElementosComponent implements OnInit {
   cargar_Datos_btn2(elemento_copia: any, boton_2: any){
     elemento_copia.btn2Title=boton_2.titlebutton;
     elemento_copia.btn2Type=boton_2.typebutton;
+    elemento_copia.opc_nextid2=boton_2.opc_nextid;
     elemento_copia.btn2Cont=boton_2.contentbutton;
     this.fromElementos.patchValue(elemento_copia);
   }
 
   saveElemento(){
-    if (this.fromElementos.invalid) {
-      return;
-    }
-    
-    if (this.createMode){
-      let elementos: InterfazElementosS= this.fromElementos.value;
-      let botones: any[]=[];
-      elementos.id_elements='sin almacenar';
-      elementos.id_block='sin almacenar';
-      elementos.blocktype='slide';
 
-      let boton1={
-        id_boton:'sin almacenar',
-        id_elemento:'sin almacenar',
-        titlebutton:this.fromElementos.value.btn1Title,
-        typebutton:this.fromElementos.value.btn1Type,
-        contentbutton:this.fromElementos.value.btn1Cont
-      };
+    if(this.validar_datos()){  
+      if (this.fromElementos.invalid) {
+        return;
+      }
+      
+      if (this.createMode){
+        let elementos: InterfazElementosS= this.fromElementos.value;
+        let botones: any[]=[];
+        elementos.id_elements='sin almacenar';
+        elementos.id_block='sin almacenar';
+        elementos.blocktype='slide';
 
-      botones.push(boton1);
-
-      if(this.fromElementos.value.btn2Title!=''){
-
-        let boton2={
+        let boton1={
           id_boton:'sin almacenar',
           id_elemento:'sin almacenar',
-          titlebutton:this.fromElementos.value.btn2Title,
-          typebutton:this.fromElementos.value.btn2Type,
-          contentbutton:this.fromElementos.value.btn2Cont
-        }
+          titlebutton:this.fromElementos.value.btn1Title,
+          typebutton:this.fromElementos.value.btn1Type,
+          opc_nextid:this.fromElementos.value.opc_nextid1,
+          contentbutton:this.fromElementos.value.btn1Cont
+        };
 
-        botones.push(boton2);
-      }
-      elementos.botones=botones;
-      this.globals.elementosG.push(elementos);
-      this.handleSuccessfulSaveTodo(elementos);
+        botones.push(boton1);
 
-    } else{
-      let elementos: InterfazElementosS= this.fromElementos.value;
-      let botones: any[]=[];
-      
-      elementos.id_elements=this.elemento.id_elements;
-      elementos.id_block=this.elemento.id_block;
-      elementos.blocktype='slide';
+        if(this.fromElementos.value.btn2Title!=''){
 
-      let boton1={
-        id_boton:'1',
-        id_elemento:'1',
-        titlebutton:this.fromElementos.value.btn1Title,
-        typebutton:this.fromElementos.value.btn1Type,
-        contentbutton:this.fromElementos.value.btn1Cont
-      };
-
-      console.log('Boton 2-> '+boton1.titlebutton);
-      botones.push(boton1);
-      //botones[0]=boton1;
-      
-
-      if(this.fromElementos.value.btn2Title!=''){
-
-        let boton2={
-          id_boton:'2',
-          id_elemento:'1',
-          titlebutton:this.fromElementos.value.btn2Title,
-          typebutton:this.fromElementos.value.btn2Type,
-          contentbutton:this.fromElementos.value.btn2Cont
-        }
-        console.log('Boton 2-> '+boton2.titlebutton);
-
-        botones.push(boton2);
-      }
-
-      elementos.botones=botones;       
-      
-      for(let i=0;i<this.globals.elementosG.length;i++){
-        if(this.globals.elementosG[i].id_elements==elementos.id_elements)
-          this.globals.elementosG[i]=elementos;
-      }
-
-      this.handleSuccessfulEditTodo(elementos);
-      
-      /*this.elementoService.updateElementos(elementos).subscribe(response=>{
-        for(let i=0;i<this.globals.AllBlocks.length;i++){
-          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-            if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
-              this.globals.AllBlocks[i][j]=datosBloque;
-            }
+          let boton2={
+            id_boton:'sin almacenar',
+            id_elemento:'sin almacenar',
+            titlebutton:this.fromElementos.value.btn2Title,
+            typebutton:this.fromElementos.value.btn2Type,
+            opc_nextid:this.fromElementos.value.opc_nextid2,
+            contentbutton:this.fromElementos.value.btn2Cont
           }
+
+          botones.push(boton2);
         }
-        for(let i=0;i<this.globals.AllBlocks.length;i++){
-          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-            console.log(i+","+j+" -> "+this.globals.AllBlocks[i][j].namestate);
+        elementos.botones=botones;
+        this.globals.elementosG.push(elementos);
+        this.handleSuccessfulSaveTodo(elementos);
+
+      } else{
+        let elementos: InterfazElementosS= this.fromElementos.value;
+        let botones: any[]=[];
+        
+        elementos.id_elements=this.elemento.id_elements;
+        elementos.id_block=this.elemento.id_block;
+        elementos.blocktype='slide';
+
+        let boton1={
+          id_boton:this.elemento.botones[0].id_boton,
+          id_elemento:this.elemento.id_elements,
+          titlebutton:this.fromElementos.value.btn1Title,
+          typebutton:this.fromElementos.value.btn1Type,
+          opc_nextid:this.fromElementos.value.opc_nextid1,
+          contentbutton:this.fromElementos.value.btn1Cont
+        };
+
+        console.log('Boton 2-> '+boton1.titlebutton);
+        botones.push(boton1);
+        //botones[0]=boton1;
+        
+
+        if(this.fromElementos.value.btn2Title!='' && this.elemento.botones.length ==1){
+
+          let boton2={
+            id_boton:'sin almacenar',
+            id_elemento:this.elemento.id_elements,
+            titlebutton:this.fromElementos.value.btn2Title,
+            typebutton:this.fromElementos.value.btn2Type,
+            opc_nextid:this.fromElementos.value.opc_nextid2,
+            contentbutton:this.fromElementos.value.btn2Cont
           }
+          console.log('Boton 2-> '+boton2.titlebutton);
+
+          botones.push(boton2);
         }
-      });
-      this.handleSuccessfulEditTodo(elementos);
-        //.catch(err => console.error(err));*/
+        else if(this.fromElementos.value.btn2Title!='' && this.elemento.botones.length ==2){
+
+          let boton2={
+            id_boton:'sin almacenar',
+            id_elemento:this.elemento.botones[1].id_boton,
+            titlebutton:this.fromElementos.value.btn2Title,
+            typebutton:this.fromElementos.value.btn2Type,
+            opc_nextid:this.fromElementos.value.opc_nextid2,
+            contentbutton:this.fromElementos.value.btn2Cont
+          }
+          console.log('Boton 2-> '+boton2.titlebutton);
+
+          botones.push(boton2);
+        }
+
+        elementos.botones=botones;       
+        
+        for(let i=0;i<this.globals.elementosG.length;i++)
+          if(this.globals.elementosG[i].id_elements == elementos.id_elements && this.elemento.title == this.globals.elementosG[i].title)
+            this.globals.elementosG[i]=elementos;
+        
+
+        this.handleSuccessfulEditTodo(elementos);
+        
+      
+      }
     }
+    else
+      alert("Todos los campos deben ser llenados");
      
+  }
+
+  validar_datos(){
+    if(this.globals.bandera_slide_nx == 'Una transición por elemento'){
+      if((this.fromElementos.value.btn1Cont == '' && this.fromElementos.value.opc_nextid1 != 'Generar automaticamente') || (this.fromElementos.value.btn2Cont == '' && this.fromElementos.value.btn2Title != '' && this.fromElementos.value.opc_nextid2 != 'Generar automaticamente' && this.fromElementos.value.btn2Type == 'postback') || (this.fromElementos.value.btn2Type == 'web_url' && this.fromElementos.value.btn2Cont == ''))
+        return false;
+      if((this.fromElementos.value.btn1Type == 'postback' && this.fromElementos.value.opc_nextid1 == '') || (this.fromElementos.value.btn2Title != '' && this.fromElementos.value.btn2Type == 'postback' && this.fromElementos.value.opc_nextid2 == ''))
+        return false;      
+    }
+    else{
+      if(this.fromElementos.value.btn1Cont == '' || (this.fromElementos.value.btn2Cont == '' && this.fromElementos.value.btn2Title != ''))
+        return false;
+    }  
+
+    return true;
+  }
+  
+
+  control_required(){
+    let pos_boton = document.getElementById("btn1Cont");
+    
+    if(this.fromElementos.value.opc_nextid1=='Generar automaticamente')
+      pos_boton.removeAttribute("required");
+    else if(this.fromElementos.value.opc_nextid1=='Seleccionar de la lista')
+      pos_boton.setAttribute("required","");
   }
 
   handleSuccessfulSaveTodo(datos: InterfazElementosS) {

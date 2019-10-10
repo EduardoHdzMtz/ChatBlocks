@@ -44,10 +44,11 @@ export class Globals {
               }
               else if(this.AllBlocks[i][j].blocktype=='slide' && this.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
                 for(let cont_e=0;cont_e<this.AllBlocks[i][j].elementos.length;cont_e++)
-                  if(this.AllBlocks[i][j].elementos[cont_e].opc_nextid == 'Generar automaticamente'){
-                    this.AllBlocks[i][j].elementos[cont_e].nextid= this.AllBlocks[i+1][contNextArr].namestate;
-                    contNextArr=this.validarCont(contNextArr, i);
-                  }
+                  for(let cont_btn=0;cont_btn<this.AllBlocks[i][j].elementos[cont_e].botones.length;cont_btn++)
+                    if(this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].opc_nextid == 'Generar automaticamente'){
+                      this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].contentbutton= this.AllBlocks[i+1][contNextArr].namestate;
+                      contNextArr=this.validarCont(contNextArr, i);
+                    }
               }
               else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                 let opc_type=this.AllBlocks[i][j].opc_nextid.split(",");
@@ -76,8 +77,9 @@ export class Globals {
                 this.AllBlocks[i][j].next_id= '';
               else if(this.AllBlocks[i][j].blocktype=='slide' && this.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
                 for(let cont_e=0;cont_e<this.AllBlocks[i][j].elementos.length;cont_e++)
-                  if(this.AllBlocks[i][j].elementos[cont_e].opc_nextid == 'Generar automaticamente')
-                    this.AllBlocks[i][j].elementos[cont_e].nextid= '';
+                  for(let cont_btn=0;cont_btn<this.AllBlocks[i][j].elementos[cont_e].botones.length;cont_btn++)
+                    if(this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].opc_nextid == 'Generar automaticamente')
+                      this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].contentbutton= '';
               }                
               else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                 let opc_type=this.AllBlocks[i][j].opc_nextid.split(",");
@@ -110,8 +112,9 @@ export class Globals {
                     }
                     else if(this.AllBlocks[i][j].blocktype=='slide' && this.AllBlocks[i][j].opc_elm=='Una transición por elemento'){
                       for(let cont_e=0;cont_e<this.AllBlocks[i][j].elementos.length;cont_e++)
-                        if(this.AllBlocks[i][j].elementos[cont_e].opc_nextid == 'Generar automaticamente')
-                          this.AllBlocks[i][j].elementos[cont_e].nextid= this.AllBlocks[y][0].namestate;
+                        for(let cont_btn=0;cont_btn<this.AllBlocks[i][j].elementos[cont_e].botones.length;cont_btn++)
+                          if(this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].opc_nextid == 'Generar automaticamente')
+                            this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].contentbutton= this.AllBlocks[y][0].namestate;
                     }
                     else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                       let opc_nx=this.AllBlocks[i][j].opc_nextid.split(",");

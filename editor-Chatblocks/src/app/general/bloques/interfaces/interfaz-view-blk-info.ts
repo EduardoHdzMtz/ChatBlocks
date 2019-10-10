@@ -136,7 +136,8 @@ export interface InterfazBotones{
     id_elemento: string,
     titlebutton: string,
     typebutton: string,
-    contentbutton: string
+    contentbutton: string,
+    opc_nextid: string
 }
 
 export interface InterfazElementosS{
@@ -146,8 +147,6 @@ export interface InterfazElementosS{
     title: string,
     image_url: string,
     subtitle: string,
-    opc_nextid: string,
-    nextid: string,
     botones: any[];    
 }
 

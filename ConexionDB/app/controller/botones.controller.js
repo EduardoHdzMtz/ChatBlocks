@@ -8,7 +8,8 @@ exports.create = (req, res) => {
 				"id_elemento": req.body.id_elemento,
                 "titlebutton": req.body.titlebutton,
                 "typebutton": req.body.typebutton,
-                "contentbutton": req.body.contentbutton
+				"contentbutton": req.body.contentbutton,
+				"opc_nextid": req.body.opc_nextid,
             }
         ).then(botones => {
 				// Send created customer to client

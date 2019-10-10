@@ -138,9 +138,18 @@ export class FromSaveCBComponent implements OnInit {
     let cadNI: string='';
 
     if(this.globals.AllBlocks[fila][columna].opc_elm == 'Una transición por elemento'){
-      cadNI=this.globals.AllBlocks[fila][columna].elementos[0].nextid;
+      cadNI=this.globals.AllBlocks[fila][columna].elementos[0].botones[0].contentbutton;        
+        
+      if(this.globals.AllBlocks[fila][columna].elementos[0].botones.length == 2)
+        if(this.globals.AllBlocks[fila][columna].elementos[0].botones[1].typebutton == 'postback')
+          cadNI=cadNI+','+this.globals.AllBlocks[fila][columna].elementos[0].botones[1].contentbutton;
+      
       for(let i=1;i<this.globals.AllBlocks[fila][columna].elementos.length;i++)
-        cadNI=cadNI+','+this.globals.AllBlocks[fila][columna].elementos[i].nextid;
+        for(let cont_btn=0;cont_btn<this.globals.AllBlocks[fila][columna].elementos[i].botones.length;cont_btn++){
+          if(this.globals.AllBlocks[fila][columna].elementos[i].botones[cont_btn].typebutton == 'postback')
+            cadNI=cadNI+','+this.globals.AllBlocks[fila][columna].elementos[i].botones[cont_btn].contentbutton;
+        }
+      
       this.globals.AllBlocks[fila][columna].next_id=cadNI; 
     }
   }

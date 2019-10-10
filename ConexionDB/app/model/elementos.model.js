@@ -14,12 +14,6 @@ module.exports = (sequelize, Sequelize) => {
 	    },
         subtitle:{
 			type: Sequelize.STRING
-      },
-      opc_nextid:{
-        type: Sequelize.STRING
-      },
-      nextid:{
-        type: Sequelize.STRING
       }
     },
     {

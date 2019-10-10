@@ -76,7 +76,7 @@ export class FromBlockSlideComponent implements OnInit {
   
 
   saveBlockSlide(c_e: string) {
-    if(this.globals.elementosG.length > 0){
+    if(this.globals.elementosG.length > 0 && this.valiacion_datos() && (c_e == 'crear')){
     if (this.fromBlksSlide.invalid) {
       return;
     }
@@ -91,22 +91,28 @@ export class FromBlockSlideComponent implements OnInit {
       datosBloque.pos_y=this.globals.AllBlocks.length-1;
       datosBloque.tag_salida=false;
       let cadNI: string='';
+      let botones_elm;
       
       if(this.fromBlksSlide.value.opc_elm == 'Una sola transición'){
         datosBloque.next_id=this.fromBlksSlide.value.next_id;
       }
       else if(this.fromBlksSlide.value.opc_elm == 'Una transición por elemento'){
-        cadNI=this.globals.elementosG[0].nextid;
-        for(let i=1;i<this.globals.elementosG.length;i++){
-          cadNI=cadNI+','+this.globals.elementosG[i].nextid;
-        }
-        datosBloque.next_id=cadNI;
-        for(let elm=1;elm<this.globals.elementosG.length;elm++){
-          if(this.globals.elementosG[elm].opc_nextid == 'Seleccionar de la lista'){
-            datosBloque.tag_salida=true;
-            break;
+        this.validar_datos_botones();  
+        cadNI=this.globals.elementosG[0].botones[0].contentbutton;        
+        
+        if(this.globals.elementosG[0].botones.length == 2)
+          if(this.globals.elementosG[0].botones[1].typebutton == 'postback')
+            cadNI=cadNI+','+this.globals.elementosG[0].botones[1].contentbutton;
+        
+        for(let i=1;i<this.globals.elementosG.length;i++)
+          for(let cont_btn=0;cont_btn<this.globals.elementosG[i].botones.length;cont_btn++){
+            if(this.globals.elementosG[i].botones[cont_btn].typebutton == 'postback')
+              cadNI=cadNI+','+this.globals.elementosG[i].botones[cont_btn].contentbutton;
+            if(this.globals.elementosG[i].botones[cont_btn].opc_nextid == 'Seleccionar de la lista' && datosBloque.tag_salida == false)
+              datosBloque.tag_salida=true;
           }
-        }
+      
+        datosBloque.next_id=cadNI;
       }
 
       this.blkSlideService.addDatosBlkSlide(datosBloque).subscribe(response =>{
@@ -134,37 +140,32 @@ export class FromBlockSlideComponent implements OnInit {
       
       let cadNI: string='';
 
+
       if(this.fromBlksSlide.value.opc_elm == 'Una sola transición'){
         datosBloque.next_id=this.fromBlksSlide.value.next_id;
       }
       else if(this.fromBlksSlide.value.opc_elm == 'Una transición por elemento'){
-        cadNI=this.globals.elementosG[0].nextid;
-        for(let i=1;i<this.globals.elementosG.length;i++){
-          cadNI=cadNI+','+this.globals.elementosG[i].nextid;
-        }
-        datosBloque.next_id=cadNI;
-        for(let elm=1;elm<this.globals.elementosG.length;elm++){
-          if(this.globals.elementosG[elm].opc_nextid == 'Seleccionar de la lista'){
-            datosBloque.tag_salida=true;
-            break;
+        this.validar_datos_botones();  
+        cadNI=this.globals.elementosG[0].botones[0].contentbutton;        
+        
+        if(this.globals.elementosG[0].botones.length == 2)
+          if(this.globals.elementosG[0].botones[1].typebutton == 'postback')
+            cadNI=cadNI+','+this.globals.elementosG[0].botones[1].contentbutton;
+        
+        for(let i=1;i<this.globals.elementosG.length;i++)
+          for(let cont_btn=0;cont_btn<this.globals.elementosG[i].botones.length;cont_btn++){
+            if(this.globals.elementosG[i].botones[cont_btn].typebutton == 'postback')
+              cadNI=cadNI+','+this.globals.elementosG[i].botones[cont_btn].contentbutton;
+            if(this.globals.elementosG[i].botones[cont_btn].opc_nextid == 'Seleccionar de la lista' && datosBloque.tag_salida == false)
+              datosBloque.tag_salida=true;
           }
-        }
+      
+        datosBloque.next_id=cadNI;
       }
 
       this.bloqueS=datosBloque;
       this.bloqueS.elementos=this.globals.elementosG;
       this.bloqueS.tags_entradas=this.bloque.tags_entradas;
-
-
-      if(this.fromBlksSlide.value.opc_elm == 'Una transición por elemento'){
-        for(let elm=1;elm<this.globals.elementosG.length;elm++)
-          if(this.globals.elementosG[elm].opc_nextid == 'Seleccionar de la lista'){
-            datosBloque.tag_salida=true;
-            break;
-          }
-        
-      }
-      //todo.updateAt = new Date();
       console.log("PASO_1");
       this.blkSlideService.updateBlkSlide(datosBloque).subscribe(response=>{
         this.guardar_edicion_ELM();
@@ -173,11 +174,31 @@ export class FromBlockSlideComponent implements OnInit {
         //.catch(err => console.error(err));
     }
   }
-  else{
+  else if(c_e == 'crear'){
     if(this.bandera_Elementos)
-      alert("Debes tener al menos un elemento generado");
+      alert("Debes tener al menos un elemento generado y llenar todos los campos");
+    
+    
   }
     
+  }
+
+  valiacion_datos(){
+    if(this.fromBlksSlide.value.opc_elm == 'Una sola transición' && (this.fromBlksSlide.value.opc_nextid == '' || (this.fromBlksSlide.value.opc_nextid == 'Seleccionar de la lista' && this.fromBlksSlide.value.next_id == '')))
+      return false;
+    return true;
+  }
+
+  validar_datos_botones(){
+    for(let cont_elm=0;cont_elm<this.globals.elementosG.length;cont_elm++)
+      for(let cont_btn=0;cont_btn<this.globals.elementosG[cont_elm].botones.length;cont_btn++){
+        if(this.globals.elementosG[cont_elm].botones[cont_btn].typebutton != 'postback'){
+          this.globals.elementosG[cont_elm].botones[cont_btn].typebutton= 'postback';
+          this.globals.elementosG[cont_elm].botones[cont_btn].opc_nextid= 'Generar automaticamente';
+        }
+        else if(this.globals.elementosG[cont_elm].botones[cont_btn].opc_nextid == '')
+          this.globals.elementosG[cont_elm].botones[cont_btn].opc_nextid= 'Generar automaticamente';
+      }    
   }
 
   guardar_edicion_ELM(){
@@ -200,15 +221,7 @@ export class FromBlockSlideComponent implements OnInit {
         this.elimina_elementos(i);
         
     }
-      
-
-
-    for(let i=0;i<this.globals.AllBlocks.length;i++){
-      if(this.globals.AllBlocks[i].id_block == this.bloqueS.id_block && this.globals.AllBlocks[i].blocktype == this.bloqueS.blocktype){
-        this.globals.AllBlocks[i]=this.bloqueS;
-      }
-    }
-
+    //?????????
     for(let i=0;i<this.globals.AllBlocks.length;i++){
       for(let j=0;j<this.globals.AllBlocks[i].length;j++){
         if(this.globals.AllBlocks[i][j].id_block == this.bloqueS.id_block && this.globals.AllBlocks[i][j].blocktype == this.bloqueS.blocktype){
@@ -230,19 +243,32 @@ export class FromBlockSlideComponent implements OnInit {
   editar_elemento(i: number){
     this.elementoService.updateElementos(this.bloqueS.elementos[i]).subscribe(response=>{
       this.botonesService.updateBoton(this.bloqueS.elementos[i].botones[0]).subscribe(response=> {
+        console.log("Boton actualizado: "+this.bloqueS.elementos[i].botones[0].titlebutton+", id: "+this.bloqueS.elementos[i].botones[0].id_boton);
         for(let j=0;j<this.bloque.elementos.length;j++)
-        if(this.bloque.elementos[j].id_elements == this.bloqueS.elementos[i].id_elements){
-          if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 2)
-            this.botonesService.updateBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {});
-          else if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 1)
-            this.botonesService.deleteBoton(this.bloque.elementos[j].botones[1].id_boton).subscribe(response=> {});
-          else if(this.bloque.elementos[j].botones.length == 1 && this.bloqueS.elementos[i].botones.length == 2)
-            this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {
-              const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[1].titlebutton+'"}';
-              this.botonesService.getBotonDt(datos).subscribe(responseB=> {
-                this.bloqueS.elementos[i].botones[1].id_boton=responseB[0].id_boton;
+          if(this.bloque.elementos[j].id_elements == this.bloqueS.elementos[i].id_elements){
+            if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 2){
+              if(this.bloqueS.elementos[i].botones[1].id_boton != 'sin almacenar'){
+                this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {
+                  const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[1].titlebutton+'"}';
+                  this.botonesService.getBotonDt(datos).subscribe(responseB=> {
+                    this.bloqueS.elementos[i].botones[1].id_boton=responseB[0].id_boton;
+                  });
+                });
+                this.botonesService.deleteBoton(this.bloque.elementos[j].botones[1].id_boton).subscribe(response=> {});
+              }
+              else 
+                this.botonesService.updateBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {});
+            }              
+            else if(this.bloque.elementos[j].botones.length == 2 && this.bloqueS.elementos[i].botones.length == 1)
+              this.botonesService.deleteBoton(this.bloque.elementos[j].botones[1].id_boton).subscribe(response=> {});
+            else if(this.bloque.elementos[j].botones.length == 1 && this.bloqueS.elementos[i].botones.length == 2)
+              this.botonesService.addDatosBoton(this.bloqueS.elementos[i].botones[1]).subscribe(response=> {
+                const datos='{"id_elemento": "'+this.bloqueS.elementos[i].id_elements+'", "title": "'+this.bloqueS.elementos[i].botones[1].titlebutton+'"}';
+                this.botonesService.getBotonDt(datos).subscribe(responseB=> {
+                  this.bloqueS.elementos[i].botones[1].id_boton=responseB[0].id_boton;
+                });
               });
-            });
+            break;
           }
       });
     });    
@@ -355,11 +381,13 @@ export class FromBlockSlideComponent implements OnInit {
     
     else if(this.bloqueS.opc_elm=='Una transición por elemento')
       for(let i=0;i<this.bloqueS.elementos.length;i++)
-        if(this.bloqueS.elementos[i]=="Seleccionar de la lista")
-          for(let x=0;x<this.globals.AllBlocks.length;x++)
-            for(let y=0;y<this.globals.AllBlocks[x].length;y++)
-              if(this.globals.AllBlocks[x][y].namestate == this.bloqueS.elementos[i].nextid)
-                this.globals.AllBlocks[x][y].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[i].title);
+        for(let cont_btn=0;cont_btn<this.bloqueS.elementos[i].botones.length;cont_btn++)
+          if(this.bloqueS.elementos[i].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+            for(let x=0;x<this.globals.AllBlocks.length;x++)
+              for(let y=0;y<this.globals.AllBlocks[x].length;y++)
+                if(this.globals.AllBlocks[x][y].namestate == this.bloqueS.elementos[i].botones[cont_btn].contentbutton)
+                  this.globals.AllBlocks[x][y].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[i].title+" -> "+this.bloqueS.elementos[i].botones[cont_btn].contentbutton);
+
   }
 
 
@@ -392,14 +420,14 @@ export class FromBlockSlideComponent implements OnInit {
     }
     else if(this.bloqueS.opc_nextid=="Seleccionar de la lista" && this.edit_opcNX=="Seleccionar de la lista"){
       if((this.edit_NX != this.bloqueS.next_id) || (this.edit_nom_estado != this.bloqueS.namestate))
-      for(let i=0;i<this.globals.AllBlocks.length;i++)
-        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-          if(this.globals.AllBlocks[i][j].namestate == this.edit_NX){
-            this.eliminar_tag(this.edit_nom_estado, i, j);
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+            if(this.globals.AllBlocks[i][j].namestate == this.edit_NX){
+              this.eliminar_tag(this.edit_nom_estado, i, j);
+            }
+            if(this.globals.AllBlocks[i][j].namestate == this.bloqueS.next_id)
+              this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate);
           }
-          if(this.globals.AllBlocks[i][j].namestate == this.bloqueS.next_id)
-            this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate);
-        }
     }
     
     let arr_sigEstado;
@@ -421,24 +449,26 @@ export class FromBlockSlideComponent implements OnInit {
 
   caso2_editTags(){
     for(let elm=0;elm<this.bloque.elementos.length;elm++)
-      if(this.bloque.elementos[elm].opc_nextid == "Seleccionar de la lista")
-        for(let i=0;i<this.globals.AllBlocks.length;i++)
-          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-            if(this.globals.AllBlocks[i][j].namestate == this.bloque.elementos[elm].nextid){
-              this.eliminar_tag((this.bloque.namestate+" -> "+this.bloque.elementos[elm].title), i, j);
-              break;
-            }               
+      for(let cont_btn=0;cont_btn<this.bloque.elementos[elm].botones.length;cont_btn++)
+        if(this.bloque.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+          for(let i=0;i<this.globals.AllBlocks.length;i++)
+            for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+              if(this.globals.AllBlocks[i][j].namestate == this.bloque.elementos[elm].botones[cont_btn].contentbutton){
+                this.eliminar_tag((this.bloque.namestate+" -> "+this.bloque.elementos[elm].title+" -> "+this.bloque.elementos[elm].botones[cont_btn].contentbutton), i, j);
+                break;
+              }             
   }
 
   caso3_editTags(){
     for(let elm=0;elm<this.bloqueS.elementos.length;elm++)
-      if(this.bloque.elementos[elm].opc_nextid == "Seleccionar de la lista")
-        for(let i=0;i<this.globals.AllBlocks.length;i++)
-          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-            if(this.bloqueS.elementos[elm].nextid == this.globals.AllBlocks[i][j].namestate){
-              this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[elm].title);
-              break;
-            }
+      for(let cont_btn=0;cont_btn<this.bloqueS.elementos[elm].botones.length;cont_btn++)
+        if(this.bloque.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+          for(let i=0;i<this.globals.AllBlocks.length;i++)
+            for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+              if(this.bloqueS.elementos[elm].botones[cont_btn].contentbutton == this.globals.AllBlocks[i][j].namestate){
+                this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[elm].title+" -> "+this.bloqueS.elementos[elm].botones[cont_btn].contentbutton);
+                break;
+              }
   }
 
   caso4_editTags(){
@@ -465,7 +495,6 @@ export class FromBlockSlideComponent implements OnInit {
 
   eliminar_tag(nom_estado, i, j){
     for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
-      //console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
       if(this.globals.AllBlocks[i][j].tags_entradas[y]==nom_estado)
         this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
     }
@@ -487,20 +516,24 @@ export class FromBlockSlideComponent implements OnInit {
 
 
   agregarElemento(){
-    
-    if(this.globals.elementosG.length < 11){
-      if(this.fromBlksSlide.value.opc_elm != '')
-        this.globals.bandera_slide_nx=this.fromBlksSlide.value.opc_elm;
 
-      this.bandera_Elementos=false;
-      const modal=this.modalService.open(ElementosComponent);
-      modal.result.then(
-        this.handleModalFromChatBotCloseADD.bind(this),
-        this.handleModalFromChatBotCloseADD.bind(this)
-      )      
+    if(this.fromBlksSlide.value.opc_elm != ''){
+      if(this.globals.elementosG.length < 11){
+        if(this.fromBlksSlide.value.opc_elm != '')
+          this.globals.bandera_slide_nx=this.fromBlksSlide.value.opc_elm;
+
+        this.bandera_Elementos=false;
+        const modal=this.modalService.open(ElementosComponent);
+        modal.result.then(
+          this.handleModalFromChatBotCloseADD.bind(this),
+          this.handleModalFromChatBotCloseADD.bind(this)
+        )      
+      }
+      else
+        alert("Solo puedes generar un maximo de 10 elementos");  
     }
     else
-      alert("Solo puedes generar un maximo de 10 elementos");    
+      alert('Antes de crear un elemento, debes de llenar el campo "Opciones de transicion de estado"' );  
   }
 
 
@@ -540,5 +573,42 @@ export class FromBlockSlideComponent implements OnInit {
           this.globals.elementosG.splice(i, 1);
     }
   }
+
+  /*control_required_opc(){
+
+    let pos_boton = document.getElementById("btn1Cont");
+
+    if(this.fromBlksSlide.value.opc_elm=='Una transición por elemento'){
+      let elemento = document.getElementById("opc_nextid");
+      console.log("CAMPO Una transición por elemento");
+      if(elemento != null){
+
+        elemento.removeAttribute("required");
+        let div = document.getElementById("div_opc_nx").innerHTML='';
+      }
+    }
+    else if(this.fromBlksSlide.value.opc_elm=='Una sola transición'){
+      let div = document.getElementById("div_opc_nx");
+      console.log("CAMPO Una sola transición");
+      //elemento.setAttribute("required","");
+      if(document.getElementById("opc_nextid") == null){
+        div.insertAdjacentHTML('beforeend', '<label for="opc_nextid">Opciones de siguiente estado*</label>');
+        div.insertAdjacentHTML('beforeend', '<select name="OS" id="opc_nextid" placeholder="Selecciona opcion" class="form-control" formControlName="opc_nextid" required><option value="Generar automaticamente">Generar automaticamente</option><option value="Seleccionar de la lista">Seleccionar de la lista</option></select>');
+      }
+
+      
+    let pos_boton = document.getElementById("opc_nextid");
+        
+    if(this.fromBlksSlide.value.opc_elm=='Una sola transición'){
+      if(pos_boton != null){
+        console.log("Una sola transición");
+        pos_boton.setAttribute("required","");
+      }
+      else
+        console.log("vacio");
+    }   
+    
+  }*/
+ 
 
 }

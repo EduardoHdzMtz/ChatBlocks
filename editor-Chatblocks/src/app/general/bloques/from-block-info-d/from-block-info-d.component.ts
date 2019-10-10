@@ -506,11 +506,11 @@ export class FromBlockInfoDComponent implements OnInit {
               }
             }
           }
-          for(let i=0;i<this.globals.AllBlocks.length;i++){
-            for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-              console.log(i+","+j+" -> "+this.globals.AllBlocks[i][j].namestate);
-            }
-          }
+          //for(let i=0;i<this.globals.AllBlocks.length;i++){
+            //for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+              //console.log(i+","+j+" -> "+this.globals.AllBlocks[i][j].namestate);
+            //}
+          //}
           this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
         });
         this.handleSuccessfulEditTodo(datosBloque);
