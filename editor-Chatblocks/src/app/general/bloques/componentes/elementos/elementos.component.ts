@@ -206,8 +206,8 @@ export class ElementosComponent implements OnInit {
         else if(this.fromElementos.value.btn2Title!='' && this.elemento.botones.length ==2){
 
           let boton2={
-            id_boton:'sin almacenar',
-            id_elemento:this.elemento.botones[1].id_boton,
+            id_boton:this.elemento.botones[1].id_boton,
+            id_elemento:this.elemento.id_elements,
             titlebutton:this.fromElementos.value.btn2Title,
             typebutton:this.fromElementos.value.btn2Type,
             opc_nextid:this.fromElementos.value.opc_nextid2,
