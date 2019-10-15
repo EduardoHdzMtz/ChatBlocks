@@ -438,7 +438,7 @@ export class ConstruccionCBComponent implements OnInit {
                   for(let f=0;f<this.globals.AllBlocks.length;f++)
                     for(let k=0;k<this.globals.AllBlocks[f].length;k++)
                       if(this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].contentbutton == this.globals.AllBlocks[f][k].namestate){
-                        this.globals.AllBlocks[f][k].tags_entradas.push(this.globals.AllBlocks[i][j].namestate+" -> "+this.globals.AllBlocks[i][j].elementos[elm].title+" -> "+this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].contentbutton);
+                        this.globals.AllBlocks[f][k].tags_entradas.push(this.globals.AllBlocks[i][j].namestate+" -> "+this.globals.AllBlocks[i][j].elementos[elm].title+" -> "+this.globals.AllBlocks[i][j].elementos[elm].botones[cont_btn].titlebutton);
                         break;
                       }
                 }
@@ -685,30 +685,34 @@ export class ConstruccionCBComponent implements OnInit {
   }
 
   deleteBlkArry(bloque: any, index: number){
-    if(((bloque.blocktype=='informativo' || bloque.blocktype=='input' || bloque.blocktype=='informativoDinamico' || bloque.blocktype=='slideDinamico' || bloque.blocktype=='inputDinamico' || bloque.blocktype=='quickReplyDinamico') && bloque.opc_nextid== 'Seleccionar de la lista') || (bloque.blocktype=='slide' && bloque.opc_elm=='Una sola transición' && bloque.opc_nextid== 'Seleccionar de la lista'))
+    if(((bloque.blocktype=='informativo' || bloque.blocktype=='input' || bloque.blocktype=='informativoDinamico' || bloque.blocktype=='slideDinamico' || bloque.blocktype=='inputDinamico' || bloque.blocktype=='quickReplyDinamico') && bloque.opc_nextid== 'Seleccionar de la lista') || (bloque.blocktype=='slide' && bloque.opc_elm=='Una sola transición' && bloque.opc_nextid== 'Seleccionar de la lista')){
       if(bloque.opc_nextid=='Seleccionar de la lista')
         for(let i=0;i<this.globals.AllBlocks.length;i++)
           for(let j=0;j<this.globals.AllBlocks[i].length;j++)
             if(bloque.next_id==this.globals.AllBlocks[i][j].namestate){
               for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
-                if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate)
-                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1); 
-              
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate){
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+                  return;
+                }
+                               
                  
             }
+    }
     else if(bloque.blocktype=='slide' && bloque.opc_elm=='Una transición por elemento'){
       for(let elm=0;elm<bloque.elementos.length;elm++)
-        if(bloque.elementos[i].opc_nextid == "Seleccionar de la lista")
-          for(let i=0;i<this.globals.AllBlocks.length;i++)
-            for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-              if(bloque.elementos[elm].nextid == this.globals.AllBlocks[i][j].namestate){
-                for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
-                  if(this.globals.AllBlocks[i][j].tags_entradas[y] == (bloque.namestate+" -> "+bloque.elementos[elm].title)){
-                    this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
-                    break;
-                  }
-                break;   
-              }
+        for(let cont_btn=0;cont_btn<bloque.elementos[elm].botones.length;cont_btn++)
+          if(bloque.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+            for(let i=0;i<this.globals.AllBlocks.length;i++)
+              for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+                if(bloque.elementos[elm].botones[cont_btn].contentbutton == this.globals.AllBlocks[i][j].namestate){
+                  for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+                    if(this.globals.AllBlocks[i][j].tags_entradas[y] == (bloque.namestate+" -> "+bloque.elementos[elm].title+" -> "+bloque.elementos[elm].botones[cont_btn].titlebutton)){
+                      this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+                      break;
+                    }
+                  break;   
+                }
     }
 
     for(let i=0;i<this.globals.AllBlocks[index].length;i++){

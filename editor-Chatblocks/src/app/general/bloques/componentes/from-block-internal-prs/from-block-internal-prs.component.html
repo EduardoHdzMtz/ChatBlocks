@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{createMode ? 'Crear: Proceso Interno' : 'Editar: Proceso Interno'}}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form>
+      <select name="OS" id="opc_InernalProcess" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_InernalProcess">
+      <option value="postback">Switch</option>
+      <option value="web_url">Matt</option>
+      <option value="web_url">Matt</option>
+      <option value="web_url">Matt</option>
+    </select>
+    <select name="" id=""></select>
+  </form>
+  <form [formGroup]="from_InternalProcess" (ngSubmit)="save_InternalProcess()" *ngFor="let I_P of Internal_Process, let index2 = index">
+    <div class="div_operacion">
+      <div class="form-group">
+        <label for="operation">Tipo de operación*</label>
+        <input type="text" id="operation" placeholder="Saludo" class="form-control" formControlName="operation" />
+        <span style="color:Red;" *ngIf="from_InternalProcess.controls['operation'].touched && from_InternalProcess.controls['operation'].errors?.required">Dato requerido.</span>
+      </div>
+  
+      <div class="form-group">
+        <label for="data_opt">Datos de la operación*</label>
+        <input type="text" id="data_opt" placeholder="Hola!" class="form-control" formControlName="data_opt" />
+        <span style="color:Red;" *ngIf="from_InternalProcess.controls['data_opt'].touched && from_InternalProcess.controls['data_opt'].errors?.required">Dato requerido.</span>
+      </div>  
+    </div>
+      
+
+       
+
+  </form>
+  
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <button class="btn btn-primary" (click)="save_InternalProcess()" [disabled]="from_InternalProcess.invalid">Save</button>
+</div>

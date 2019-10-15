@@ -87,7 +87,7 @@ exports.findBoton = (req, res) => {
 
 exports.deleteByIdELM= (req, res) => {
 	const id = req.params.id_elemento;
-	Elementos2.destroy({
+	Botones2.destroy({
 			where: { id_elemento: id }
 		}).then(() => {
 			res.status(200).json( { msg: 'Fueron eliminados los bloques informativos con Id_robot = ' + id } );

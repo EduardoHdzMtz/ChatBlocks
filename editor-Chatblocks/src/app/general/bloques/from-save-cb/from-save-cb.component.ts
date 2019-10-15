@@ -12,6 +12,8 @@ import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
 import { BlkSlideServiceDin } from 'src/app/sendToDB/blkSlideDin.service';
 import { BlkInputServiceDin } from 'src/app/sendToDB/blkIputDin.service';
 import { BlkQRServiceDin } from 'src/app/sendToDB/blkQRDin.service';
+import { ElementoService } from 'src/app/sendToDB/elementos.service';
+import { BotonesService } from 'src/app/sendToDB/botones.service';
 
 @Component({
   selector: 'app-from-save-cb',
@@ -36,6 +38,8 @@ export class FromSaveCBComponent implements OnInit {
     private blkInfoDService: BlkInfoServiceDin,
     private blkSlideDService: BlkSlideServiceDin,
     private blkInputDService: BlkInputServiceDin,
+    private elementoService: ElementoService,
+    private botonesService: BotonesService,
     public globals: Globals
     ) { }
 
@@ -120,6 +124,11 @@ export class FromSaveCBComponent implements OnInit {
         else if(this.globals.AllBlocks[i][j].blocktype=='slide'){
           this.actualizar_Slide(i,j);
           this.blkSlideService.updateBlkSlide(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          for(let cont_elm=0;cont_elm<this.globals.AllBlocks[i][j].elementos.length;cont_elm++){
+            this.elementoService.updateElementos(this.globals.AllBlocks[i][j].elementos[cont_elm]).subscribe(response=>{});
+            for(let cont_btn=0;cont_btn<this.globals.AllBlocks[i][j].elementos[cont_elm].botones.length;cont_btn++)
+              this.botonesService.updateBoton(this.globals.AllBlocks[i][j].elementos[cont_elm].botones[cont_btn]).subscribe(response=> {});
+          }
         }
         else if(this.globals.AllBlocks[i][j].blocktype=='informativoDinamico')
           this.blkInfoDService.updateBlkInfo(this.globals.AllBlocks[i][j]).subscribe(response=>{});

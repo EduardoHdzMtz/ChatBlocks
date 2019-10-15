@@ -290,9 +290,12 @@
                                           </thead>
                                           <tbody style="width: 100%;">
                                               <div style="width: 100%;" *ngFor="let elemento of bloque.elementos , let indexTags = index ">
-                                                    <tr style="width: 100%;" *ngIf="elemento.opc_nextid == 'Seleccionar de la lista'">
-                                                            <th><p id="nombreU" class="card-text">  {{ elemento.nextid }}  </p></th>
+                                                    <tr style="width: 100%;" *ngIf="elemento.botones[0].opc_nextid == 'Seleccionar de la lista'">
+                                                            <th><p id="nombreU" class="card-text">  {{ elemento.botones[0].contentbutton }}  </p></th>
                                                       </tr>
+                                                    <tr style="width: 100%;" *ngIf="elemento.botones.length == 2 && elemento.botones[1].opc_nextid == 'Seleccionar de la lista'">
+                                                        <th><p id="nombreU" class="card-text">  {{ elemento.botones[1].contentbutton }}  </p></th>
+                                                     </tr>
                                               </div>
                                                 
                                           </tbody>

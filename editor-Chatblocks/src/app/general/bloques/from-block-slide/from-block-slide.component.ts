@@ -25,6 +25,7 @@ export class FromBlockSlideComponent implements OnInit {
   edit_opcNX: string;
   edit_NX: string;
   edit_nom_estado: string;
+  blk_edit: any;
   
 
   constructor(
@@ -65,8 +66,11 @@ export class FromBlockSlideComponent implements OnInit {
   }
 
   loadBloque(bloque){
+    
     this.fromBlksSlide.patchValue(bloque);
     this.globals.elementosG=bloque.elementos;
+    this.blk_edit=JSON.parse(JSON.stringify( bloque ));
+    
 
     this.edit_opcElm=bloque.opc_elm;
     this.edit_opcNX=bloque.opc_nextid;
@@ -359,11 +363,11 @@ export class FromBlockSlideComponent implements OnInit {
       });
     }
     else{
+      this.crear_tag();
       this.globals.AllBlocks.pop();
       this.globals.AllBlocks.push([this.bloqueS]);
       this.globals.AllBlocks.push([]);
-      this.globals.generar_Id();
-      this.crear_tag();
+      this.globals.generar_Id();      
       this.handleSuccessfulSaveTodo(this.bloqueS);
       this.globals.elementosG=[]; 
       return;
@@ -373,37 +377,47 @@ export class FromBlockSlideComponent implements OnInit {
 
   crear_tag(){
 
-    if(this.bloqueS.opc_elm=='Una sola transición' && this.bloqueS.opc_nextid== 'Seleccionar de la lista')
+    if(this.bloqueS.opc_elm=='Una sola transición' && this.bloqueS.opc_nextid== 'Seleccionar de la lista'){
       for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-          if(this.globals.AllBlocks[i][j].namestate == this.bloqueS.next_id)
+          if(this.globals.AllBlocks[i][j].namestate == this.bloqueS.next_id){
             this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate);
-    
-    else if(this.bloqueS.opc_elm=='Una transición por elemento')
+            return;
+          }
+    }
+    else if(this.bloqueS.opc_elm=='Una transición por elemento'){
       for(let i=0;i<this.bloqueS.elementos.length;i++)
         for(let cont_btn=0;cont_btn<this.bloqueS.elementos[i].botones.length;cont_btn++)
           if(this.bloqueS.elementos[i].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
             for(let x=0;x<this.globals.AllBlocks.length;x++)
               for(let y=0;y<this.globals.AllBlocks[x].length;y++)
-                if(this.globals.AllBlocks[x][y].namestate == this.bloqueS.elementos[i].botones[cont_btn].contentbutton)
-                  this.globals.AllBlocks[x][y].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[i].title+" -> "+this.bloqueS.elementos[i].botones[cont_btn].contentbutton);
-
+                if(this.globals.AllBlocks[x][y].namestate == this.bloqueS.elementos[i].botones[cont_btn].contentbutton){
+                  this.globals.AllBlocks[x][y].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[i].title+" -> "+this.bloqueS.elementos[i].botones[cont_btn].titlebutton);
+                  break;
+                }                  
+    }
   }
 
 
   editar_tag(){
-    if(this.bloqueS.opc_elm=='Una sola transición' && this.edit_opcElm=='Una sola transición')
+    if(this.bloqueS.opc_elm=='Una sola transición' && this.edit_opcElm=='Una sola transición'){
       this.caso1_editTags();
+      this.bloqueS.tag_salida=false;
+    }
     else if(this.bloqueS.opc_elm=='Una sola transición' && this.edit_opcElm=='Una transición por elemento'){
       this.caso2_editTags();
       this.crear_tag();
+      this.bloqueS.tag_salida=false;
     }
     else if(this.bloqueS.opc_elm=='Una transición por elemento' && this.edit_opcElm=='Una transición por elemento'){
       this.caso2_editTags();
       this.caso3_editTags();
+      this.bloqueS.tag_salida=true;
     }
-    else if(this.bloqueS.opc_elm=='Una transición por elemento' && this.edit_opcElm=='Una sola transición')
+    else if(this.bloqueS.opc_elm=='Una transición por elemento' && this.edit_opcElm=='Una sola transición'){
       this.caso4_editTags();
+      this.bloqueS.tag_salida=true;
+    }
   }
 
   caso1_editTags(){
@@ -448,35 +462,36 @@ export class FromBlockSlideComponent implements OnInit {
   }
 
   caso2_editTags(){
-    for(let elm=0;elm<this.bloque.elementos.length;elm++)
-      for(let cont_btn=0;cont_btn<this.bloque.elementos[elm].botones.length;cont_btn++)
-        if(this.bloque.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+    for(let elm=0;elm<this.blk_edit.elementos.length;elm++)
+      for(let cont_btn=0;cont_btn<this.blk_edit.elementos[elm].botones.length;cont_btn++)
+        if(this.blk_edit.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
           for(let i=0;i<this.globals.AllBlocks.length;i++)
             for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-              if(this.globals.AllBlocks[i][j].namestate == this.bloque.elementos[elm].botones[cont_btn].contentbutton){
-                this.eliminar_tag((this.bloque.namestate+" -> "+this.bloque.elementos[elm].title+" -> "+this.bloque.elementos[elm].botones[cont_btn].contentbutton), i, j);
+              if(this.globals.AllBlocks[i][j].namestate == this.blk_edit.elementos[elm].botones[cont_btn].contentbutton){
+                this.eliminar_tag((this.blk_edit.namestate+" -> "+this.blk_edit.elementos[elm].title+" -> "+this.blk_edit.elementos[elm].botones[cont_btn].titlebutton), i, j);
                 break;
-              }             
+              }
+              
   }
 
   caso3_editTags(){
     for(let elm=0;elm<this.bloqueS.elementos.length;elm++)
       for(let cont_btn=0;cont_btn<this.bloqueS.elementos[elm].botones.length;cont_btn++)
-        if(this.bloque.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
+        if(this.bloqueS.elementos[elm].botones[cont_btn].opc_nextid == "Seleccionar de la lista")
           for(let i=0;i<this.globals.AllBlocks.length;i++)
             for(let j=0;j<this.globals.AllBlocks[i].length;j++)
               if(this.bloqueS.elementos[elm].botones[cont_btn].contentbutton == this.globals.AllBlocks[i][j].namestate){
-                this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[elm].title+" -> "+this.bloqueS.elementos[elm].botones[cont_btn].contentbutton);
+                this.globals.AllBlocks[i][j].tags_entradas.push(this.bloqueS.namestate+" -> "+this.bloqueS.elementos[elm].title+" -> "+this.bloqueS.elementos[elm].botones[cont_btn].titlebutton);
                 break;
               }
   }
 
   caso4_editTags(){
-    if(this.bloque.opc_nextid == "Seleccionar de la lista")
+    if(this.blk_edit.opc_nextid == "Seleccionar de la lista")
       for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++)
-          if(this.globals.AllBlocks[i][j].namestate == this.bloque.next_id){
-            this.eliminar_tag(this.bloque.namestate, i, j);
+          if(this.globals.AllBlocks[i][j].namestate == this.blk_edit.next_id){
+            this.eliminar_tag(this.blk_edit.namestate, i, j);
             break;
           }
     this.caso3_editTags();

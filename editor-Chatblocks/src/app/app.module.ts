@@ -47,6 +47,7 @@ import { FromBlockInfoDComponent } from './general/bloques/from-block-info-d/fro
 import { FromBlockSlideDComponent } from './general/bloques/from-block-slide-d/from-block-slide-d.component';
 import { FromBlockInputDComponent } from './general/bloques/from-block-input-d/from-block-input-d.component';
 import { FromBlockQRDComponent } from './general/bloques/from-block-qrd/from-block-qrd.component';
+import { FromBlockInternalPrsComponent } from './general/bloques/componentes/from-block-internal-prs/from-block-internal-prs.component';
 
 
 const config = new AuthServiceConfig([
@@ -87,7 +88,8 @@ export function provideConfig() {
     FromBlockInfoDComponent,
     FromBlockSlideDComponent,
     FromBlockInputDComponent,
-    FromBlockQRDComponent
+    FromBlockQRDComponent,
+    FromBlockInternalPrsComponent
   ],
   imports: [
     BrowserModule,
@@ -130,7 +132,8 @@ export function provideConfig() {
     FromBlockSlideDComponent,
     FromBlockInputDComponent,
     FromBlockQRDComponent,
-    FromBlockTicketComponent
+    FromBlockTicketComponent,
+    FromBlockInternalPrsComponent
   ]
 })
 export class AppModule { }

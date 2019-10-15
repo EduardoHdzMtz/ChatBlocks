@@ -1,3 +1,5 @@
+import { setTNodeAndViewData } from '@angular/core/src/render3/state'
+
 export interface InterfazChatBot {
     id_robot: string,
     name_robot: string,
@@ -227,6 +229,15 @@ export interface InterfazViewBlkTicket{
     pos_x: number,
     pos_y: number,
     tags_entradas: any[];
+}
+
+export interface IntefazInternalProcess{
+    id_block: number,
+    id_host: number,
+    order: number,
+    type_host: string,
+    operation: string,
+    data_opt: string
 }
 
 
