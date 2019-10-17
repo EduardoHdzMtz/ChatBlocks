@@ -4,6 +4,7 @@ import { FromBlockInfoComponent } from '../bloques/from-block-info/from-block-in
 import { FromBlockInputComponent } from '../bloques/from-block-input/from-block-input.component';
 import { FromBlockQRComponent } from '../bloques/from-block-qr/from-block-qr.component';
 import { FromBlockSlideComponent } from '../bloques/from-block-slide/from-block-slide.component';
+import { FromBlockInternalPrsComponent } from '../bloques/componentes/from-block-internal-prs/from-block-internal-prs.component';
 
 import { InterfazViewBlkInfo } from '../bloques/interfaces/interfaz-view-blk-info';
 import { FromBlockInfoDComponent } from '../bloques/from-block-info-d/from-block-info-d.component';
@@ -135,4 +136,12 @@ export class MenuHerramientasComponent implements OnInit {
     )
   }
 
+  addBlock_InternalProcess(){
+    const modal=this.modalService.open(FromBlockInternalPrsComponent)
+    modal.result.then(
+      this.handleModalFromBlockSlideClose.bind(this),
+      this.handleModalFromBlockSlideClose.bind(this)
+    )
+  }
+  
 }

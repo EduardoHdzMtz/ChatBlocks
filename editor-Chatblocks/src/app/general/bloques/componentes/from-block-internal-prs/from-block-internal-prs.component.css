@@ -2,3 +2,26 @@
     background: #EEEFF0;
     border: black;
 }
+
+#campo_btn{
+    border-radius: 50px;
+    float: right;
+    
+}
+
+.cont_InternalProcess{
+    float: right; 
+    background: rgb(9, 0, 90); 
+    color: white; 
+    padding-top: 5px; 
+    padding-left: 10px; 
+    padding-right: 10px; 
+    padding-bottom: 5px;
+}
+
+.linea_InternalProcess{
+    width: 100%; 
+    height: 2px; 
+    background: rgb(9, 0, 90); 
+    margin-bottom: 10px;
+}

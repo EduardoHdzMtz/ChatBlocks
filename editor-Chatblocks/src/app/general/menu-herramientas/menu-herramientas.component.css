@@ -5,7 +5,7 @@
   background-color: #2A6C6C;
  }
 
-#btnHerramienta1, #btnHerramienta2, #btnHerramienta3, #btnHerramienta4, #btnHerramienta5, #btnHerramienta6, #btnHerramienta7, #btnHerramienta8{
+#btnHerramienta1, #btnHerramienta2, #btnHerramienta3, #btnHerramienta4, #btnHerramienta5, #btnHerramienta6, #btnHerramienta7, #btnHerramienta8, #btnHerramienta9{
   width: 95%;
   color: black;  
   margin-top: 6%;
@@ -88,6 +88,14 @@
 
 #btnHerramienta8:hover{
   background: #e2e622e3 !important;
+  color: #fff;
+  box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
+  width: 98%;
+  font-size: 20px;
+}
+
+#btnHerramienta9:hover{
+  background: #F49000 !important;
   color: #fff;
   box-shadow: 0px 12px 16px 0px rgba(0,0,0,0.24),0 17px 50px rgba(0,0,0,0.16);
   width: 98%;

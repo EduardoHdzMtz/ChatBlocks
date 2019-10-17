@@ -1,41 +1,107 @@
 <div class="modal-header">
   <h4 class="modal-title">{{createMode ? 'Crear: Proceso Interno' : 'Editar: Proceso Interno'}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
 </div>
 <div class="modal-body">
-  <form>
-      <select name="OS" id="opc_InernalProcess" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_InernalProcess">
-      <option value="postback">Switch</option>
-      <option value="web_url">Matt</option>
-      <option value="web_url">Matt</option>
-      <option value="web_url">Matt</option>
+  <form [formGroup]="from_Selector">
+    <select name="OS" id="opc_InernalProcess" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_InernalProcess">
+        <option value="Matt">Matt</option>
+        <option value="if">if</option>
+        <option value="for">else</option>
+        <option value="Switch">Switch</option>
+        <option value="Modificar variables">Crear variables</option>
+        <option value="Modificar variables">Modificar variables</option>
+        <option value="Eliminar variables">Eliminar variables</option>
     </select>
-    <select name="" id=""></select>
-  </form>
-  <form [formGroup]="from_InternalProcess" (ngSubmit)="save_InternalProcess()" *ngFor="let I_P of Internal_Process, let index2 = index">
-    <div class="div_operacion">
-      <div class="form-group">
-        <label for="operation">Tipo de operación*</label>
-        <input type="text" id="operation" placeholder="Saludo" class="form-control" formControlName="operation" />
-        <span style="color:Red;" *ngIf="from_InternalProcess.controls['operation'].touched && from_InternalProcess.controls['operation'].errors?.required">Dato requerido.</span>
+    <button mat-button (click)="agregarOperacion(from_Selector.value.opc_InernalProcess)">Agregar</button>
+  </form><br/>
+
+  <div class="div_operacion" *ngFor="let I_P of Internal_Process, let index2 = index">
+    <form [formGroup]="from_InternalProcess[index2]" (ngSubmit)="save_InternalProcess()" >    
+
+      <div class="form-group" *ngIf="I_P.type_operation == 'Matt'">
+
+        <div style="text-align: center;">
+            <label style="font-weight: bold;">Matt</label>
+            <label class="cont_InternalProcess">{{index2+1}}</label>
+        </div>
+        <div class="linea_InternalProcess"></div>
+
+        <label for="data_1">Nombre de la variable*</label>
+        <input type="text" id="data_1" placeholder="variable 1" class="form-control" formControlName="data_1" />
+        <label for="opc_operation">Operacion*</label>
+        <select name="OS" id="opc_operation" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_operation" >
+            <option value=" + "> Suma </option>
+            <option value=" - "> Resta </option>
+            <option value=" * "> Multiplicación </option>
+            <option value=" / "> Divición </option>
+          </select>
+        <label for="opc_data">Tipo de dato*</label>
+        <select name="OS" id="opc_data" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_data">
+          <option value="Variable">Variable</option>
+          <option value="Constante">Constante</option>
+        </select>
+        <input type="text" id="data_2" placeholder="Saludo" class="form-control" formControlName="data_2" *ngIf="from_InternalProcess[index2].value.opc_data == 'Variable'"/>
+        <div *ngIf="from_InternalProcess[index2].value.opc_data == 'Constante'">
+          <select name="OS" id="data_2" placeholder="Selecciona una opción de boton" class="form-control" formControlName="data_2" >
+            <option *ngFor="let num of this.numeracion"  [value]="num">{{num}}</option>
+          </select>
+        </div>
+        <br/>
+        <div style="text-align: center;">
+          <label for="operation">{{from_InternalProcess[index2].value.data_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.data_2}}</label>
+          <button id="campo_btn" mat-button (click)="eliminarOperacion(index2)">
+              <mat-icon>delete</mat-icon>
+          </button>
+        </div><br/>
+        
       </div>
+
+      <div class="form-group" *ngIf="I_P.type_operation == 'if'">
+        <div style="text-align: center;">
+            <label  style="font-weight: bold;">If</label>
+            <label class="cont_InternalProcess">{{index2+1}}</label>
+        </div>
+        <div class="linea_InternalProcess"></div>
+        
+        <label for="operation">Nombre de la variable*</label>
+        <input type="text" id="dato_1" placeholder="variable 1" class="form-control"  formControlName="data_1"/>
+        <label for="opc_compare">Comparador*</label>
+        <select name="OS" id="opc_compare" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_compare" >
+          <option value=" = "> = </option>
+          <option value=" < "> &lt; </option>
+          <option value=" > "> &gt; </option>
+          <option value=" != "> != </option>
+        </select>
+        <label for="opc_data">Tipo de dato*</label>
+        <select name="OS" id="opc_data" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_data">
+          <option value="Variable">Variable</option>
+          <option value="Constante">Constante</option>
+        </select>
+        <input type="text" id="data_2" placeholder="variable 2" class="form-control" formControlName="data_2" *ngIf="from_InternalProcess[index2].value.opc_data == 'Variable'"/>
+        <div *ngIf="from_InternalProcess[index2].value.opc_data == 'Constante'">
+          <select name="OS" id="data_2" placeholder="Selecciona una opción de boton" class="form-control" formControlName="data_2" >
+            <option *ngFor="let num of this.numeracion"  [value]="num">{{num}}</option>
+          </select>
+        </div>
+        <br/>
+        <div style="text-align: center;">
+          <label for="operation">if ({{from_InternalProcess[index2].value.data_1}} {{from_InternalProcess[index2].value.opc_compare}} {{from_InternalProcess[index2].value.data_2}})</label>
+          <button id="campo_btn" mat-button (click)="eliminarOperacion()">
+              <mat-icon>delete</mat-icon>
+          </button>
+        </div><br/>
+    
+        
+        
+      </div>
+
+    </form>
+
+  </div>
   
-      <div class="form-group">
-        <label for="data_opt">Datos de la operación*</label>
-        <input type="text" id="data_opt" placeholder="Hola!" class="form-control" formControlName="data_opt" />
-        <span style="color:Red;" *ngIf="from_InternalProcess.controls['data_opt'].touched && from_InternalProcess.controls['data_opt'].errors?.required">Dato requerido.</span>
-      </div>  
-    </div>
-      
-
-       
-
-  </form>
   
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-  <button class="btn btn-primary" (click)="save_InternalProcess()" [disabled]="from_InternalProcess.invalid">Save</button>
+  <button class="btn btn-primary" (click)="save_InternalProcess()">Save</button>
 </div>

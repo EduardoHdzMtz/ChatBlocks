@@ -420,7 +420,6 @@ export class ConstruccionCBComponent implements OnInit {
   construir_tags(){
     //console.log("------------------TAGS:");
 
-
     for(let i=0;i<this.globals.AllBlocks.length;i++)
       for(let j=0;j<this.globals.AllBlocks[i].length;j++){
         if((this.globals.AllBlocks[i][j].blocktype=='informativo' || this.globals.AllBlocks[i][j].blocktype=='input' || this.globals.AllBlocks[i][j].blocktype=='quickReply' || this.globals.AllBlocks[i][j].blocktype=='informativoDinamico' || this.globals.AllBlocks[i][j].blocktype=='slideDinamico' || this.globals.AllBlocks[i][j].blocktype=='inputDinamico' || this.globals.AllBlocks[i][j].blocktype=='quickReplyDinamico') && this.globals.AllBlocks[i][j].opc_nextid== 'Seleccionar de la lista'){

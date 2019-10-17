@@ -234,10 +234,10 @@ export interface InterfazViewBlkTicket{
 export interface IntefazInternalProcess{
     id_block: number,
     id_host: number,
-    order: number,
     type_host: string,
-    operation: string,
-    data_opt: string
+    order: number,
+    type_operation: string,
+    data_operation: string
 }
 
 
