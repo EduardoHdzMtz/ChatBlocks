@@ -52,5 +52,13 @@ db.bloqueinputDin = require('../model/bloqueInputD.model')(sequelize, Sequelize)
 db.bloqueinputDin2 = require('../model/bloqueInputD2.model')(sequelize, Sequelize);
 db.bloqueQRDin = require('../model/bloqueQRD.model')(sequelize, Sequelize);
 db.bloqueQRDin2 = require('../model/bloqueQRD2.model')(sequelize, Sequelize);
+db.bloqueInternalPrs = require('../model/bloqueInternalPrs.model')(sequelize, Sequelize);
+db.bloqueInternalPrs2 = require('../model/bloqueInternalPrs2.model')(sequelize, Sequelize);
+db.bloqueInternalPrs = require('../model/bloqueInternalPrs.model')(sequelize, Sequelize);
+db.bloqueInternalPrs2 = require('../model/bloqueInternalPrs2.model')(sequelize, Sequelize);
+db.Operaciones = require('../model/operaciones.model')(sequelize, Sequelize);
+db.Operaciones2 = require('../model/operaciones2.model')(sequelize, Sequelize);
+db.Variables = require('../model/variables.model')(sequelize, Sequelize);
+db.Variables2 = require('../model/variables2.model')(sequelize, Sequelize);
 
 module.exports = db;

@@ -3,14 +3,26 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="from_Selector">
+    
+    <div class="form-group">
+      <label for="namestate">Nombre del estado</label>
+      <input type="text" id="namestate" placeholder="Internal process" formControlName="namestate" class="form-control"/>
+    </div> 
+
+    <div class="form-group">
+      <label for="default_id">Siguiente estado default*</label>
+      <select name="OS" id="default_id" placeholder="Selecciona un estado" class="form-control" formControlName="default_id" *ngIf="globals.AllBlocks">
+        <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
+      </select>
+    </div>
+
+    <label for="namestate">Selecciona la operación que deseas agregar</label>
     <select name="OS" id="opc_InernalProcess" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_InernalProcess">
         <option value="Matt">Matt</option>
         <option value="if">if</option>
-        <option value="for">else</option>
-        <option value="Switch">Switch</option>
-        <option value="Modificar variables">Crear variables</option>
-        <option value="Modificar variables">Modificar variables</option>
-        <option value="Eliminar variables">Eliminar variables</option>
+        <option value="else">else</option>
+        <option value="Mod_var">Variable de cadena</option>
+        
     </select>
     <button mat-button (click)="agregarOperacion(from_Selector.value.opc_InernalProcess)">Agregar</button>
   </form><br/>
@@ -26,29 +38,70 @@
         </div>
         <div class="linea_InternalProcess"></div>
 
-        <label for="data_1">Nombre de la variable*</label>
-        <input type="text" id="data_1" placeholder="variable 1" class="form-control" formControlName="data_1" />
-        <label for="opc_operation">Operacion*</label>
-        <select name="OS" id="opc_operation" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_operation" >
-            <option value=" + "> Suma </option>
-            <option value=" - "> Resta </option>
-            <option value=" * "> Multiplicación </option>
-            <option value=" / "> Divición </option>
-          </select>
-        <label for="opc_data">Tipo de dato*</label>
-        <select name="OS" id="opc_data" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_data">
-          <option value="Variable">Variable</option>
-          <option value="Constante">Constante</option>
-        </select>
-        <input type="text" id="data_2" placeholder="Saludo" class="form-control" formControlName="data_2" *ngIf="from_InternalProcess[index2].value.opc_data == 'Variable'"/>
-        <div *ngIf="from_InternalProcess[index2].value.opc_data == 'Constante'">
-          <select name="OS" id="data_2" placeholder="Selecciona una opción de boton" class="form-control" formControlName="data_2" >
-            <option *ngFor="let num of this.numeracion"  [value]="num">{{num}}</option>
-          </select>
+        <div class="row">
+          <div class="col-12">
+            <label>Variable 1</label>
+          </div>
         </div>
-        <br/>
+
+        <div class="form-row">          
+          <div class="form-group col-md-6">
+            <label for="new_exist">Crear / Seleccionar</label>
+            <select id="new_exist" class="form-control" formControlName="new_exist">
+              <option value="nueva" selected>Crear variable</option>
+              <option value="existente">Seleccionar variable</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="var_1">Variable</label>
+
+            <input type="text" class="form-control" id="var_1" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'nueva'">
+
+            <select id="var_1" class="form-control" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'existente'">
+              <option *ngFor="let num of list_num" [value]="num">{{num}}</option>
+            </select>
+          </div>
+        </div>
+        
+        <label for="opc_operation">Tipo de operacion</label>
+        <select name="OS" id="opc_operation" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_operation" >
+          <option value=" + "> Suma </option>
+          <option value=" - "> Resta </option>
+          <option value=" * "> Multiplicación </option>
+          <option value=" / "> Divición </option>
+        </select>
+
+        <div class="row">
+          <div class="col-12">
+            <label>Variable 2</label>
+          </div>
+        </div>
+
+        <div class="form-row">          
+          <div class="form-group col-md-6">
+            <label for="opc_type_2">Tipo de variable*</label>
+            <select id="opc_type_2" class="form-control" formControlName="opc_type_2">
+              <option value="Variable" selected>Variable</option>
+              <option value="Constante">Constante</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="var_2">Variable</label>
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante'">
+              <option *ngFor="let num of this.numeracion" [value]="num">{{num}}</option>
+            </select>
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable'">
+              <option *ngFor="let num of list_num" [value]="num">{{num}}</option>
+            </select>
+          </div>
+        </div>
+
+
         <div style="text-align: center;">
-          <label for="operation">{{from_InternalProcess[index2].value.data_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.data_2}}</label>
+          <label for="operation">{{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.var_2}}</label>
           <button id="campo_btn" mat-button (click)="eliminarOperacion(index2)">
               <mat-icon>delete</mat-icon>
           </button>
@@ -63,37 +116,190 @@
         </div>
         <div class="linea_InternalProcess"></div>
         
-        <label for="operation">Nombre de la variable*</label>
-        <input type="text" id="dato_1" placeholder="variable 1" class="form-control"  formControlName="data_1"/>
-        <label for="opc_compare">Comparador*</label>
-        <select name="OS" id="opc_compare" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_compare" >
-          <option value=" = "> = </option>
+        <div class="row">
+            <div class="col-12">
+              <label>Variable 1</label>
+            </div>
+          </div>
+  
+          <div class="form-row">          
+            <div class="form-group col-md-4">
+              <label for="new_exist">Crear / Seleccionar</label>
+              <select id="new_exist" class="form-control" formControlName="new_exist">
+                <option value="nueva" selected>Crear variable</option>
+                <option value="existente">Seleccionar variable</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="opc_data_1">Tipo de variable*</label>
+              <select id="opc_data_1" class="form-control" formControlName="opc_data_1">
+                <option value="Cadena" selected>Cadena</option>
+                <option value="Numero">Numero</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="var_1">Variable</label>
+  
+              <input type="text" class="form-control" id="var_1" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'nueva'">
+  
+              <select id="var_1" class="form-control" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'existente' && from_InternalProcess[index2].value.opc_data_1 == 'Cadena'">
+                <option *ngFor="let cad of list_cad" [value]="cad">{{cad}}</option>
+              </select>
+              <select id="var_1" class="form-control" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'existente' && from_InternalProcess[index2].value.opc_data_1 == 'Numero'" >
+                <option *ngFor="let num of list_num" [value]="num">{{num}}</option>
+              </select>
+            </div>
+          </div>
+
+        <label for="opc_operation">Comparador*</label>
+        <select name="OS" id="opc_operation" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_operation" >
+          <option value=" == "> == </option>
           <option value=" < "> &lt; </option>
           <option value=" > "> &gt; </option>
           <option value=" != "> != </option>
         </select>
-        <label for="opc_data">Tipo de dato*</label>
-        <select name="OS" id="opc_data" placeholder="Selecciona una opción de boton" class="form-control" formControlName="opc_data">
-          <option value="Variable">Variable</option>
-          <option value="Constante">Constante</option>
-        </select>
-        <input type="text" id="data_2" placeholder="variable 2" class="form-control" formControlName="data_2" *ngIf="from_InternalProcess[index2].value.opc_data == 'Variable'"/>
-        <div *ngIf="from_InternalProcess[index2].value.opc_data == 'Constante'">
-          <select name="OS" id="data_2" placeholder="Selecciona una opción de boton" class="form-control" formControlName="data_2" >
-            <option *ngFor="let num of this.numeracion"  [value]="num">{{num}}</option>
-          </select>
+
+
+        <div class="row">
+          <div class="col-12">
+            <label>Variable 2</label>
+          </div>
         </div>
-        <br/>
+
+        <div class="form-row">          
+          <div class="form-group col-md-6">
+            <label for="opc_type_2">Tipo de variable*</label>
+            <select id="opc_type_2" class="form-control" formControlName="opc_type_2">
+              <option value="Variable" selected>Variable</option>
+              <option value="Constante">Constante</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="var_2">Variable</label>
+
+            <input type="text" id="var_2" placeholder="variable 2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante' && from_InternalProcess[index2].value.opc_data_1 == 'Cadena'"/>
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante' && from_InternalProcess[index2].value.opc_data_1 == 'Numero'">
+              <option *ngFor="let num of this.numeracion" [value]="num">{{num}}</option>
+            </select>
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable' && from_InternalProcess[index2].value.opc_data_1 == 'Numero'">
+              <option *ngFor="let num of list_num" [value]="num">{{num}}</option>
+            </select>
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable' && from_InternalProcess[index2].value.opc_data_1 == 'Cadena'">
+              <option *ngFor="let cad of list_cad" [value]="cad">{{cad}}</option>
+            </select>
+          </div>
+        </div>
+
         <div style="text-align: center;">
-          <label for="operation">if ({{from_InternalProcess[index2].value.data_1}} {{from_InternalProcess[index2].value.opc_compare}} {{from_InternalProcess[index2].value.data_2}})</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.new_exist == '' && from_InternalProcess[index2].value.opc_type_2 == ''">if ()</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.new_exist != '' && from_InternalProcess[index2].value.opc_type_2 == ''">if ({{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}})</label>
+
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante' && from_InternalProcess[index2].value.opc_data_1 == 'Cadena'">if ({{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}} '{{from_InternalProcess[index2].value.var_2}}')</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante' && from_InternalProcess[index2].value.opc_data_1 == 'Numero'">if ({{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.var_2}})</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable' && from_InternalProcess[index2].value.opc_data_1 == 'Numero'">if ({{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.var_2}})</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable' && from_InternalProcess[index2].value.opc_data_1 == 'Cadena'">if ({{from_InternalProcess[index2].value.var_1}} {{from_InternalProcess[index2].value.opc_operation}} {{from_InternalProcess[index2].value.var_2}})</label>
+
           <button id="campo_btn" mat-button (click)="eliminarOperacion()">
               <mat-icon>delete</mat-icon>
           </button>
-        </div><br/>
-    
-        
+        </div><br/>    
         
       </div>
+
+
+      <div class="form-group" *ngIf="I_P.type_operation == 'else'">
+        <div style="text-align: center;">
+            <label  style="font-weight: bold;">Else</label>
+            <label class="cont_InternalProcess">{{index2+1}}</label>
+        </div>
+        <div class="linea_InternalProcess"></div> 
+        <div style="text-align: center;">
+          
+          <button id="campo_btn" mat-button (click)="eliminarOperacion()">
+              <mat-icon>delete</mat-icon>
+          </button>
+        </div><br/><br/>   
+      </div>
+
+
+
+
+      <div class="form-group" *ngIf="I_P.type_operation == 'Mod_var'">
+
+        <div style="text-align: center;">
+            <label style="font-weight: bold;">Variable de caracteres</label>
+            <label class="cont_InternalProcess">{{index2+1}}</label>
+        </div>
+        <div class="linea_InternalProcess"></div>
+
+        <div class="row">
+          <div class="col-12">
+            <label>Variable 1</label>
+          </div>
+        </div>
+
+        <div class="form-row">          
+          <div class="form-group col-md-6">
+            <label for="new_exist">Crear / Seleccionar</label>
+            <select id="new_exist" class="form-control" formControlName="new_exist">
+              <option value="nueva" selected>Crear variable</option>
+              <option value="existente">Seleccionar variable</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="var_1">Variable</label>
+
+            <input type="text" class="form-control" id="var_1" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'nueva'">
+
+            <select id="var_1" class="form-control" formControlName="var_1" *ngIf="from_InternalProcess[index2].value.new_exist == 'existente'">
+              <option *ngFor="let cad of list_cad" [value]="cad">{{cad}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <label>Variable 2</label>
+          </div>
+        </div>
+
+        <div class="form-row">          
+          <div class="form-group col-md-6">
+            <label for="opc_type_2">Tipo de variable*</label>
+            <select id="opc_type_2" class="form-control" formControlName="opc_type_2">
+              <option value="Variable" selected>Variable</option>
+              <option value="Constante">Constante</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="var_2">Variable</label>
+
+            <input type="text" class="form-control" id="var_2" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante'">
+
+            <select id="var_2" class="form-control" formControlName="var_2" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable'">
+              <option *ngFor="let cad of list_cad" [value]="cad">{{cad}}</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div style="text-align: center;">
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Variable' || from_InternalProcess[index2].value.opc_type_2 == ''">{{from_InternalProcess[index2].value.var_1}} = {{from_InternalProcess[index2].value.var_2}}</label>
+          <label for="operation" *ngIf="from_InternalProcess[index2].value.opc_type_2 == 'Constante'">{{from_InternalProcess[index2].value.var_1}} = '{{from_InternalProcess[index2].value.var_2}}'</label>
+          <button id="campo_btn" mat-button (click)="eliminarOperacion(index2)">
+              <mat-icon>delete</mat-icon>
+          </button>
+        </div><br/>
+        
+      </div>
+
+      
+
 
     </form>
 

@@ -12,6 +12,9 @@ module.exports = function(app) {
     const credencialesAPI= require('../controller/credenciales.controller');
     const bloqueinputDin= require('../controller/bloqueInputDin.controller'); 
     const bloqueQRDin= require('../controller/bloqueQRDin.controller');
+    const bloqueInternalPrs= require('../controller/bloqueInternalPrs.controller');
+    const Operaciones= require('../controller/Operaciones.controller');
+    const Variables= require('../controller/variables.controller');
  
     app.post('/api/chatbotsDB', robots.create);
 
@@ -210,7 +213,44 @@ module.exports = function(app) {
 
     app.delete('/api/botones/newBTN/:id_elemento', botones.deleteByIdELM);
 
-    
+
+    app.post('/api/bloqueInternalPrs', bloqueInternalPrs.create);
+
+    app.put('/api/bloqueInternalPrs', bloqueInternalPrs.update);
+
+    app.delete('/api/bloqueInternalPrs/:id', bloqueInternalPrs.delete);
+
+    app.get('/api/bloqueInternalPrs/:id_robot', bloqueInternalPrs.findByIdRobot);
+
+    app.get('/api/bloqueInternalPrs/newBlk/:datos', bloqueInternalPrs.findBloque);
+
+    app.delete('/api/bloqueInternalPrs/newBlk/:id_robot', bloqueInternalPrs.deleteByIdBot);
+
+
+    app.post('/api/operaciones', Operaciones.create);
+
+    app.put('/api/operaciones', Operaciones.update);
+
+    app.delete('/api/operaciones/:id', Operaciones.delete);
+
+    app.get('/api/operaciones/:id_robot', Operaciones.findByIdBLK);
+
+    app.get('/api/operaciones/newOpc/:datos', Operaciones.findOperacion);
+
+    app.delete('/api/operaciones/newOpc/:id_robot', Operaciones.deleteByIdBlk);
+
+
+    app.post('/api/variables', Variables.create);
+
+    app.put('/api/variables', Variables.update);
+
+    app.delete('/api/variables/:id', Variables.delete);
+
+    app.get('/api/variables/:id_robot', Variables.findByIdOpc);
+
+    app.get('/api/variables/newVar/:datos', Variables.findVar);
+
+    app.delete('/api/variables/newVar/:id_robot', Variables.deleteByIdOpc);    
     
 
 }

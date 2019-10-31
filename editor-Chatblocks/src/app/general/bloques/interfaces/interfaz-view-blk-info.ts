@@ -14,7 +14,7 @@ export interface InterfazChatBot {
 export interface InterfazViewBlkInfo {
     id_block: string,
     namestate: string,
-    id_robot: string;
+    id_robot: string,
     contenido: string,
     opc_nextid: string,
     next_id: string,
@@ -232,12 +232,38 @@ export interface InterfazViewBlkTicket{
 }
 
 export interface IntefazInternalProcess{
-    id_block: number,
-    id_host: number,
-    type_host: string,
-    order: number,
+    id_block: string,
+    namestate: string,
+    id_robot: string,
+    next_id: string,
+    default_nextid: string,
+    blocktype: string,
+    pos_x: number,
+    pos_y: number,
+    operaciones: any[];
+    tags_entradas: any[];
+}
+
+export interface IntefazOperaciones{
+    id_operacion: string,
+    id_block: string,
+    order_opc: string,
     type_operation: string,
-    data_operation: string
+    new_exist: string,
+    id_var_1: string,
+    opc_operation: string,
+    id_var_2: string,
+    opc_nextid: string,
+    next_id: string
+    variables: any[];
+}
+
+export interface InterfazVariables{
+    id_var: string,
+    id_operacion: string,
+    opc_type: string,
+    opc_data: string,
+    var: string,
 }
 
 

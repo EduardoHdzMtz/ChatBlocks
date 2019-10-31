@@ -172,6 +172,26 @@
                                     </tbody>
                                 </table>
                             </div>  
+
+                            <div *ngIf="bloque.blocktype == 'internalProcesss'" class="conf" style="background: #F49000" > 
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> 
                                                         
                             <div style="position: relative; float: left;  width: 5px; height: 10px;"></div>                           
                             <div style="float: left;" *ngIf="(bloque.tags_entradas.length) > 0"><!---error-->

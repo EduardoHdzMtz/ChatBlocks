@@ -10,7 +10,7 @@ const httpOptions={
 @Injectable({
   providedIn: 'root'
 })
-export class BlkInfoService {
+export class BlkInternalPrs {
   private DataBaseUrl = 'http://148.204.64.142:8081/api/bloqueInternalPrs';  // URL to web api
   private DataBaseUrl2 = 'http://148.204.64.142:8081/api/bloqueInternalPrs/newBlk';
   constructor( 
