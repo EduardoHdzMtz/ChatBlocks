@@ -247,12 +247,12 @@ export interface IntefazInternalProcess{
 export interface IntefazOperaciones{
     id_operacion: string,
     id_block: string,
-    order_opc: string,
+    order_opc: number,
     type_operation: string,
     new_exist: string,
-    id_var_1: string,
+    id_var_1: number,
     opc_operation: string,
-    id_var_2: string,
+    id_var_2: number,
     opc_nextid: string,
     next_id: string
     variables: any[];
@@ -260,7 +260,7 @@ export interface IntefazOperaciones{
 
 export interface InterfazVariables{
     id_var: string,
-    id_operacion: string,
+    id_robot: string,
     opc_type: string,
     opc_data: string,
     var: string,

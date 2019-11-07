@@ -31,8 +31,8 @@ export class OperacionesService {
     return this.http.get<IntefazOperaciones>(url);
   }
 
-  getAll_ByRobot(id_robot: string): Observable<IntefazOperaciones[]> {
-    const url = `${this.DataBaseUrl}/${id_robot}`;
+  getAll_ByBlock(id_block: string): Observable<IntefazOperaciones[]> {
+    const url = `${this.DataBaseUrl}/${id_block}`;
     return this.http.get<IntefazOperaciones[]>(url);
   }
 

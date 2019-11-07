@@ -26,8 +26,8 @@ export class variablesService {
     return this.http.get<InterfazVariables>(url);
   }
 
-  getVar(id: number): Observable<InterfazVariables> {
-    const url = `${this.DataBaseUrl}/${id}`;
+  getVar(id_var: number): Observable<InterfazVariables> {
+    const url = `${this.DataBaseUrl}/${id_var}`;
     return this.http.get<InterfazVariables>(url);
   }
 

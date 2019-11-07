@@ -173,7 +173,7 @@
                                 </table>
                             </div>  
 
-                            <div *ngIf="bloque.blocktype == 'internalProcesss'" class="conf" style="background: #F49000" > 
+                            <div *ngIf="bloque.blocktype == 'internalProcess'" class="conf" style="background: #F49000" > 
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
@@ -269,7 +269,7 @@
                               </mat-menu>
                             </div>
 
-                            <div style="float: right;" *ngIf="bloque.opc_nextid.includes('Seleccionar de la lista') && bloque.blocktype == 'quickReply'">
+                            <div style="float: right;" *ngIf="bloque.blocktype == 'quickReply' && bloque.opc_nextid.includes('Seleccionar de la lista')">
                                 <hr id="linea_tag_2" style="position: relative; background: gray; float: left; width: 5px; height: 1px; top:3px;"/>
                                 <button class="tag_rigth" style="float: right;" [matMenuTriggerFor]="beforeMenu">
                                     <mat-icon class="icono_tag2">play_arrow</mat-icon>

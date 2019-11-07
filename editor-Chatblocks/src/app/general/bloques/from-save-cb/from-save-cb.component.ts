@@ -14,6 +14,9 @@ import { BlkInputServiceDin } from 'src/app/sendToDB/blkIputDin.service';
 import { BlkQRServiceDin } from 'src/app/sendToDB/blkQRDin.service';
 import { ElementoService } from 'src/app/sendToDB/elementos.service';
 import { BotonesService } from 'src/app/sendToDB/botones.service';
+import { BlkInternalPrs } from 'src/app/sendToDB/blkInternalPrs.service';
+import { OperacionesService } from 'src/app/sendToDB/operaciones.service';
+import { variablesService } from 'src/app/sendToDB/variables.service';
 
 @Component({
   selector: 'app-from-save-cb',
@@ -40,6 +43,9 @@ export class FromSaveCBComponent implements OnInit {
     private blkInputDService: BlkInputServiceDin,
     private elementoService: ElementoService,
     private botonesService: BotonesService,
+    private blkInternalPrsService: BlkInternalPrs,
+    private opcService: OperacionesService,
+    private varService: variablesService,
     public globals: Globals
     ) { }
 
@@ -128,6 +134,12 @@ export class FromSaveCBComponent implements OnInit {
             this.elementoService.updateElementos(this.globals.AllBlocks[i][j].elementos[cont_elm]).subscribe(response=>{});
             for(let cont_btn=0;cont_btn<this.globals.AllBlocks[i][j].elementos[cont_elm].botones.length;cont_btn++)
               this.botonesService.updateBoton(this.globals.AllBlocks[i][j].elementos[cont_elm].botones[cont_btn]).subscribe(response=> {});
+          }
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='internalProcess'){
+          this.blkInternalPrsService.updateBlkInternalPrs(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          for(let cont_opc=0;cont_opc<this.globals.AllBlocks[i][j].operaciones.length;cont_opc++){
+            this.opcService.updateOpc(this.globals.AllBlocks[i][j].operaciones[cont_opc]).subscribe(response=>{});            
           }
         }
         else if(this.globals.AllBlocks[i][j].blocktype=='informativoDinamico')

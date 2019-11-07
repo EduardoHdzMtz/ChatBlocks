@@ -18,6 +18,8 @@ export class FromBlockInternalPrsComponent implements OnInit {
   from_InternalProcess: FormGroup[]=[];
   createMode: boolean=true;
   Internal_Process: any[];
+  bloque: IntefazInternalProcess;
+  bloque_final: any;
   states: string[]=[];
   numeracion: number[]=[];
   num_datos_Suma: number= 3;
@@ -46,7 +48,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
 
     this.from_Selector=this.formBuilder.group({
       namestate: [''],
-      default_id: [''],
+      default_nextid: [''],
       opc_InernalProcess: ['']
     });
 
@@ -56,7 +58,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
     this.Internal_Process=[];
 
     if (!this.createMode) {
-      this.loadBloque(this.Internal_Process); 
+      this.loadBloque(this.bloque); 
     }
   }
 
@@ -72,35 +74,56 @@ export class FromBlockInternalPrsComponent implements OnInit {
 
   }
 
-  lista_variables(){
-    
-
-    /*this.varService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response =>{
-      for(let cont_v;cont_v<response.length;cont_v++){
-        if(response[cont_v].type_data == 'Cadena')
-          this.lista_var_string.push(response[cont_v]);
-        else
-          this.lista_var_number.push(response[cont_v]);
-      }
-      
-    });*/
-    
-
-    //this.lista_var_string.push('cadena');
-    //this.lista_var_number.push(response[cont_v]);
-
-  }
 
   loadBloque(Internal_Process){
-    //this.fromElementos.patchValue(elemento);
-    let elemento_copia: any[];
+    let datos_bloque: any={
+      namestate: Internal_Process.namestate,
+      default_nextid: Internal_Process.default_nextid,
+      opc_InernalProcess: ''
+    }
 
-    for(let cont_IP=0;cont_IP<Internal_Process.length;cont_IP++){    
-      elemento_copia[cont_IP]={
-        operation: Internal_Process[cont_IP].operation,
-        data_opt: Internal_Process[cont_IP].data_opt,
+    this.from_Selector.patchValue(datos_bloque);
+
+    console.log('OPERACION TAM ->'+Internal_Process.operaciones.length);
+    for(let cont_opc=0; cont_opc<Internal_Process.operaciones.length; cont_opc++){
+      this.selector_tipo(Internal_Process.operaciones[cont_opc].type_operation, cont_opc);
+      console.log('EDICION VAR ->'+Internal_Process.operaciones[cont_opc].variables.length);
+      //console.log('EDICION ID_VAR ->'+Internal_Process.operaciones[cont_opc].variables[0]);
+      if(Internal_Process.operaciones[cont_opc].type_operation != 'else'){
+        console.log('EDICION ip: OPERACION ->'+cont_opc);
+        let datos_operacion: any={
+          new_exist: Internal_Process.operaciones[cont_opc].new_exist,
+          opc_data_1: Internal_Process.operaciones[cont_opc].variables[0].opc_data,
+          var_1: Internal_Process.operaciones[cont_opc].variables[0].var,
+          opc_operation: Internal_Process.operaciones[cont_opc].opc_operation,
+          opc_type_2: Internal_Process.operaciones[cont_opc].variables[1].opc_type,
+          var_2: Internal_Process.operaciones[cont_opc].variables[1].var
+        }
+
+        this.from_InternalProcess[cont_opc].patchValue(datos_operacion);
+
+        this.Internal_Process[cont_opc].id_operacion = Internal_Process.operaciones[cont_opc].id_operacion;
+        this.Internal_Process[cont_opc].id_block = Internal_Process.operaciones[cont_opc].id_block;
+        this.Internal_Process[cont_opc].order_opc = Internal_Process.operaciones[cont_opc].order_opc;
+        this.Internal_Process[cont_opc].type_operation = Internal_Process.operaciones[cont_opc].type_operation;
+        this.Internal_Process[cont_opc].new_exist= Internal_Process.operaciones[cont_opc].new_exist;
+        this.Internal_Process[cont_opc].id_var_1 = Internal_Process.operaciones[cont_opc].id_var_1;
+        this.Internal_Process[cont_opc].opc_operation = Internal_Process.operaciones[cont_opc].opc_operation;
+        this.Internal_Process[cont_opc].id_var_2 = Internal_Process.operaciones[cont_opc].id_var_2;
+        this.Internal_Process[cont_opc].opc_nextid = Internal_Process.operaciones[cont_opc].opc_nextid;
+        this.Internal_Process[cont_opc].next_id = Internal_Process.operaciones[cont_opc].next_id;
+
+        for(let cont_var=0; cont_var<Internal_Process.operaciones[cont_opc].variables.length; cont_var++){
+          console.log('EDICION ip: VARIABLE ->'+cont_opc+" , "+cont_var);
+          this.Internal_Process[cont_opc].variables[cont_var].id_var = Internal_Process.operaciones[cont_opc].variables[cont_var].id_var;
+          this.Internal_Process[cont_opc].variables[cont_var].id_robot = Internal_Process.operaciones[cont_opc].variables[cont_var].id_robot;
+          this.Internal_Process[cont_opc].variables[cont_var].opc_type = Internal_Process.operaciones[cont_opc].variables[cont_var].opc_type;
+          this.Internal_Process[cont_opc].variables[cont_var].opc_data = Internal_Process.operaciones[cont_opc].variables[cont_var].opc_data;
+          this.Internal_Process[cont_opc].variables[cont_var].var = Internal_Process.operaciones[cont_opc].variables[cont_var].var;
+        }
       }
-    }    
+    }
+    console.log('Tam arr opc -> '+this.Internal_Process.length);
   }
 
   save_InternalProcess(){
@@ -109,11 +132,11 @@ export class FromBlockInternalPrsComponent implements OnInit {
     }
     
     if (this.createMode){
-      
+      console.log("ABCDF -> "+this.Internal_Process[0].variables.length);
       let datosBloque: IntefazInternalProcess = this.from_Selector.value;
       datosBloque.id_block = 'sin almacenar';
       datosBloque.id_robot=this.globals.RobotSelect.id_robot;
-      datosBloque.blocktype='internalProcesss';
+      datosBloque.blocktype='internalProcess';
       datosBloque.pos_x=0;
       datosBloque.pos_y=this.globals.AllBlocks.length-1;
       datosBloque.operaciones=[];
@@ -125,13 +148,13 @@ export class FromBlockInternalPrsComponent implements OnInit {
           datosBloque.id_block=response[0].id_block;
           datosBloque.operaciones= this.Internal_Process;
           datosBloque.tags_entradas=[];  
+          this.bloque_final=datosBloque;
           this.globals.AllBlocks.pop();
           this.globals.AllBlocks.push([datosBloque]);
           this.globals.AllBlocks.push([]);
           
-
-          for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc){
-            this.generar_datos_operaciones(cont_opc, this.globals.AllBlocks[this.globals.AllBlocks.length-2][0]);
+          for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
+            this.generar_datos_operaciones(cont_opc, datosBloque);
           }
           
           let result= this.globals.generar_Id();
@@ -174,51 +197,78 @@ export class FromBlockInternalPrsComponent implements OnInit {
   }
 
   generar_datos_operaciones(cont_opc: number, datos_Bloque: any){
-    let opc_save: any = this.operaciones_almacenar(cont_opc, datos_Bloque.id_block);
+    let opc_save: any ={
+      id_operacion: '',
+      id_block: this.bloque_final.id_block,
+      order_opc: cont_opc,
+      type_operation: this.Internal_Process[cont_opc].type_operation,
+      new_exist: this.from_InternalProcess[cont_opc].value.new_exist,
+      id_var_1: 0,
+      opc_operation: this.from_InternalProcess[cont_opc].value.opc_operation,
+      id_var_2: 0,
+    }
+    
+    this.bloque_final.operaciones[cont_opc].id_block = this.bloque_final.id_block;
+    this.bloque_final.operaciones[cont_opc].order_opc = cont_opc;
+    this.bloque_final.operaciones[cont_opc].type_operation = this.Internal_Process[cont_opc].type_operation;
+    this.bloque_final.operaciones[cont_opc].new_exist = this.from_InternalProcess[cont_opc].value.new_exist;
+    this.bloque_final.operaciones[cont_opc].opc_operation = this.from_InternalProcess[cont_opc].value.opc_operation;  
+
+
+    this.Internal_Process[cont_opc].id_block = datos_Bloque.id_block;
+    this.Internal_Process[cont_opc].order_opc = cont_opc;
+    this.Internal_Process[cont_opc].type_operation = this.Internal_Process[cont_opc].type_operation;
+    this.Internal_Process[cont_opc].new_exist = this.from_InternalProcess[cont_opc].value.new_exist;
+    this.Internal_Process[cont_opc].opc_operation = this.from_InternalProcess[cont_opc].value.opc_operation;    
 
     this.opcService.addDatosOpc(opc_save).subscribe(response =>{
-      const datos='{"id_block": "'+opc_save.id_block+'", "namestate": "'+opc_save.order_opc+'"}';
+      const datos='{"id_block": "'+opc_save.id_block+'", "order_opc": "'+opc_save.order_opc+'"}';
       this.opcService.getOpc_data(datos).subscribe(responseOpc=> {
-        opc_save.id_operacion = responseOpc[0].id_operacion;
+        this.bloque_final.operaciones[cont_opc].id_operacion = responseOpc[0].id_operacion;
 
-        this.Internal_Process[cont_opc]=opc_save;
-
-        this.Internal_Process[cont_opc].id_var_1 = this.almacenar_variable(cont_opc, 0, opc_save.id_operacion);
-        this.Internal_Process[cont_opc].id_var_2 = this.almacenar_variable(cont_opc, 1, opc_save.id_operacion);
-
-        datos_Bloque.operaciones=this.Internal_Process[cont_opc];
+        this.almacenar_variable(cont_opc, 0, this.bloque_final);
+        this.almacenar_variable(cont_opc, 1, this.bloque_final);
       });
     });
 
   }
 
-  almacenar_variable(cont_opc: number, cont_var: number, id_operacion){
-    this.Internal_Process[cont_opc].variables[cont_var] = this.from_InternalProcess.values;
-    this.Internal_Process[cont_opc].variables[cont_var].id_operacion = id_operacion;
-    
-    this.varService.addDatosVar(this.Internal_Process[cont_opc].variables[cont_var]).subscribe(response=> {
-      const datos='{"id_operacion": "'+id_operacion+'", "namestate": "'+this.Internal_Process[cont_opc].variables[cont_var].var+'"}';
-        this.varService.getVar_data(datos).subscribe(responseVar=> {
-          this.Internal_Process[cont_opc].variables[cont_var].id_var = responseVar[0].id_var;          
-          return responseVar[0].id_var;
-        });
-    });
+  almacenar_variable(cont_opc: number, cont_var: number, datos_Bloque){
 
-  }
-
-  operaciones_almacenar(cont_opc, id_block){
-    let formato_Opc: any={
-      id_operacion: '',
-      id_block: id_block,
-      order_opc: cont_opc,
-      type_operation: '',
-      new_exist: '',
-      id_var_1: '',
-      opc_operation: '',
-      id_var_2: '',
+    this.bloque_final.operaciones[cont_opc].variables[cont_var].id_robot = this.globals.RobotSelect.id_robot;
+    if(cont_var == 0){
+      this.bloque_final.operaciones[cont_opc].variables[cont_var].opc_type = 'Variable';
+      this.bloque_final.operaciones[cont_opc].variables[cont_var].var = this.from_InternalProcess[cont_opc].value.var_1;
     }
+    else{
+      this.bloque_final.operaciones[cont_opc].variables[cont_var].opc_type = this.from_InternalProcess[cont_opc].value.opc_type_2;
+      this.bloque_final.operaciones[cont_opc].variables[cont_var].var = this.from_InternalProcess[cont_opc].value.var_2;
+    }
+    this.bloque_final.operaciones[cont_opc].variables[cont_var].opc_data = this.from_InternalProcess[cont_opc].value.opc_data_1;
+    
+    if(this.from_InternalProcess[cont_opc].value.new_exist == 'nueva'){
+      this.varService.addDatosVar(this.bloque_final.operaciones[cont_opc].variables[cont_var]).subscribe(response=> {
+        const datos='{"id_robot": "'+this.globals.RobotSelect.id_robot+'", "var": "'+this.bloque_final.operaciones[cont_opc].variables[cont_var].var+'", "opc_data": "'+this.from_InternalProcess[cont_opc].value.opc_data_1+'"}';
+          this.varService.getVar_data(datos).subscribe(responseVar=> {
+            this.bloque_final.operaciones[cont_opc].variables[cont_var].id_var = responseVar[0].id_var;
+            if(cont_var == 1){
+              this.bloque_final.operaciones[cont_opc].id_var_2 = +responseVar[0].id_var;
+              this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{
+                console.log("ACTUALIZANDO OPERACION");
+                
+                this.globals.AllBlocks[this.globals.AllBlocks.length-2][0]=this.bloque_final;
+              });
+            }
+            else{
+              this.bloque_final.operaciones[cont_opc].id_var_1 = +responseVar[0].id_var;
+            }
+          });
+      });
+    }
+    else{
 
-    return formato_Opc=this.from_InternalProcess[cont_opc].value;
+    }    
+
   }
 
   guardar_operaciones(cont_opc: number, datos_Bloque: any){
@@ -258,11 +308,12 @@ export class FromBlockInternalPrsComponent implements OnInit {
   datos_Matt(posicion: number){
     let formato_Matt: any = this.operaciones(posicion, 'Matt', '');
 
-    formato_Matt.vars.push(this.variables('Numero'));
-    formato_Matt.vars.push(this.variables('Numero'));
+    formato_Matt.variables.push(this.variables('Numero'));
+    formato_Matt.variables.push(this.variables('Numero'));
 
     let form_Matt: FormGroup= this.formBuilder.group({
       new_exist: [''],
+      opc_data_1: [''],
       var_1: [''],
       opc_operation: [''],
       opc_type_2: [''],
@@ -276,9 +327,9 @@ export class FromBlockInternalPrsComponent implements OnInit {
   datos_if(posicion: number){
     let formato_if: any = this.operaciones(posicion, 'if', '');
 
-    formato_if.vars.push(this.variables(''));
-    formato_if.vars.push(this.variables(''));
-
+    formato_if.variables.push(this.variables(''));
+    formato_if.variables.push(this.variables(''));
+    
     let form_if: FormGroup= this.formBuilder.group({
       new_exist: [''],
       opc_data_1: [''],
@@ -296,7 +347,16 @@ export class FromBlockInternalPrsComponent implements OnInit {
   datos_else(posicion: number){
     let formato_else: any = this.operaciones(posicion, 'else', '');
 
+    formato_else.variables.push(this.variables('Numero'));
+    formato_else.variables.push(this.variables('Numero'));
+
     let form_else: FormGroup= this.formBuilder.group({
+      new_exist: [''],
+      opc_data_1: [''],
+      var_1: [''],
+      opc_operation: [''],
+      opc_type_2: [''],
+      var_2:['']
     });
 
     this.Internal_Process.push(formato_else);
@@ -306,12 +366,14 @@ export class FromBlockInternalPrsComponent implements OnInit {
   datos_Mod_var(posicion: number){
     let formato_Mod_var: any = this.operaciones(posicion, 'Mod_var', '=');
     
-    formato_Mod_var.vars.push(this.variables('Cadena'));
-    formato_Mod_var.vars.push(this.variables('Cadena'));
+    formato_Mod_var.variables.push(this.variables('Cadena'));
+    formato_Mod_var.variables.push(this.variables('Cadena'));
 
     let form_Mod_var: FormGroup= this.formBuilder.group({
       new_exist: [''],
+      opc_data_1: [''],
       var_1: [''],
+      opc_operation: [''],
       opc_type_2: [''],
       var_2:['']
     });
@@ -321,29 +383,38 @@ export class FromBlockInternalPrsComponent implements OnInit {
   }
 
   operaciones(posicion: number, type_operation:string, opc_operation: string){
-    let formato_Opc: any={
-      id_operacion: '',
-      id_block: '',
+
+    let formato: any={
+      id_operacion: 'sin asignar',
+      id_block: 'sin asignar',
       order_opc: posicion,
       type_operation: type_operation,
       new_exist: '',
       id_var_1: '',
       opc_operation: opc_operation,
       id_var_2: '',
-      vars: []
-    }
+      opc_nextid: '',
+      next_id: ''
+    }    
+
+    let formato_Opc: IntefazOperaciones = formato;
+    formato_Opc.variables=[];
 
     return formato_Opc;
   }
 
   variables(type_data){
-    let var_: any={
-      id_var: '',
-      id_operacion: '',
+    
+    let formato: any={
+      id_var: 'sin asignar',
+      id_robot: this.globals.RobotSelect.id_robot,
       opc_type: '',
       opc_data: type_data,
       var: ''
     }
+
+    let var_: InterfazVariables= formato;
+
     return var_;
   }
 
@@ -404,8 +475,6 @@ export class FromBlockInternalPrsComponent implements OnInit {
 
   handleSuccessfulEditTodo(datos: IntefazInternalProcess) {
     this.activeModal.dismiss({  datos: datos, id: datos.id_block, createMode: false });
-  }
-
-  
+  }  
 
 }

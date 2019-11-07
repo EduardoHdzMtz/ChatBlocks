@@ -14,6 +14,9 @@ import { BlkQRService } from './../../../sendToDB/blkQR.service';
 import { BlkSlideService } from './../../../sendToDB/blkSlide.service';
 import { ElementoService } from './../../../sendToDB/elementos.service';
 import { BotonesService } from './../../../sendToDB/botones.service';
+import { BlkInternalPrs } from './../../../sendToDB/blkInternalPrs.service';
+import { OperacionesService } from './../../../sendToDB/operaciones.service';
+import { variablesService } from './../../../sendToDB/variables.service';
 import { Globals } from '../../bloques/interfaces/Globals';
 import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
 import { LinksAPIService } from 'src/app/sendToDB/linksAPI.service';
@@ -23,6 +26,7 @@ import { FromBlockSlideDComponent } from '../../bloques/from-block-slide-d/from-
 import { FromBlockInputDComponent } from '../../bloques/from-block-input-d/from-block-input-d.component';
 import { BlkInputServiceDin } from 'src/app/sendToDB/blkIputDin.service';
 import { FromBlockQRDComponent } from '../../bloques/from-block-qrd/from-block-qrd.component';
+import { FromBlockInternalPrsComponent } from '../../bloques/componentes/from-block-internal-prs/from-block-internal-prs.component';
 import { BlkQRServiceDin } from 'src/app/sendToDB/blkQRDin.service';
 @Component({
   selector: 'app-construccion-cb',
@@ -51,6 +55,9 @@ export class ConstruccionCBComponent implements OnInit {
     private credencialAPIService: CredencialAPIService,
     private elementoService: ElementoService,
     private botonesService: BotonesService,
+    private blokInternalPrsService: BlkInternalPrs,
+    private opcService: OperacionesService,
+    private varService: variablesService, 
     public globals: Globals
     ) { }
 
@@ -197,7 +204,6 @@ export class ConstruccionCBComponent implements OnInit {
                   botones.push(responseC[k]);
                 }                 
     
-                //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
                 elementos[cont_elm].botones=botones;
                 cont_elm=cont_elm+1;
               });
@@ -207,9 +213,52 @@ export class ConstruccionCBComponent implements OnInit {
           ConsultaBloques.push(bloque);
         });
       }
+      this.loadTodosBlkInternalProcess(ConsultaBloques, max_X, max_Y);
+    });    
+  }
+
+  loadTodosBlkInternalProcess(ConsultaBloques: any, max_X: number, max_Y: number){
+    this.blokInternalPrsService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++){
+        let bloque=response[i];
+        let operaciones: any[]=[];
+        let cont_opc: number=0;
+        //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        if(max_X<response[i].pos_x)
+          max_X=response[i].pos_x;
+        if(max_Y<response[i].pos_y)
+          max_Y=response[i].pos_y;
+        
+        this.opcService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
+          for(let j=0;j<responseB.length;j++){
+            responseB[j].variables=[];
+            operaciones.push(responseB[j]);
+            let variables: any[]=[];
+            if(responseB[j].type_operation != 'else'){
+              this.varService.getVar(responseB[j].id_var_1).subscribe(responseVar1=> {
+                variables.push(responseVar1[0]);
+
+                this.varService.getVar(responseB[j].id_var_2).subscribe(responseVar2=> {
+                  variables.push(responseVar2[0]);
+                  operaciones[cont_opc].variables=variables;
+                  cont_opc=cont_opc+1;
+                });
+              });
+            }
+            else{
+              cont_opc=cont_opc+1;
+            }
+               
+          }    
+          bloque.operaciones=operaciones;
+          ConsultaBloques.push(bloque);
+        });
+      }
       //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
-    });    
+    });   
+    
+
   }
 
   loadTodosBlkInfoDin(ConsultaBloques: any, max_X: number, max_Y: number) {
@@ -604,6 +653,9 @@ export class ConstruccionCBComponent implements OnInit {
     }
     else if(bloque.blocktype=='quickReplyDinamico'){
       modal=this.modalService.open(FromBlockQRDComponent);      
+    }
+    else if(bloque.blocktype=='internalProcess'){
+      modal=this.modalService.open(FromBlockInternalPrsComponent);      
     }
     
     //const modal = this.modalService.open(FromBlockInfoComponent);

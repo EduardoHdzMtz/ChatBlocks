@@ -1,11 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
 	const Operaciones2 = sequelize.define('operaciones', {
-        id_operacion:{
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
-        id_block:{
-			type: Sequelize.STRING
+      id_operacion:{
+        type: Sequelize.STRING,
+        primaryKey: true
+      },
+      id_block:{
+		    type: Sequelize.STRING
 	    },
         order_opc:{
 			type: Sequelize.STRING

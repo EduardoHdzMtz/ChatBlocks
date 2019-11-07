@@ -5,7 +5,7 @@ const Variables2 = db.Variables2;
 exports.create = (req, res) => {	
 	// Save to PostgreSQL database
 	Variables.create({
-				"id_operacion": req.body.id_operacion,
+				"id_robot": req.body.id_robot,
                 "opc_type": req.body.opc_type,
                 "opc_data": req.body.opc_data,
                 "var": req.body.var
@@ -55,10 +55,10 @@ exports.delete = (req, res) => {
 		});
 };
 
-exports.findByIdOpc = (req, res) => {
-	const id= req.params.id_operacion;
+exports.findByIdVar = (req, res) => {
+	const id= req.params.id_var;
 	Variables2.findAll({
-		where: { id_operacion: id }
+		where: { id_var: id }
 	}).then(Variables => {
 			// Send All Customers to Client
 			res.json(Variables.sort(function(c1, c2){return c1.id - c2.id}));
@@ -70,10 +70,11 @@ exports.findByIdOpc = (req, res) => {
 
 exports.findVar  = (req, res) => {
 	var obj=JSON.parse(req.params.datos);
-	const id_opc= obj.id_operacion;
+	const id_bot= obj.id_robot;
 	const vr= obj.var;
+	const opc_d= obj.opc_data;
 	Variables2.findAll({
-		where: { id_operacion: id_opc, var: vr }
+		where: { id_robot: id_bot, var: vr, opc_data: opc_d }
 	}).then(Variables => {
 			// Send All Customers to Client
 			res.json(Variables.sort(function(c1, c2){return c1.id - c2.id}));
@@ -84,10 +85,10 @@ exports.findVar  = (req, res) => {
 };
 
 
-exports.deleteByIdOpc = (req, res) => {
-	const id = req.params.id_operacion;
+exports.deleteByIdBot = (req, res) => {
+	const id = req.params.id_robot;
 	Variables2.destroy({
-			where: { id_operacion: id }
+			where: { id_robot: id }
 		}).then(() => {
 			res.status(200).json( { msg: 'Fueron eliminados los bloques informativos con Id_robot = ' + id } );
 		}).catch(err => {
