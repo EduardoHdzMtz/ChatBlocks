@@ -61,11 +61,11 @@ export class ConstruccionCBComponent implements OnInit {
     public globals: Globals
     ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     if (typeof window.innerWidth != 'undefined'){
       this.tam = [window.innerWidth,window.innerHeight];
       //console.log("Caso 1-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
-    }
+    }/*
     else if (typeof document.documentElement != 'undefined'
         && typeof document.documentElement.clientWidth !=
         'undefined' && document.documentElement.clientWidth != 0)
@@ -75,7 +75,7 @@ export class ConstruccionCBComponent implements OnInit {
           document.documentElement.clientHeight
       ];
       alert("Caso 2-> Ancho: "+this.tam[0]+", largo: "+this.tam[1]);
-    }
+    }*/
 
     let shand = document.getElementsByClassName("tamlienzo") as HTMLCollectionOf<HTMLElement>;
     let tam= this.tam[1]-60;
@@ -93,14 +93,8 @@ export class ConstruccionCBComponent implements OnInit {
       this.bloque_inicial();
     else if(this.globals.estado=='editar'){
       this.globals.AllBlocks.push([]);
-      this.loadTodosBlkInfo();
+      this.load_vars();
     }
-      
-
-    
-    //this.loadTodosBlkInfo();
-    //this.loadTodosBlkInput();
-    //this.loadTodosBlkQR();
   }
 
   
@@ -116,7 +110,8 @@ export class ConstruccionCBComponent implements OnInit {
       blocktype: 'informativo',
       contenttype: 'text',
       typingtime: '1',
-      
+      pos_x: 0,
+      pos_y: 0
     }
 
     this.blokInfoservice.addDatosBlkInfo(this.bloqueInicial).subscribe(response =>{
@@ -128,9 +123,18 @@ export class ConstruccionCBComponent implements OnInit {
         this.globals.AllBlocks.push([]);
       });
       
-    });    
+    });  
+    
+    this.globals.tabla_vars=[];
 
     
+  }
+
+  load_vars(){
+    this.varService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(responseVars=>{
+      this.globals.tabla_vars = responseVars;
+    });
+    this.loadTodosBlkInfo();
   }
   
   loadTodosBlkInfo() {
@@ -142,7 +146,7 @@ export class ConstruccionCBComponent implements OnInit {
       let max_Y: number=response[0].pos_y;
       //console.log("Max_X-0: "+max_X+", Max_Y-0: "+max_Y);
       for(let i=1;i<response.length;i++){
-        //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
+        console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -223,6 +227,7 @@ export class ConstruccionCBComponent implements OnInit {
         let bloque=response[i];
         let operaciones: any[]=[];
         let cont_opc: number=0;
+        response[i].tag_salida=false;
         //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
@@ -255,10 +260,17 @@ export class ConstruccionCBComponent implements OnInit {
         });
       }
       //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
-      this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
-    });   
-    
+      this.loadTodosVariables(ConsultaBloques, max_X, max_Y);
+    });  
+  }
 
+  loadTodosVariables(ConsultaBloques: any, max_X: number, max_Y: number){
+    this.varService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
+      for(let i=0;i<response.length;i++)
+        this.globals.tabla_vars.push(response[i]);
+      //console.log("Max_X-QR: "+max_X+", Max_Y-QR: "+max_Y);
+      this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
+    });
   }
 
   loadTodosBlkInfoDin(ConsultaBloques: any, max_X: number, max_Y: number) {
@@ -416,7 +428,7 @@ export class ConstruccionCBComponent implements OnInit {
 
 
   reconstruirChatbot(ConsultaBloques: any, max_X: number, max_Y: number){
-    //console.log('max_X-Final-> '+max_X+', max_Y-Final-> '+max_Y);
+    console.log('max_X-Final-> '+max_X+', max_Y-Final-> '+max_Y);
     let reconstruccion: any[]=[];
 
     for(let i=0;i<=max_Y;i++){
@@ -491,11 +503,32 @@ export class ConstruccionCBComponent implements OnInit {
                       }
                 }
           }
+          
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='internalProcess'){
+          this.crear_tag(this.globals.AllBlocks[i][j].opc_nextid, this.globals.AllBlocks[i][j].default_nextid, this.globals.AllBlocks[i][j].namestate, i, j);
+
+          for(let cont_opc=0;cont_opc<this.globals.AllBlocks[i][j].operaciones.length;cont_opc++){
+            if(this.globals.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'if' || this.globals.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'else')
+              this.crear_tag(this.globals.AllBlocks[i][j].operaciones[cont_opc].opc_nextid, this.globals.AllBlocks[i][j].operaciones[cont_opc].next_id, this.globals.AllBlocks[i][j].namestate, i, j);
+          }
         }
         
           
       }         
               
+  }
+
+  crear_tag(opc_nextid: string, next_id: string, namestate, i: number, j: number){
+    if(opc_nextid == 'Seleccionar de la lista'){
+      this.globals.AllBlocks[i][j].tag_salida=true;
+      for(let i=0;i<this.globals.AllBlocks.length;i++)
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+          if(this.globals.AllBlocks[i][j].namestate == next_id){
+            this.globals.AllBlocks[i][j].tags_entradas.push(namestate);
+            return;
+          }
+    }
   }
 
   generar_tag_caso1(i: number, j: number){

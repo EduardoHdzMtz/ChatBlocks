@@ -2,15 +2,13 @@ const db = require('../config/db.config.js');
 const bloqueInternalPrs = db.bloqueInternalPrs;
 const bloqueInternalPrs2 = db.bloqueInternalPrs2;
 
-exports.create = (req, res) => {
-	console.log("Creando un bloque info: "+req.body.opc_nextID);
-	console.log("Creando un bloque next_id: "+req.body.next_id);	
+exports.create = (req, res) => {	
 	// Save to PostgreSQL database
 	bloqueInternalPrs.create({
 				//"id_block": req.body.id_block, 
 				"namestate": req.body.namestate,
                 "id_robot": req.body.id_robot,
-                "next_id": req.body.next_id,
+                "opc_nextid": req.body.opc_nextid,
                 "default_nextid": req.body.default_nextid,
                 "blocktype": req.body.blocktype,
                 "pos_x": req.body.pos_x,

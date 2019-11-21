@@ -7,6 +7,7 @@ import { BlkInfoService } from '../../sendToDB/blkInfo.service';
 import { BlkInputService } from '../../sendToDB/blkInput.service';
 import { BlkQRService } from '../../sendToDB/blkQR.service';
 import { BlkSlideService } from '../../sendToDB/blkSlide.service';
+import { variablesService } from 'src/app/sendToDB/variables.service';
 import { ALLOW_MULTIPLE_PLATFORMS } from '@angular/core/src/application_ref';
 import { concat } from 'rxjs';
 import { BlkInfoServiceDin } from 'src/app/sendToDB/blkInfoDin.service';
@@ -25,6 +26,7 @@ export class MenuChatbotsComponent implements OnInit {
     private blokInfoDService: BlkInfoServiceDin, 
     private blokQRservice: BlkQRService,
     private blokSlideservice: BlkSlideService,
+    private varService: variablesService,
     public globals: Globals, 
     private robotService: ChatbotService
     ) { }
@@ -94,16 +96,13 @@ export class MenuChatbotsComponent implements OnInit {
     });
   }
 
-  DeleteBLKS(bot: any) { 
-    this.blokInfoservice.deleteBlkInfoBot(bot.id_robot).subscribe(response=>{});
-    
-    this.blokInputservice.deleteBlkInputBot(bot.id_robot).subscribe(response=>{});
-    
-    this.blokQRservice.deleteBlkQRBot(bot.id_robot).subscribe(response=>{});
-    
-    this.blokSlideservice.deleteBlkSlideBot(bot.id_robot).subscribe(response=>{});    
-
-    this.blokInfoDService.deleteBlkInfoBot(bot.id_robot).subscribe(response=>{}); 
+  DeleteBLKS(bot: any) {
+    this.blokInfoservice.deleteBlkInfoBot(bot.id_robot).subscribe(response=>{});    
+    this.blokInputservice.deleteBlkInputBot(bot.id_robot).subscribe(response=>{});    
+    this.blokQRservice.deleteBlkQRBot(bot.id_robot).subscribe(response=>{});    
+    this.blokSlideservice.deleteBlkSlideBot(bot.id_robot).subscribe(response=>{});
+    this.blokInfoDService.deleteBlkInfoBot(bot.id_robot).subscribe(response=>{});
+    this.varService.deleteVars_Bot(bot.id_robot).subscribe(response=>{});
   }
 
   recorrerRobots(i: number){

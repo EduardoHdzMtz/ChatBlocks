@@ -70,7 +70,7 @@ export interface InterfazViewBlkInput {
     typingtime: string,
     validacion: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     pos_x: number,
     pos_y: number,
     tags_entradas: any[];
@@ -235,12 +235,13 @@ export interface IntefazInternalProcess{
     id_block: string,
     namestate: string,
     id_robot: string,
-    next_id: string,
+    opc_nextid: string,
     default_nextid: string,
     blocktype: string,
     pos_x: number,
     pos_y: number,
     operaciones: any[];
+    tag_salida: boolean,
     tags_entradas: any[];
 }
 

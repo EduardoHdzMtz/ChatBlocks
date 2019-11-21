@@ -30,7 +30,7 @@ module.exports = (sequelize, Sequelize) => {
         default_id: {
             type: Sequelize.STRING
         },
-        save_var: {
+        id_var: {
             type: Sequelize.STRING
         },
         pos_y: {

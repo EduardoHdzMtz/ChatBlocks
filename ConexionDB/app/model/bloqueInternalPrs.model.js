@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
         namestate: {
 			type: Sequelize.STRING
 	    },
-        next_id: {
+        opc_nextid: {
             type: Sequelize.STRING
         },
         default_nextid: {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { InterfazViewBlkInfo, InterfazViewBlkInput, InterfazChatBot, InterfazElementosS, InterfazViewBlkSlide } from './interfaz-view-blk-info';
+import { InterfazViewBlkInfo, InterfazViewBlkInput, InterfazChatBot, InterfazElementosS, InterfazViewBlkSlide, InterfazVariables } from './interfaz-view-blk-info';
 
 @Injectable()
 export class Globals {
@@ -12,6 +12,8 @@ export class Globals {
     PenultimaEdBlks: any[]=[];
     elementosG: any[]=[];
     bandera_slide_nx: any;
+    conjunto_varaibles: any[];
+    tabla_vars: InterfazVariables[];
     
     
     RobotSelect: InterfazChatBot; 
@@ -20,7 +22,7 @@ export class Globals {
     //Datos usuario
     //estado: string='out';
     estado: string='in'
-    user: any= {email: 'chatbots.proyecto@gmail.com'};
+    user: any= {email: 'chatbots2.proyecto@gmail.com'};
     //user: any='';
 
     generar_Id(){

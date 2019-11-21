@@ -1,12 +1,11 @@
-<div class="div_cartas">
+<section class="div_cartas">
   
   <h2>Hola {{globals.user.name}}, estos son tus chatbots</h2><br>
   <button mat-raised-button (click)="addChatbot()"> Agregar Chatbot </button>
   <br><br><br>
 
-  <table id="idtable" class="tablaCB">
-  <tr *ngFor="let chatbots of globals.AllChatBots , let index2 = index">
-    <td *ngFor="let chatbot of chatbots">
+<div class="row" *ngFor="let chatbots of globals.AllChatBots , let index2 = index">
+  <div class="col-12 col-md-6 col-lg-4 col-xl-3" *ngFor="let chatbot of chatbots" style="text-align: center;">
         <mat-card class="example-card">
             <mat-card-header>
               <div mat-card-avatar class="example-header-image">
@@ -28,7 +27,7 @@
             </mat-card-actions>
           </mat-card>
           <br><br>
-    </td>    
-  </tr>
-</table>
+      </div>  
 </div>
+
+</section>
