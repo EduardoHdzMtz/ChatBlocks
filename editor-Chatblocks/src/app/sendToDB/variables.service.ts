@@ -13,6 +13,7 @@ const httpOptions={
 export class variablesService {
   private DataBaseUrl = 'http://148.204.64.142:8081/api/variables';  // URL to web api
   private DataBaseUrl2 = 'http://148.204.64.142:8081/api/variables/newVar';
+  private DataBaseUrl3 = 'http://148.204.64.142:8081/api/variables/getVars'
   constructor( 
     private http: HttpClient
   ) { }
@@ -32,7 +33,7 @@ export class variablesService {
   }
 
   getAll_ByRobot(id_robot: string): Observable<InterfazVariables[]> {
-    const url = `${this.DataBaseUrl}/${id_robot}`;
+    const url = `${this.DataBaseUrl3}/${id_robot}`;
     return this.http.get<InterfazVariables[]>(url);
   }
 

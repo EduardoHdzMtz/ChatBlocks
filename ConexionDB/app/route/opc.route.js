@@ -237,7 +237,7 @@ module.exports = function(app) {
 
     app.get('/api/operaciones/newOpc/:datos', Operaciones.findOperacion);
 
-    app.delete('/api/operaciones/newOpc/:id_robot', Operaciones.deleteByIdBlk);
+    app.delete('/api/operaciones/newOpc/:id_block', Operaciones.deleteByIdBlk);
 
 
     app.post('/api/variables', Variables.create);
@@ -247,6 +247,8 @@ module.exports = function(app) {
     app.delete('/api/variables/:id', Variables.delete);
 
     app.get('/api/variables/:id_var', Variables.findByIdVar);
+
+    app.get('/api/variables/getVars/:id_robot', Variables.findByIdRobot)
 
     app.get('/api/variables/newVar/:datos', Variables.findVar);
 

@@ -18,7 +18,7 @@
     </div>
 
     <div class="form-group" *ngIf="from_Selector.value.opc_nextid == 'Seleccionar de la lista'">
-      <label for="default_nextid">Siguiente estado default*</label>
+      <label for="default_nextid">Siguiente estado*</label>
       <select name="OS" id="default_nextid" placeholder="Selecciona un estado" class="form-control" formControlName="default_nextid" *ngIf="globals.AllBlocks">
         <option *ngFor="let nameST of states" [value]="nameST">{{nameST}}</option>
       </select>

@@ -96,3 +96,15 @@ exports.deleteByIdBot = (req, res) => {
 			res.status(500).json({msg: "error", details: err});
 		});
 };
+
+exports.findByIdRobot = (req, res) => {
+	const id= req.params.id_robot;
+	Variables2.findAll({
+		where: { id_robot: id }
+	}).then(Variables => {
+			res.json(Variables.sort(function(c1, c2){return c1.id - c2.id}));
+		}).catch(err => {	
+			console.log(err);
+			res.status(500).json({msg: "error", details: err});
+		});
+};

@@ -52,8 +52,8 @@ export class OperacionesService {
     return this.http.delete<IntefazOperaciones>(url, httpOptions);
   }
 
-  deleteOpcs_Bot(id_robot: any): Observable<IntefazOperaciones> {
-    const url = `${this.DataBaseUrl2}/${id_robot}`;
+  deleteOpcs_Blk(id_block: any): Observable<IntefazOperaciones> {
+    const url = `${this.DataBaseUrl2}/${id_block}`;
     return this.http.delete<IntefazOperaciones>(url, httpOptions);
   }
 

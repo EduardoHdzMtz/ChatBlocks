@@ -2,16 +2,14 @@ const db = require('../config/db.config.js');
 const BloqueInfo = db.bloqueinfo;
 const BloqueInfo2 = db.bloqueinfo2;
 
-exports.create = (req, res) => {
-	console.log("Creando un bloque info: "+req.body.opc_nextID);
-	console.log("Creando un bloque next_id: "+req.body.next_id);	
+exports.create = (req, res) => {	
 	// Save to PostgreSQL database
 	BloqueInfo.create({
 				//"id_block": req.body.id_block, 
 				"namestate": req.body.namestate, 
 				"id_robot": req.body.id_robot,
 				"contenido": req.body.contenido,
-				"opc_nextid": req.body.opc_nextID,
+				"opc_nextid": req.body.opc_nextid,
 				"next_id": req.body.next_id,
 				"blocktype": req.body.blocktype,
                 "contenttype": req.body.contenttype,

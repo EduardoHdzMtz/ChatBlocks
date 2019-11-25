@@ -260,7 +260,7 @@ export class ConstruccionCBComponent implements OnInit {
         });
       }
       //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
-      this.loadTodosVariables(ConsultaBloques, max_X, max_Y);
+      this.loadTodosBlkInfoDin(ConsultaBloques, max_X, max_Y);
     });  
   }
 
@@ -616,7 +616,7 @@ export class ConstruccionCBComponent implements OnInit {
                 if(opc_sig_estados[x] == "Generar automaticamente"){
                   //console.log("@@@@@@-sig_estados "+x+": "+sig_estados[x]);
                   //console.log("@@@@@@-lienzo: "+cont_lienzos+", cont_bloques: "+(j+cont_bloques));
-                  this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);      
+                  this.buscar_sig_estado(sig_estados[x], i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);
                   
                 } 
               }
@@ -632,6 +632,14 @@ export class ConstruccionCBComponent implements OnInit {
                   } 
               }
 
+            }
+            else if(this.globals.AllBlocks[i][j].blocktype == 'internalProcess'){
+              if(this.globals.AllBlocks[i][j].opc_nextid == 'Generar automaticamente')
+                this.buscar_sig_estado(this.globals.AllBlocks[i][j].default_nextid, i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);
+              for(let cont_opc=0; cont_opc<this.globals.AllBlocks[i][j].operaciones.length; cont_opc++){
+                if((this.globals.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'if' || this.globals.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'else') && this.globals.AllBlocks[i][j].operaciones[cont_opc].opc_nextid == 'Generar automaticamente')
+                  this.buscar_sig_estado(this.globals.AllBlocks[i][j].operaciones[cont_opc].next_id, i+1, shand[cont_lienzos], posicion.right, posicion.left, bloques_pos, cont_por_fila, posicion_btn.right);
+              }
             }
             //cont_bloques=cont_bloques+1;
           }
@@ -726,6 +734,13 @@ export class ConstruccionCBComponent implements OnInit {
         this.elementoService.deleteElementosBLK(bloque.id_block).subscribe (response=>{});
         for(let i=0;i<bloque.elementos.length;i++)
           this.botonesService.deleteBotonELM(bloque.elementos[i].id_elements).subscribe (response=>{});
+        this.deleteBlkArry(bloque, index);
+      });
+    }
+    else if(bloque.blocktype=='internalProcess'){
+      this.blokInternalPrsService.deleteBlkInternalPrs(bloque.id_block).subscribe(response=>{ 
+        for(let i=0;i<bloque.operaciones.length;i++)
+          this.opcService.deleteOpc(bloque.operaciones[i].id_operacion).subscribe (response=>{});
         this.deleteBlkArry(bloque, index);
       });
     }

@@ -7,6 +7,7 @@ import { OperacionesService } from 'src/app/sendToDB/operaciones.service';
 import { variablesService } from 'src/app/sendToDB/variables.service';
 import { Globals } from '../../interfaces/Globals';
 import { Response } from 'selenium-webdriver/http';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-from-block-internal-prs',
@@ -72,11 +73,18 @@ export class FromBlockInternalPrsComponent implements OnInit {
     this.list_cad=[];
     this.list_num=[];
 
-    for(let fil=0;fil<this.globals.AllBlocks.length;fil++)
+    /*for(let fil=0;fil<this.globals.AllBlocks.length;fil++)
       for(let col=0;col<this.globals.AllBlocks[fil].length;col++)
         if(this.globals.AllBlocks[fil][col].blocktype == 'input' || this.globals.AllBlocks[fil][col].blocktype == 'quickReply' || this.globals.AllBlocks[fil][col].blocktype == 'slide' || this.globals.AllBlocks[fil][col].blocktype == 'informativoDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'inputDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'quickReplyDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'slideDinamico'){
           this.list_cad.push(this.globals.AllBlocks[fil][col].save_var);
-        }
+        }*/
+    console.log('tam tabla_vars: '+this.globals.tabla_vars.length);
+    for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
+      if(this.globals.tabla_vars[cont_vars].opc_data == 'Cadena'){
+        this.list_cad.push(this.globals.tabla_vars[cont_vars].var);}
+      else{
+        this.list_num.push(this.globals.tabla_vars[cont_vars].var);}
+    }
 
   }
 
@@ -84,6 +92,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
   loadBloque(Internal_Process){
     let datos_bloque: any={
       namestate: Internal_Process.namestate,
+      opc_nextid: Internal_Process.opc_nextid,
       default_nextid: Internal_Process.default_nextid,
       opc_InernalProcess: ''
     }
@@ -101,7 +110,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
           opc_type_2: Internal_Process.operaciones[cont_opc].variables[1].opc_type,
           var_2: Internal_Process.operaciones[cont_opc].variables[1].var,
           opc_nextid: Internal_Process.operaciones[cont_opc].opc_nextid,
-          default_nextid: Internal_Process.operaciones[cont_opc].next_id
+          next_id: Internal_Process.operaciones[cont_opc].next_id
         }
 
         this.from_InternalProcess[cont_opc].patchValue(datos_operacion);
@@ -150,11 +159,9 @@ export class FromBlockInternalPrsComponent implements OnInit {
         this.blkInternalPrsService.getBlk(datos).subscribe(response=> {
           datosBloque.id_block=response[0].id_block;
           datosBloque.operaciones= this.Internal_Process;
-          datosBloque.tags_entradas=[];  
+          datosBloque.tags_entradas=[];
           this.bloque_final=datosBloque;
-          this.globals.AllBlocks.pop();
-          this.globals.AllBlocks.push([datosBloque]);
-          this.globals.AllBlocks.push([]);
+          
           
           for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
             this.generar_datos_operaciones(cont_opc);
@@ -165,11 +172,17 @@ export class FromBlockInternalPrsComponent implements OnInit {
           for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
             if(this.bloque_final.operaciones[cont_opc].type_operation == 'if' || this.bloque_final.operaciones[cont_opc].type_operation == 'else')
               this.crear_tag(this.bloque_final.operaciones[cont_opc].opc_nextid, this.bloque_final.operaciones[cont_opc].next_id, this.bloque_final.namestate);
-          }
+          }          
           
-          this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].tag_salida=this.bandera_tags;
 
+          this.globals.AllBlocks.pop();
+          this.globals.AllBlocks.push([this.bloque_final]);
+          this.globals.AllBlocks.push([]);
+          this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].tag_salida=this.bandera_tags;
           this.globals.generar_Id();
+          console.log('FILAS: '+this.globals.AllBlocks.length);
+          console.log('COLUMNAS: '+this.globals.AllBlocks[this.globals.AllBlocks.length-2].length);
+          console.log('Nom_bloque: '+this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].namestate);
           this.handleSuccessfulSaveTodo(datosBloque);
         });
       });       
@@ -265,10 +278,10 @@ export class FromBlockInternalPrsComponent implements OnInit {
       else if(this.bloque_final.operaciones[cont_opc].new_exist == 'existente')
         this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_1, cont_opc, 0);*/
 
-      if(!this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_1, cont_opc, 0))
+      if(this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_1, cont_opc, 0) == false)
         this.almacenar_variable(cont_opc, 0);
 
-      if(!this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_2, cont_opc, 1))
+      if(this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_2, cont_opc, 1) == false)
         this.almacenar_variable(cont_opc, 1);
 
       /*if(this.from_InternalProcess[cont_opc].value.opc_type_2 == 'Constante')
@@ -298,7 +311,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
             this.bloque_final.operaciones[cont_opc].id_var_2 = +responseVar[0].id_var;
             this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{
               console.log("ACTUALIZANDO OPERACION");
-              this.globals.AllBlocks[this.act_pos_x][this.act_pos_y]=this.bloque_final;
+              //this.globals.AllBlocks[this.act_pos_x][this.act_pos_y]=this.bloque_final;
             });
           }
           else{
@@ -309,9 +322,9 @@ export class FromBlockInternalPrsComponent implements OnInit {
   }
 
   crear_datos_cargar(nom_var: string, cont_opc: number, cont_var: number){
-    for(let cont_var=0; cont_var<this.globals.conjunto_varaibles.length; cont_var++){
-      if(this.globals.conjunto_varaibles[cont_var].var == nom_var){
-        this.bloque_final.operaciones[cont_opc].variables[cont_var].id_var = this.globals.conjunto_varaibles[cont_var].id_var;
+    for(let cont_var=0; cont_var<this.globals.tabla_vars.length; cont_var++){
+      if(this.globals.tabla_vars[cont_var].var == nom_var){
+        this.bloque_final.operaciones[cont_opc].variables[cont_var].id_var = this.globals.tabla_vars[cont_var].id_var;
         return true;
       }
     }

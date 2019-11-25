@@ -12,7 +12,6 @@ export class Globals {
     PenultimaEdBlks: any[]=[];
     elementosG: any[]=[];
     bandera_slide_nx: any;
-    conjunto_varaibles: any[];
     tabla_vars: InterfazVariables[];
     
     
@@ -52,6 +51,18 @@ export class Globals {
                       contNextArr=this.validarCont(contNextArr, i);
                     }
               }
+              else if(this.AllBlocks[i][j].blocktype == 'internalProcess'){
+                if(this.AllBlocks[i][j].opc_nextid== 'Generar automaticamente'){
+                  this.AllBlocks[i][j].default_nextid = this.AllBlocks[i+1][contNextArr].namestate; 
+                  contNextArr=this.validarCont(contNextArr, i);
+                }
+                for(let cont_opc=0; cont_opc<this.AllBlocks[i][j].operaciones.length; cont_opc++){
+                  if((this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'if' || this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'else') && this.AllBlocks[i][j].operaciones[cont_opc].opc_nextid == 'Generar automaticamente'){
+                    this.AllBlocks[i][j].operaciones[cont_opc].next_id = this.AllBlocks[i+1][contNextArr].namestate;
+                    contNextArr=this.validarCont(contNextArr, i);                
+                  }
+                }
+              }
               else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                 let opc_type=this.AllBlocks[i][j].opc_nextid.split(",");
                 let arr_nx=this.AllBlocks[i][j].next_id.split(",");
@@ -82,7 +93,17 @@ export class Globals {
                   for(let cont_btn=0;cont_btn<this.AllBlocks[i][j].elementos[cont_e].botones.length;cont_btn++)
                     if(this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].opc_nextid == 'Generar automaticamente')
                       this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].contentbutton= '';
-              }                
+              }
+              else if(this.AllBlocks[i][j].blocktype == 'internalProcess'){
+                if(this.AllBlocks[i][j].opc_nextid== 'Generar automaticamente'){
+                  this.AllBlocks[i][j].default_nextid= '';
+                }
+                for(let cont_opc=0; cont_opc<this.AllBlocks[i][j].operaciones.length; cont_opc++){
+                  if((this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'if' || this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'else') && this.AllBlocks[i][j].operaciones[cont_opc].opc_nextid == 'Generar automaticamente'){
+                    this.AllBlocks[i][j].operaciones[cont_opc].next_id = '';               
+                  }
+                }
+              }              
               else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                 let opc_type=this.AllBlocks[i][j].opc_nextid.split(",");
                 let arr_nx=this.AllBlocks[i][j].next_id.split(",");
@@ -117,6 +138,16 @@ export class Globals {
                         for(let cont_btn=0;cont_btn<this.AllBlocks[i][j].elementos[cont_e].botones.length;cont_btn++)
                           if(this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].opc_nextid == 'Generar automaticamente')
                             this.AllBlocks[i][j].elementos[cont_e].botones[cont_btn].contentbutton= this.AllBlocks[y][0].namestate;
+                    }
+                    else if(this.AllBlocks[i][j].blocktype == 'internalProcess'){
+                      if(this.AllBlocks[i][j].opc_nextid== 'Generar automaticamente'){
+                        this.AllBlocks[i][j].default_nextid= this.AllBlocks[y][0].namestate;
+                      }
+                      for(let cont_opc=0; cont_opc<this.AllBlocks[i][j].operaciones.length; cont_opc++){
+                        if((this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'if' || this.AllBlocks[i][j].operaciones[cont_opc].type_operation == 'else') && this.AllBlocks[i][j].operaciones[cont_opc].opc_nextid == 'Generar automaticamente'){
+                          this.AllBlocks[i][j].operaciones[cont_opc].next_id = this.AllBlocks[y][0].namestate;               
+                        }
+                      }
                     }
                     else if(this.AllBlocks[i][j].blocktype=='quickReply'){
                       let opc_nx=this.AllBlocks[i][j].opc_nextid.split(",");

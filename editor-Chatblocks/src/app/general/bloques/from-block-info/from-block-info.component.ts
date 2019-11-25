@@ -66,6 +66,7 @@ export class FromBlockInfoComponent implements OnInit {
       let datosBloque: InterfazViewBlkInfo = this.fromBlksInfo.value;
       datosBloque.id_block = '12';
       datosBloque.id_robot=this.globals.RobotSelect.id_robot;
+      //datosBloque.opc_nextid = this.fromBlksInfo.value.opc_nextid;
       datosBloque.blocktype='informativo';
       datosBloque.contenttype='text';
       datosBloque.pos_x=0;
