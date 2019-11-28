@@ -146,6 +146,7 @@ export class ConstruccionCBComponent implements OnInit {
       let max_Y: number=response[0].pos_y;
       //console.log("Max_X-0: "+max_X+", Max_Y-0: "+max_Y);
       for(let i=1;i<response.length;i++){
+        console.log("NameState: "+response[i].namestate);
         console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;

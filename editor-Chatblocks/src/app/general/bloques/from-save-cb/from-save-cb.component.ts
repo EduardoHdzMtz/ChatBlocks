@@ -119,17 +119,23 @@ export class FromSaveCBComponent implements OnInit {
   }
 
   saveAllBloks(){
+    let id_vars: any[]=[];
     for(let i=0;i<(this.globals.AllBlocks.length-1);i++){
       for(let j=0;j<this.globals.AllBlocks[i].length;j++){
         if(this.globals.AllBlocks[i][j].blocktype=='informativo')
           this.blkInfoService.updateBlkInfo(this.globals.AllBlocks[i][j]).subscribe(response=>{});
-        else if(this.globals.AllBlocks[i][j].blocktype=='input')
+        else if(this.globals.AllBlocks[i][j].blocktype=='input'){
           this.blkInputService.updateBlkInput(this.globals.AllBlocks[i][j]).subscribe(response=>{});
-        else if(this.globals.AllBlocks[i][j].blocktype=='quickReply')
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='quickReply'){
           this.blkQRService.updateBlkQR(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
+        }
         else if(this.globals.AllBlocks[i][j].blocktype=='slide'){
           this.actualizar_Slide(i,j);
           this.blkSlideService.updateBlkSlide(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
           for(let cont_elm=0;cont_elm<this.globals.AllBlocks[i][j].elementos.length;cont_elm++){
             this.elementoService.updateElementos(this.globals.AllBlocks[i][j].elementos[cont_elm]).subscribe(response=>{});
             for(let cont_btn=0;cont_btn<this.globals.AllBlocks[i][j].elementos[cont_elm].botones.length;cont_btn++)
@@ -139,19 +145,38 @@ export class FromSaveCBComponent implements OnInit {
         else if(this.globals.AllBlocks[i][j].blocktype=='internalProcess'){
           this.blkInternalPrsService.updateBlkInternalPrs(this.globals.AllBlocks[i][j]).subscribe(response=>{});
           for(let cont_opc=0;cont_opc<this.globals.AllBlocks[i][j].operaciones.length;cont_opc++){
-            this.opcService.updateOpc(this.globals.AllBlocks[i][j].operaciones[cont_opc]).subscribe(response=>{});            
+            this.opcService.updateOpc(this.globals.AllBlocks[i][j].operaciones[cont_opc]).subscribe(response=>{});   
+            if(this.globals.AllBlocks[i][j].operaciones[cont_opc].type_operation != 'else'){
+              id_vars.push(this.globals.AllBlocks[i][j].operaciones[cont_opc].id_var_1);  
+              id_vars.push(this.globals.AllBlocks[i][j].operaciones[cont_opc].id_var_2);  
+            }      
           }
         }
         else if(this.globals.AllBlocks[i][j].blocktype=='informativoDinamico')
           this.blkInfoDService.updateBlkInfo(this.globals.AllBlocks[i][j]).subscribe(response=>{});
-        else if(this.globals.AllBlocks[i][j].blocktype=='slideDinamico')
+        else if(this.globals.AllBlocks[i][j].blocktype=='slideDinamico'){
           this.blkSlideDService.updateBlkSlide(this.globals.AllBlocks[i][j]).subscribe(response=>{});
-        else if(this.globals.AllBlocks[i][j].blocktype=='inputDinamico')
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='inputDinamico'){
           this.blkInputDService.updateBlkInput(this.globals.AllBlocks[i][j]).subscribe(response=>{});
-        else if(this.globals.AllBlocks[i][j].blocktype=='quickReplyDinamico')
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
+        }
+        else if(this.globals.AllBlocks[i][j].blocktype=='quickReplyDinamico'){
           this.blkQRDService.updateBlkQR(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          id_vars.push(this.globals.AllBlocks[i][j].id_var);
+        }
       }
     }  
+
+    for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
+      if(id_vars.includes(this.globals.tabla_vars[cont_vars].id_var) == false)
+        this.varService.deleteVar(this.globals.tabla_vars[cont_vars].id_var).subscribe(responce=>{});
+    }
+    
+  }
+
+  actualizar_listaVars(){
     
   }
 
