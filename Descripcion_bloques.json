@@ -1,0 +1,244 @@
+{
+    "ejemplo_Info": {
+        "content": "string example: text,url",
+        "next_id": "text_string",
+        "blockType": "informativo",
+        "contentType": "string cases:text,video,image",
+        "typingTime": "number"
+    },
+    "ejemplo_Input": {
+        "content": "string example: text",
+        "next_id": "text_string",
+        "blockType": "input",
+        "contentType": "string cases:text,video,image",
+        "typingTime": "number",
+        "validacion":"text_string (Regex)",
+        "Default_id":"text_string",
+        "id_var":"number"
+    },
+    "ejemplo_QR": {
+        "content": "string example: text",
+        "options":["caso1","caso2","caso3","caso4"],
+        "next_id": {
+            "caso1":"next_id1",
+            "caso2":"next_id2",
+            "caso3":"next_id3",
+            "caso4":"next_id4" 
+        },
+        "blockType": "quickReplay",
+        "typingTime": "number",
+        "Default_id":"text_string",
+        "id_var":"number"
+    },
+    "ejemplo_Slide": {
+        "content": [
+            {
+                "title":"text_string",
+                "subtitle":" text_string ",
+                "image_url":"string example: url",
+                "Butons":[{
+                    "titleButton":"text_string",
+                    "typeButton": "string example: web_url, postback",
+                    "contentButton": "text_string"
+                }]
+            }
+        ],
+        "next_id": " string example: list_options",
+        "blockType": "Slide",
+        "typingTime": "number",
+        "default_id":"text_string",
+        "id_var":"number"          
+    },
+    "ejemplo_SlideBuy": {
+        "content": [
+            {
+                "title":"text_string",
+                "subtitle":" text_string ",
+                "image_url":"string example: url",
+                "price": "string example: $10, ...",
+                "Butons":[{
+                    "titleButton":"text_string",
+                    "typeButton": "string example: web_url, postback",
+                    "contentButton": "text_string"
+                }]
+            }
+        ],
+        "next_id": "text_string",
+        "blockType": "SlideBuy",
+        "typingTime": "number",
+        "Default_id":"text_string",
+        "id_var":"number"          
+    },
+    "ejemplo_Ticket": {
+        "next_id": "text_string",
+        "blockType": "informativo",
+        "typingTime": "number",
+        "rescue_var": "text_string",
+        "shipping_cost": "text_string",
+        "total_taxes": "text_string",
+        "street1_var": "text_string",
+        "street2_var": "text_string",
+        "city_var": "text_string",
+        "pc_var": "text_string",
+        "state_var": "text_string",
+        "country_var": "text_string",
+        "paymethod_var": "text_string",
+        "nameu_var": "text_string"
+    },
+    "ejemplo_Internal_Process":{
+        "opc_nextid": "text_string",
+        "default_nextid": "text_string",
+        "blocktype": "text_string: internalProcess",
+        "operaciones": [
+            {
+                "type_operation": "text_string: if",
+                "id_var_1": "number",
+                "opc_operation": "string example: ==, <, >, !=",
+                "id_var_2": "number",
+                "next_id": "text_string"
+            },
+            {
+                "type_operation": "text_string: Matt",
+                "id_var_1": "number",
+                "opc_operation": "string example: +, -, *, /",
+                "id_var_2": "number",
+                "next_id": "text_string"
+            },
+            {
+                "type_operation": "text_string: else",
+                "next_id": "text_string"
+            },
+            {
+                "type_operation": "text_string: Mod_var",
+                "id_var_1": "number",
+                "opc_operation": "text_string: =",
+                "id_var_2": "number",
+                "next_id": "text_string"
+            },
+            {...},...
+        ]
+    },
+
+    
+    "ejemplo_InfoDinamico": {
+        "content": "
+            #En este apartado se introduce el Handlebars con el que se generará dinámicamente el mensaje del bloque.
+            string example: text
+        ",
+        "links": {
+            "url1": "string example: text",
+            "url2": "string example: text"
+        },
+        "credenciales": {
+            "client_id": "string example: text",
+            "client_secret": "string example: text"
+        },
+        "next_id": "text_string",
+        "blockType": "informativoDinamico",
+        "contentType": "string cases:text",
+        "typingTime": "number"
+    },
+    "ejemplo_InputDinamico": {
+        "content": "
+            #En este apartado se introduce el Handlebars con el que se generará dinámicamente el mensaje del bloque.
+            string example: text
+        ",
+        "links": {
+            "url1": "string example: text",
+            "url2": "string example: text"
+        },
+        "credenciales": {
+            "client_id": "string example: text",
+            "client_secret": "string example: text"
+        },
+        "next_id": "text_string",
+        "blockType": "informativoDinamico",
+        "contentType": "string cases:text",
+        "typingTime": 4,
+        "id_var":"varName"
+    },
+    "ejemplo_QRDinamico": {
+      "content": "string example: text",
+      "links": {
+          "url1": "string example: text",
+          "url2": "string example: text"
+      },
+      "credenciales": {
+          "client_id": "string example: text",
+          "client_secret": "string example: text"
+      },
+      "options": "string example: 
+        #En este apartado se introduce el Handlebars con el que se generará las opciones que contendra el bloque (for each ...) .
+        ['opcion_1', 'opcion_2', ...]
+      ",
+      "blockType": "quickReplayDinamico",
+      "typingTime": "number",
+      "Default_id":"text_string",
+      "id_var":"varName"
+    },
+    "ejemplo_SlideDinamico": {
+        "content": "[
+            #Por cada estacion se genera los siguientes datos con ayuda del Handlebars especificado en este campo (for each ...) .
+            {
+                'title': 'text_string',
+                'subtitle': 'text_string' ,
+                'url': 'string example: url',
+                'Butons':[{
+                'title': 'text_string',
+                'typeButton': 'string example: web_url, postback',
+                'contentButton': 'text_string'
+            }
+        ]",
+        "links": {
+            "url1": "string example: text",
+            "url2": "string example: text"
+        },
+        "credenciales": {
+            "client_id": "string example: text",
+            "client_secret": "string example: text"
+        },
+        "next_id": " string example: list_options",
+        "blockType": "Slide",
+        "typingTime": "number",
+        "Default_id":"text_string",
+        "id_var":"varName"    
+    },
+    "ejemplo_TicketDinamico": {
+        "content": "
+            #En este apartado se introduce el Handlebars con el que se generará dinámicamente los siguientes datos.
+            'rescue_var': 'text_string',
+            'shipping_cost': 'text_string',
+            'total_taxes': 'text_string',
+            'street1_var': 'text_string',
+            'street2_var': 'text_string',
+            'city_var': 'text_string',
+            'pc_var': 'text_string',
+            'state_var': 'text_string',
+            'country_var': 'text_string',
+            'paymethod_var': 'text_string',
+            'nameu_var': 'text_string'
+        ",
+        "links": {
+            "url1": "string example: text",
+            "url2": "string example: text"
+        },
+        "credenciales": {
+            "client_id": "string example: text",
+            "client_secret": "string example: text"
+        },
+        "next_id": "text_string",
+        "blockType": "informativo",
+        "typingTime": "number",
+    },
+
+    //Conjunto de variables
+    "variables": [
+        {
+            "id_var": "number",
+            "opc_data": "string example: Cadena, Numero",
+            "var": "text_string"
+        }
+        {...},...
+    ]
+
+}
