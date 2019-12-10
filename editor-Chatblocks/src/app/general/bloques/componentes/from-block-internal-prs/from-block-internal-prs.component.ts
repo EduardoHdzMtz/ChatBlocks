@@ -32,6 +32,9 @@ export class FromBlockInternalPrsComponent implements OnInit {
   bandera_tags: boolean;
   act_pos_x: number;
   act_pos_y: number;
+  edit_opcNX: string;
+  edit_NX: string;
+  edit_nom_estado: string;
 
   constructor(
     private modalService: NgbModal,
@@ -73,19 +76,12 @@ export class FromBlockInternalPrsComponent implements OnInit {
   cargar_var(){
     this.list_cad=[];
     this.list_num=[];
-
-    /*for(let fil=0;fil<this.globals.AllBlocks.length;fil++)
-      for(let col=0;col<this.globals.AllBlocks[fil].length;col++)
-        if(this.globals.AllBlocks[fil][col].blocktype == 'input' || this.globals.AllBlocks[fil][col].blocktype == 'quickReply' || this.globals.AllBlocks[fil][col].blocktype == 'slide' || this.globals.AllBlocks[fil][col].blocktype == 'informativoDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'inputDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'quickReplyDinamico' || this.globals.AllBlocks[fil][col].blocktype == 'slideDinamico'){
-          this.list_cad.push(this.globals.AllBlocks[fil][col].save_var);
-        }*/
       for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
         if(this.globals.tabla_vars[cont_vars].opc_data == 'Cadena' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
           this.list_cad.push(this.globals.tabla_vars[cont_vars].var);}
         else if(this.globals.tabla_vars[cont_vars].opc_data == 'Numero' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
           this.list_num.push(this.globals.tabla_vars[cont_vars].var);}
       }
-
   }
 
 
@@ -96,6 +92,10 @@ export class FromBlockInternalPrsComponent implements OnInit {
       default_nextid: Internal_Process.default_nextid,
       opc_InernalProcess: ''
     }
+
+    this.edit_opcNX=Internal_Process.opc_nextid;
+    this.edit_NX=Internal_Process.next_id;
+    this.edit_nom_estado=Internal_Process.namestate;
 
     this.from_Selector.patchValue(datos_bloque);
     let datos_operacion: any;
@@ -111,13 +111,8 @@ export class FromBlockInternalPrsComponent implements OnInit {
           if(this.globals.tabla_vars[cont_vars].id_var == Internal_Process.operaciones[cont_opc].id_var_2){
             var2_pos = cont_vars;}
         }
-        console.log("Var_opc_1-> "+Internal_Process.operaciones[cont_opc].id_var_1);
-        console.log("Var_opc_2-> "+Internal_Process.operaciones[cont_opc].id_var_2);
-        console.log("var_1: "+var1_pos+", ["+this.globals.tabla_vars[var1_pos].id_var+"]"+", nom: "+this.globals.tabla_vars[var1_pos].var);
-        console.log("var_2: "+var2_pos+", ["+this.globals.tabla_vars[var2_pos].id_var+"]"+", nom: "+this.globals.tabla_vars[var2_pos].var);
-
         datos_operacion={
-          new_exist: Internal_Process.operaciones[cont_opc].new_exist,
+          new_exist: "existente",
           opc_data_1: this.globals.tabla_vars[var1_pos].opc_data,
           var_1: this.globals.tabla_vars[var1_pos].var,
           opc_operation: Internal_Process.operaciones[cont_opc].opc_operation,
@@ -139,15 +134,6 @@ export class FromBlockInternalPrsComponent implements OnInit {
           next_id: Internal_Process.operaciones[cont_opc].next_id
         } 
       }
-        console.log("----------------------------------")
-        console.log("new_exist: "+datos_operacion .new_exist);
-        console.log("opc_data_1: "+datos_operacion .opc_data_1);
-        console.log("var_1: "+datos_operacion .var_1);
-        console.log("opc_operation: "+datos_operacion .opc_operation);
-        console.log("opc_type_2: "+datos_operacion .opc_type_2);
-        console.log("var_2: "+datos_operacion .var_2);
-        console.log("opc_nextid: "+datos_operacion .opc_nextid);
-        console.log("next_id: "+datos_operacion .next_id);
 
         this.from_InternalProcess[cont_opc].patchValue(datos_operacion);
 
@@ -169,7 +155,6 @@ export class FromBlockInternalPrsComponent implements OnInit {
           this.Internal_Process[cont_opc].variables[cont_var].opc_data = Internal_Process.operaciones[cont_opc].variables[cont_var].opc_data;
           this.Internal_Process[cont_opc].variables[cont_var].var = Internal_Process.operaciones[cont_opc].variables[cont_var].var;
         }
-      //}
     }
   }
 
@@ -203,23 +188,7 @@ export class FromBlockInternalPrsComponent implements OnInit {
             this.generar_datos_operaciones(cont_opc);
           }
 
-          this.crear_tag(this.bloque_final.opc_nextid, this.bloque_final.default_nextid, this.bloque_final.namestate);
-
-          for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
-            if(this.bloque_final.operaciones[cont_opc].type_operation == 'if' || this.bloque_final.operaciones[cont_opc].type_operation == 'else')
-              this.crear_tag(this.bloque_final.operaciones[cont_opc].opc_nextid, this.bloque_final.operaciones[cont_opc].next_id, this.bloque_final.namestate);
-          }          
           
-
-          this.globals.AllBlocks.pop();
-          this.globals.AllBlocks.push([this.bloque_final]);
-          this.globals.AllBlocks.push([]);
-          this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].tag_salida=this.bandera_tags;
-          this.globals.generar_Id();
-          console.log('FILAS: '+this.globals.AllBlocks.length);
-          console.log('COLUMNAS: '+this.globals.AllBlocks[this.globals.AllBlocks.length-2].length);
-          console.log('Nom_bloque: '+this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].namestate);
-          this.handleSuccessfulSaveTodo(datosBloque);
         });
       });       
       
@@ -230,21 +199,16 @@ export class FromBlockInternalPrsComponent implements OnInit {
       datosBloque.blocktype='internalProcess';
       datosBloque.pos_x=this.bloque.pos_x;
       datosBloque.pos_y=this.bloque.pos_y;
+      datosBloque.operaciones=[];
+      datosBloque.tag_salida=false;
       this.act_pos_x = this.bloque.pos_x;
       this.act_pos_y = this.bloque.pos_y;
       
       this.blkInternalPrsService.updateBlkInternalPrs(datosBloque).subscribe(response=>{
-        datosBloque.operaciones=[];
-        datosBloque.tags_entradas=[];
-        datosBloque.tag_salida=false;      
-
+        datosBloque.operaciones = this.Internal_Process;
+        datosBloque.tags_entradas=this.bloque.tags_entradas;
         this.bloque_final=datosBloque;
-        this.bloque_final.operaciones=this.Internal_Process;
-        this.bloque_final.tags_entradas=this.bloque.tags_entradas;
-
-        for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
-          this.editar_operaciones(cont_opc);
-        }
+        
         let bandera_encontrado: boolean;
         for(let cont_opc_ant=0;cont_opc_ant<this.bloque.operaciones.length;cont_opc_ant++){
           bandera_encontrado=false;
@@ -254,18 +218,89 @@ export class FromBlockInternalPrsComponent implements OnInit {
               break;
             }    
           }
-          if(!bandera_encontrado)
+          if(bandera_encontrado == false)
             this.opcService.deleteOpc(this.bloque.operaciones[cont_opc_ant].id_operacion).subscribe(response=>{});    
         }
+
+        for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
+          this.editar_operaciones(cont_opc);
+        }
+        
+        //Eliminar tags
+        this.eliminar_TAGS();
+        //agregar los editados tags
+        this.crear_tag(this.bloque_final.opc_nextid, this.bloque_final.default_nextid, this.bloque_final.namestate);
+
+        for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
+          if(this.bloque_final.operaciones[cont_opc].type_operation == 'if' || this.bloque_final.operaciones[cont_opc].type_operation == 'else')
+            this.crear_tag(this.bloque_final.operaciones[cont_opc].opc_nextid, this.bloque_final.operaciones[cont_opc].next_id, this.bloque_final.namestate);
+        }
+        
+        for(let i=0;i<this.globals.AllBlocks.length;i++){
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+            if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
+              this.globals.AllBlocks[i][j]=this.bloque_final;
+              this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
+              this.globals.AllBlocks[i][j].tag_salida=this.bandera_tags;
+            }
+          }
+        }
+
         this.handleSuccessfulEditTodo(datosBloque);
       });
       
     }
   }
 
+  eliminar_TAGS(){
+    let conts_: number[]= [];
+    if(this.bloque.opc_nextid == 'Seleccionar de la lista'){
+      conts_ = this.buscar_estados(this.bloque.default_nextid);
+      this.eliminar_tag(this.bloque.namestate, conts_[0], conts_[1]);
+    }      
+    for(let cont_opc=0; cont_opc<this.bloque.operaciones.length; cont_opc++)
+      if((this.bloque.operaciones[cont_opc].type_operation == 'if' || this.bloque.operaciones[cont_opc].type_operation == 'else') && this.bloque.operaciones[cont_opc].opc_nextid == 'Seleccionar de la lista'){
+        conts_ = this.buscar_estados(this.bloque.operaciones[cont_opc].next_id);
+        this.eliminar_tag(this.bloque.namestate, conts_[0], conts_[1]);
+      }
+  }
+
+  eliminar_tag(nom_estado, i, j){
+    for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++){
+      console.log("- "+this.globals.AllBlocks[i][j].tags_entradas[y]);
+      if(this.globals.AllBlocks[i][j].tags_entradas[y]==nom_estado)
+        this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+    }
+  }
+
+  buscar_estados(name_state: string){
+    let conts_: number[]= [];
+    for(let i=0;i<this.globals.AllBlocks.length;i++){
+      for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+        if(this.globals.AllBlocks[i][j].namestate == name_state){
+          conts_.push(i); conts_.push(j);
+          return conts_;
+        }
+      }
+    }
+    return conts_;
+  }
+
   editar_operaciones(cont_opc: number){
     this.bloque_final.operaciones[cont_opc].order_opc = cont_opc;
     if(this.bloque_final.operaciones[cont_opc].id_block != 'sin asignar'){
+      if(this.bloque_final.operaciones[cont_opc].type_operation == 'if' ){
+        this.bloque_final.operaciones[cont_opc].opc_operation = this.from_InternalProcess[cont_opc].value.opc_operation;
+        this.bloque_final.operaciones[cont_opc].opc_nextid = this.from_InternalProcess[cont_opc].value.opc_nextid;
+        this.bloque_final.operaciones[cont_opc].next_id = this.from_InternalProcess[cont_opc].value.next_id;
+      }
+      else if(this.bloque_final.operaciones[cont_opc].type_operation == 'else' ){
+        this.bloque_final.operaciones[cont_opc].opc_nextid = this.from_InternalProcess[cont_opc].value.opc_nextid;
+        this.bloque_final.operaciones[cont_opc].next_id = this.from_InternalProcess[cont_opc].value.next_id;
+      }
+      else if(this.bloque_final.operaciones[cont_opc].type_operation == 'Matt' )
+        this.bloque_final.operaciones[cont_opc].opc_operation = this.from_InternalProcess[cont_opc].value.opc_operation;
+      
       this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseOpc=>{
         this.casos_variables(cont_opc);
       });
@@ -310,56 +345,8 @@ export class FromBlockInternalPrsComponent implements OnInit {
   casos_variables(cont_opc: number){
     if(this.bloque_final.operaciones[cont_opc].type_operation != 'else'){
       this.almacenar_variable(cont_opc, 0);
-
-      /*if(this.bloque_final.operaciones[cont_opc].new_exist == 'nueva')
-        this.almacenar_variable(cont_opc, 0);
-      else if(this.bloque_final.operaciones[cont_opc].new_exist == 'existente')
-        this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_1, cont_opc, 0);*/
-
-      /*if(this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_1, cont_opc, 0) == false){
-        this.almacenar_variable(cont_opc, 0).subscribe(responce=>{
-          if(this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_2, cont_opc, 1) == false)
-            this.almacenar_variable(cont_opc, 1);
-          else{
-            this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{});
-          }
-        });
-      }
-      else{
-        if(this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_2, cont_opc, 1) == false)
-          this.almacenar_variable(cont_opc, 1);
-        else{
-          console.log('Actualizacion operacion 1');
-          console.log('id_operacion -> '+this.bloque_final.operaciones[cont_opc].id_operacion);
-          console.log('id_block -> '+this.bloque_final.operaciones[cont_opc].id_block);
-          console.log('order_opc -> '+this.bloque_final.operaciones[cont_opc].order_opc);
-          console.log('type_operation -> '+this.bloque_final.operaciones[cont_opc].type_operation);
-          console.log('new_exist -> '+this.bloque_final.operaciones[cont_opc].new_exist);
-          console.log('id_var_1 -> '+this.bloque_final.operaciones[cont_opc].id_var_1);
-          console.log('opc_operation -> '+this.bloque_final.operaciones[cont_opc].opc_operation);
-          console.log('id_var_2 -> '+this.bloque_final.operaciones[cont_opc].id_var_2);
-          console.log('opc_nextid -> '+this.bloque_final.operaciones[cont_opc].opc_nextid);
-          console.log('next_id -> '+this.bloque_final.operaciones[cont_opc].next_id);
-
-          this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{});
-        }
-      }*/
-
-      
-
-      /*if(this.from_InternalProcess[cont_opc].value.opc_type_2 == 'Constante')
-        this.almacenar_variable(cont_opc, 1);
-      else if(this.from_InternalProcess[cont_opc].value.opc_type_2 == 'Variable')
-        this.crear_datos_cargar(this.from_InternalProcess[cont_opc].value.var_2, cont_opc, 1);*/
     }
   }
-
-
-
-
-
-
-
 
   almacenar_variable(cont_opc: number, cont_var: number){
     let var_bandera: boolean= false;
@@ -394,6 +381,8 @@ export class FromBlockInternalPrsComponent implements OnInit {
             if(cont_var == 1){
               this.bloque_final.operaciones[cont_opc].id_var_2 = responseVar[0].id_var;
               this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{});
+              if(cont_opc == (this.from_InternalProcess.length-1) && this.createMode)
+                this.finalizar_guardado();
             }
             else{
               this.bloque_final.operaciones[cont_opc].id_var_1 = responseVar[0].id_var;
@@ -405,10 +394,32 @@ export class FromBlockInternalPrsComponent implements OnInit {
     else{
       if(cont_var == 0)
         this.almacenar_variable(cont_opc, 1);
-      else
+      else{
         this.opcService.updateOpc(this.bloque_final.operaciones[cont_opc]).subscribe(responseUpOp=>{});
+        if(cont_opc == (this.from_InternalProcess.length-1) && this.createMode)
+          this.finalizar_guardado();
+          
+      }
     }
     
+  }
+
+  finalizar_guardado(){
+    this.crear_tag(this.bloque_final.opc_nextid, this.bloque_final.default_nextid, this.bloque_final.namestate);
+
+          for(let cont_opc=0;cont_opc<this.from_InternalProcess.length;cont_opc++){
+            if(this.bloque_final.operaciones[cont_opc].type_operation == 'if' || this.bloque_final.operaciones[cont_opc].type_operation == 'else')
+              this.crear_tag(this.bloque_final.operaciones[cont_opc].opc_nextid, this.bloque_final.operaciones[cont_opc].next_id, this.bloque_final.namestate);
+          }   
+                
+          
+
+          this.globals.AllBlocks.pop();
+          this.globals.AllBlocks.push([this.bloque_final]);
+          this.globals.AllBlocks.push([]);
+          this.globals.AllBlocks[this.globals.AllBlocks.length-2][0].tag_salida=this.bandera_tags;
+          this.globals.generar_Id();
+          this.handleSuccessfulSaveTodo(this.bloque_final);
   }
 
 
@@ -442,9 +453,9 @@ export class FromBlockInternalPrsComponent implements OnInit {
     return false;
   }
 
-  crear_tag(opc_nextid: string, next_id: string, namestate){
+  crear_tag(opc_nextid: string, next_id: string, namestate: string){
     if(opc_nextid == 'Seleccionar de la lista'){
-      this.bandera_tags=true;
+      this.bandera_tags = true;
       for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++)
           if(this.globals.AllBlocks[i][j].namestate == next_id){

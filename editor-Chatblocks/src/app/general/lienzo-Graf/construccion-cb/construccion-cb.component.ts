@@ -740,9 +740,24 @@ export class ConstruccionCBComponent implements OnInit {
     }
     else if(bloque.blocktype=='internalProcess'){
       this.blokInternalPrsService.deleteBlkInternalPrs(bloque.id_block).subscribe(response=>{ 
-        for(let i=0;i<bloque.operaciones.length;i++)
-          this.opcService.deleteOpc(bloque.operaciones[i].id_operacion).subscribe (response=>{});
-        this.deleteBlkArry(bloque, index);
+        for(let i=0;i<bloque.operaciones.length;i++){
+          if(bloque.operaciones[i].opc_nextid == 'Seleccionar de la lista'){
+            for(let i_=0;i_<this.globals.AllBlocks.length;i_++)
+              for(let j=0;j<this.globals.AllBlocks[i_].length;j++)
+                if(bloque.operaciones[i].next_id == this.globals.AllBlocks[i_][j].namestate){
+                  for(let y=0;y<this.globals.AllBlocks[i_][j].tags_entradas.length;y++)
+                    if(this.globals.AllBlocks[i_][j].tags_entradas[y]==bloque.namestate){
+                      this.globals.AllBlocks[i_][j].tags_entradas.splice(y, 1);
+                      break;
+                    }
+                }
+          }
+          this.opcService.deleteOpc(bloque.operaciones[i].id_operacion).subscribe (response=>{
+          if((bloque.operaciones.length-1) == i)
+              this.deleteBlkArry(bloque, index);
+          });
+        }
+        
       });
     }
     else if(bloque.blocktype=='informativoDinamico'){
@@ -813,6 +828,32 @@ export class ConstruccionCBComponent implements OnInit {
                     }
                   break;   
                 }
+    }
+    else if(bloque.blocktype=='slide'){
+      if(bloque.opc_nextid == 'Seleccionar de la lista'){
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+            if(bloque.next_id==this.globals.AllBlocks[i][j].namestate){
+              for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate){
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+                  break;
+                }
+            }
+      }
+    }
+    else if(bloque.blocktype=='internalProcess'){
+      if(bloque.opc_nextid == 'Seleccionar de la lista'){
+        for(let i=0;i<this.globals.AllBlocks.length;i++)
+          for(let j=0;j<this.globals.AllBlocks[i].length;j++)
+            if(bloque.default_nextid==this.globals.AllBlocks[i][j].namestate){
+              for(let y=0;y<this.globals.AllBlocks[i][j].tags_entradas.length;y++)
+                if(this.globals.AllBlocks[i][j].tags_entradas[y]==bloque.namestate){
+                  this.globals.AllBlocks[i][j].tags_entradas.splice(y, 1);
+                  break;
+                }
+            }
+      }
     }
 
     for(let i=0;i<this.globals.AllBlocks[index].length;i++){

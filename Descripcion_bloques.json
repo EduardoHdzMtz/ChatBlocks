@@ -204,6 +204,7 @@
         "id_var":"varName"    
     },
     "ejemplo_TicketDinamico": {
+        "namestate": "text_string",
         "content": "
             #En este apartado se introduce el Handlebars con el que se generará dinámicamente los siguientes datos.
             'rescue_var': 'text_string',
@@ -237,7 +238,7 @@
             "id_var": "number",
             "opc_data": "string example: Cadena, Numero",
             "var": "text_string"
-        }
+        },
         {...},...
     ]
 
