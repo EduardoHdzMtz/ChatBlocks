@@ -15,6 +15,7 @@ module.exports = function(app) {
     const bloqueInternalPrs= require('../controller/bloqueInternalPrs.controller');
     const Operaciones= require('../controller/Operaciones.controller');
     const Variables= require('../controller/variables.controller');
+    const bloqueticket= require('../controller/bloqueTicket.controller.js'); 
  
     app.post('/api/chatbotsDB', robots.create);
 
@@ -253,6 +254,35 @@ module.exports = function(app) {
     app.get('/api/variables/newVar/:datos', Variables.findVar);
 
     app.delete('/api/variables/newVar/:id_robot', Variables.deleteByIdBot);   
+
+
+    app.post('/api/bloqueTicket', bloqueticket.create);
+
+    app.put('/api/bloqueTicket', bloqueticket.update);
+
+    app.delete('/api/bloqueTicket/:id', bloqueticket.delete);
+
+    app.get('/api/bloqueTicket/:id_robot', bloqueticket.findByIdRobot);
+
+    app.get('/api/bloqueTicket/newBlk/:datos', bloqueticket.findBloque);
+
+    app.delete('/api/bloqueTicket/newBlk/:id_robot', bloqueticket.deleteByIdBot);
+
+
+    app.post('/api/bloqueTicketDinamico', bloqueticketDin.create);
+
+    //app.get('/api/bloqueInfo', bloqueinfo.findAll);
+
+    app.put('/api/bloqueTicketDinamico', bloqueticketDin.update);
+
+    app.delete('/api/bloqueTicketDinamico/:id', bloqueticketDin.delete);
+
+    app.get('/api/bloqueTicketDinamico/:id_robot', bloqueticketDin.findByIdRobot);
+
+    app.get('/api/bloqueTicketDinamico/newBlk/:datos', bloqueticketDin.findBloque);
+
+    app.delete('/api/bloqueTicketDinamico/newBlk/:id_robot', bloqueticketDin.deleteByIdBot);
+
     
 
 }

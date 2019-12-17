@@ -60,5 +60,9 @@ db.Operaciones = require('../model/operaciones.model')(sequelize, Sequelize);
 db.Operaciones2 = require('../model/operaciones2.model')(sequelize, Sequelize);
 db.Variables = require('../model/variables.model')(sequelize, Sequelize);
 db.Variables2 = require('../model/variables2.model')(sequelize, Sequelize);
+db.bloqueticket = require('../model/bloqueTicket.model')(sequelize, Sequelize);
+db.bloqueticket2 = require('../model/bloqueTicket2.model')(sequelize, Sequelize);
+db.bloqueticketDin = require('../model/bloqueTicketD.model')(sequelize, Sequelize);
+db.bloqueticketDin2 = require('../model/bloqueTicketD2.model')(sequelize, Sequelize);
 
 module.exports = db;

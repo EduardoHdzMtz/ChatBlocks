@@ -63,12 +63,6 @@
     </div> 
 
     <div class="form-group">
-      <label for="save_var">Variable de almacenamiento</label>
-      <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" />
-      <span style="color:Red;" *ngIf="fromBlksInput.controls['save_var'].touched && fromBlksInput.controls['save_var'].errors?.required">Dato requerido.</span>
-    </div>
-
-    <div class="form-group">
       <label for="link1">API: URL*</label>
       <input type="text" id="link1" placeholder="http://API" class="form-control" formControlName="link1" />
       <input type="text" id="link2" placeholder="http://API" class="form-control" formControlName="link2" />
@@ -95,6 +89,35 @@
       <span style="color:Red;" *ngIf=" fromBlksInput.value.nomCredencial2 != '' && fromBlksInput.controls['credencial2'].touched && fromBlksInput.controls['credencial2'].errors?.required">Dato requerido.</span>
       <span style="color:Red;" *ngIf=" fromBlksInput.value.nomCredencial3 != '' && fromBlksInput.controls['credencial3'].touched && fromBlksInput.controls['credencial3'].errors?.required">Dato requerido.</span>
     </div>
+
+    <label for="new_exist">Variable</label>
+      <div class="form-row">          
+        <div class="form-group col-md-4">
+          <label for="new_exist">Crear / Seleccionar</label>
+          <select id="new_exist" class="form-control" formControlName="new_exist">
+            <option value="nueva" selected>Crear variable</option>
+            <option value="existente">Seleccionar variable</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="opc_data">Tipo*</label>
+          <select id="opc_data" class="form-control" formControlName="opc_data">
+            <option value="Cadena" selected>Cadena</option>
+            <option value="Numero">Numero</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="save_var">Variable</label>
+
+          <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'nueva'"/>
+
+          <select id="save_var" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'existente'">
+            <option *ngFor="let variable of globals.tabla_vars" [value]="variable.var">{{variable.var}}</option>
+          </select>
+        </div>
+      </div>
 
   </form>
 </div>

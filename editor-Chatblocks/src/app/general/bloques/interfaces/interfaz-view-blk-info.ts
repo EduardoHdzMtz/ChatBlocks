@@ -88,7 +88,7 @@ export interface InterfazViewBlkInputDin {
     typingtime: string,
     validacion: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,

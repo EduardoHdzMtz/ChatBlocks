@@ -103,21 +103,7 @@ export class FromBlockInputComponent implements OnInit {
       datosBloque.pos_x=this.bloque.pos_x;
       datosBloque.pos_y=this.bloque.pos_y;
       datosBloque.tags_entradas=this.bloque.tags_entradas;
-      
-      this.blkInputService.updateBlkInput(datosBloque).subscribe(response=>{
-        for(let i=0;i<this.globals.AllBlocks.length;i++){
-          for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-            if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
-              this.globals.AllBlocks[i][j]=datosBloque;
-              this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
-            }
-          }
-        }
-        this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
-      });
-      //this.todoService.editTodo(todo)
-      this.handleSuccessfulEditTodo(datosBloque);
-        //.catch(err => console.error(err));
+      this.control_variables(datosBloque);
     }
   }
 
@@ -139,13 +125,19 @@ export class FromBlockInputComponent implements OnInit {
             var_.id_var = responseVar[0].id_var;
             datosBloque.id_var = responseVar[0].id_var;
             this.globals.tabla_vars.push(var_);
-            this.guardar_bloque(datosBloque);   
+            if (this.createMode)
+              this.guardar_bloque(datosBloque);
+            else
+              this.editar_bloque(datosBloque);  
           });
       });      
     }
     else{
       datosBloque.id_var = busqueda_var;
-      this.guardar_bloque(datosBloque);
+      if (this.createMode)
+        this.guardar_bloque(datosBloque);
+      else
+        this.editar_bloque(datosBloque);
     }
   }
 
@@ -174,6 +166,21 @@ export class FromBlockInputComponent implements OnInit {
         this.handleSuccessfulSaveTodo(datosBloque);
       });
     });
+  }
+
+  editar_bloque(datosBloque: InterfazViewBlkInput){
+    this.blkInputService.updateBlkInput(datosBloque).subscribe(response=>{
+      for(let i=0;i<this.globals.AllBlocks.length;i++){
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+          if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
+            this.globals.AllBlocks[i][j]=datosBloque;
+            this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
+          }
+        }
+      }
+      this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
+    });
+    this.handleSuccessfulEditTodo(datosBloque);
   }
 
   crear_tag(opc_sigEstado: string, sigEstado: string, estado_actual: string){
@@ -225,14 +232,16 @@ export class FromBlockInputComponent implements OnInit {
     if(this.edit_nom_estado != estado_actual){
       for(let i=0;i<this.globals.AllBlocks.length;i++)
         for(let j=0;j<this.globals.AllBlocks[i].length;j++){
-          arr_sigEstado = this.globals.AllBlocks[i][j].next_id.split(",");
-          for(let x=0;x<arr_sigEstado.length;x++)
-            if(arr_sigEstado[x]==this.edit_nom_estado){
-              if(arr_sigEstado.length>1)
-                this.editar_nom(i, j, x, estado_actual, arr_sigEstado);
-              else
-                this.globals.AllBlocks[i][j].next_id=estado_actual;                
-            }          
+          if(this.globals.AllBlocks[i][j].next_id != undefined){
+            arr_sigEstado = this.globals.AllBlocks[i][j].next_id.split(",");
+            for(let x=0;x<arr_sigEstado.length;x++)
+              if(arr_sigEstado[x]==this.edit_nom_estado){
+                if(arr_sigEstado.length>1)
+                  this.editar_nom(i, j, x, estado_actual, arr_sigEstado);
+                else
+                  this.globals.AllBlocks[i][j].next_id=estado_actual;                
+              } 
+          }         
         }
     }
 

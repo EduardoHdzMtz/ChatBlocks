@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { InterfazViewBlkSlideDin, InterfazViewBlkInputDin } from '../interfaces/interfaz-view-blk-info';
+import { InterfazViewBlkInputDin, InterfazVariables } from '../interfaces/interfaz-view-blk-info';
 import { Globals } from '../interfaces/Globals';
 import { LinksAPIService } from 'src/app/sendToDB/linksAPI.service';
 import { CredencialAPIService } from 'src/app/sendToDB/credenciales.service';
 import { BlkInputServiceDin } from 'src/app/sendToDB/blkIputDin.service';
+import { variablesService } from 'src/app/sendToDB/variables.service';
 
 @Component({
   selector: 'app-from-block-input-d',
@@ -31,7 +32,8 @@ export class FromBlockInputDComponent implements OnInit {
     private blkInputDinService: BlkInputServiceDin,
     private linksAPIService: LinksAPIService,
     private credencialAPIService: CredencialAPIService,
-    public globals: Globals
+    public globals: Globals,
+    private varService: variablesService
     ) { }
 
     ngOnInit() {
@@ -50,7 +52,6 @@ export class FromBlockInputDComponent implements OnInit {
         typingtime: ['', Validators.required],
         validacion: ['', Validators.required],
         default_id: ['', Validators.required],
-        save_var: ['', Validators.required],
         link1: ['', Validators.required],
         link2: [''],
         nomCredencial1: [''],
@@ -58,7 +59,10 @@ export class FromBlockInputDComponent implements OnInit {
         nomCredencial2: [''],
         credencial2: [''],
         nomCredencial3: [''],
-        credencial3: ['']
+        credencial3: [''],
+        new_exist: ['', Validators.required],
+        opc_data: ['', Validators.required],
+        save_var: ['', Validators.required]
       });
   
       if (!this.createMode) {
@@ -67,6 +71,15 @@ export class FromBlockInputDComponent implements OnInit {
     }
   
   loadBloque(bloque){
+    let opc_data_: string;
+    let save_var_: string;
+    for(let cont_var=0; cont_var<this.globals.tabla_vars.length; cont_var++){
+      if(this.globals.tabla_vars[cont_var].id_var == bloque.id_var){
+        opc_data_ = this.globals.tabla_vars[cont_var].opc_data;
+        save_var_ = this.globals.tabla_vars[cont_var].var;
+      }
+    }
+
     console.log("Opc NX Edit-> "+ bloque.opc_nextID);
     this.fromBlksInput.patchValue(bloque);
     this.edit_opcNX=bloque.opc_nextid;
@@ -110,7 +123,6 @@ export class FromBlockInputDComponent implements OnInit {
       typingtime: bloque.typingtime,
       validacion: bloque.validacion,
       default_id: bloque.default_id,
-      save_var: bloque.save_var,
       link1: links[0],
       link2: links[1],
       nomCredencial1: nomC[0],
@@ -118,7 +130,10 @@ export class FromBlockInputDComponent implements OnInit {
       nomCredencial2: nomC[1],
       credencial2: credenciales[1],
       nomCredencial3: nomC[2],
-      credencial3: credenciales[2]
+      credencial3: credenciales[2],
+      new_exist: 'existente',
+      opc_data: opc_data_,
+      save_var: save_var_
     }
     this.fromBlksInput.patchValue(bloque2);    
   }
@@ -197,97 +212,10 @@ export class FromBlockInputDComponent implements OnInit {
 
         console.log("Opc NX-> "+ datosBloque.opc_nextid);
         console.log("NX-> "+ datosBloque.next_id);
-        //todo.updateAt = new Date();
+        //this.control_variables(datosBloque);
+        this.control_variables(datosBloque, credenciales);
   
-        this.blkInputDinService.addDatosBlkInput(datosBloque).subscribe(response =>{
-          const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
-          this.blkInputDinService.getBlk(datos).subscribe(responseA=> {
-            datosBloque.id_block=responseA[0].id_block;
-            datosBloque.linksAPI[0].id_block=datosBloque.id_block;
-
-            
-            this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[0]).subscribe(response =>{
-              //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[0].links+'"}';
-              //console.log('Consulta: id_block-> '+datosBloque.id_block+', links-> '+datosBloque.linksAPI[0].links);
-              //console.log('consulta-> '+datos);
-              this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseB=> {                
-                for(let i=0;i<responseB.length;i++)
-                  if(responseB[i].links == datosBloque.linksAPI[0].links && responseB[i].blocktype=='inputDinamico')
-                    datosBloque.linksAPI[0].id_link=responseB[i].id_link;
-                if(datosBloque.linksAPI.length==1 && credenciales.length==0){
-                  this.guardarDatos(datosBloque);
-                }
-                else{
-
-                if(datosBloque.linksAPI.length==2){
-                  datosBloque.linksAPI[1].id_block=datosBloque.id_block;
-                  this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[1]).subscribe(response =>{
-                    //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[1].links+'"}';
-                    this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseC=> {
-                      for(let i=0;i<responseC.length;i++)
-                        if(responseC[i].links == datosBloque.linksAPI[1].links && responseC[i].blocktype=='inputDinamico')
-                          datosBloque.linksAPI[1].id_link=responseC[i].id_link;
-
-                    });
-                  });
-                }
-                if(credenciales.length > 0){
-                datosBloque.credenciales[0].id_block=datosBloque.id_block;
-                this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[0]).subscribe(response =>{
-                  //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[0].credencial+'"}';
-                  this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseD=> {
-                    for(let i=0;i<responseD.length;i++)
-                        if(responseD[i].credencial == datosBloque.credenciales[0].credencial && responseD[i].blocktype=='inputDinamico')
-                          datosBloque.credenciales[0].id_credencial=responseD[i].id_credencial;
-                    
-                    
-
-                    if(credenciales.length>1){
-                      datosBloque.credenciales[1].id_block=datosBloque.id_block;
-                      this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[1]).subscribe(response =>{
-                        //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[1].credencial+'"}';
-                        this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseE=> {
-                          for(let i=0;i<responseE.length;i++)
-                            if(responseE[i].credencial == datosBloque.credenciales[1].credencial && responseE[i].blocktype=='inputDinamico')
-                              datosBloque.credenciales[1].id_credencial=responseE[i].id_credencial;
-                         
-                          
-
-                          if(credenciales.length==3){
-                            datosBloque.credenciales[2].id_block=datosBloque.id_block;
-                            this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[2]).subscribe(response =>{
-                              //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[2].credencial+'"}';
-                              this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseF=> {
-                                for(let i=0;i<responseF.length;i++)
-                                  if(responseF[i].credencial == datosBloque.credenciales[2].credencial && responseF[i].blocktype=='inputDinamico')
-                                    datosBloque.credenciales[2].id_credencial=responseF[i].id_credencial;
-
-                                
-                                this.guardarDatos(datosBloque);                                
-                              });
-                            });
-      
-                          }
-                          else
-                            this.guardarDatos(datosBloque);
-
-                        });
-                      });
-
-                    }
-                    else
-                      this.guardarDatos(datosBloque);
-
-                  });
-                });
-              }
-            }
-              });
-            });
-
-            
-          });
-        });
+        
       } else{
         //EDITAR
         let datosBloque: InterfazViewBlkInputDin = this.fromBlksInput.value;
@@ -493,10 +421,154 @@ export class FromBlockInputDComponent implements OnInit {
         else if(this.tamCredenciales == 3){
           this.credencialAPIService.deleteCredencialAPI(this.bloque.credenciales[2].id_credencial).subscribe(response=>{});
         }
-        
-        
 
-        console.log('ACTUALIZANDO EL BLOQUE SLIDE DINAMICO6');
+        this.control_variables(datosBloque, credenciales);
+      }
+    }
+
+    
+
+
+
+
+
+    control_variables(datosBloque: any, credenciales){
+      let busqueda_var = this.existencia_variables();
+      if(busqueda_var == 'no se encontro'){
+        let var_: InterfazVariables={
+          id_var: 'sin asignar',
+          id_robot: this.globals.RobotSelect.id_robot,
+          opc_type: 'Variable',
+          opc_data: this.fromBlksInput.value.opc_data,
+          var: this.fromBlksInput.value.save_var
+        }
+        this.varService.addDatosVar(var_).subscribe(response=> {
+          const datos='{"id_robot": "'+this.globals.RobotSelect.id_robot+'", "var": "'+var_.var+'", "opc_data": "'+var_.opc_data+'"}';
+            this.varService.getVar_data(datos).subscribe(responseVar=> {
+              console.log('datos var-> '+responseVar.id_var);
+              console.log('datos var2-> '+responseVar[0].id_var);
+              var_.id_var = responseVar[0].id_var;
+              datosBloque.id_var = responseVar[0].id_var;
+              this.globals.tabla_vars.push(var_);
+              if (this.createMode)
+                this.guardar_bloque(datosBloque, credenciales);
+              else
+                this.editar_bloque(datosBloque);  
+            });
+        });      
+      }
+      else{
+        datosBloque.id_var = busqueda_var;
+        if (this.createMode)
+          this.guardar_bloque(datosBloque, credenciales);
+        else
+          this.editar_bloque(datosBloque);
+      }
+    }
+  
+    existencia_variables(){
+      let id_var: any= 'no se encontro';
+      for(let cont_var=0; cont_var<this.globals.tabla_vars.length; cont_var++)
+        if(this.globals.tabla_vars[cont_var].var == this.fromBlksInput.value.save_var && this.globals.tabla_vars[cont_var].opc_data == this.fromBlksInput.value.opc_data){
+          id_var = this.globals.tabla_vars[cont_var].id_var;
+        }
+      return id_var;
+    }
+  
+    guardar_bloque(datosBloque: InterfazViewBlkInputDin, credenciales: any){
+      this.blkInputDinService.addDatosBlkInput(datosBloque).subscribe(response =>{
+        const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
+        this.blkInputDinService.getBlk(datos).subscribe(responseA=> {
+          datosBloque.id_block=responseA[0].id_block;
+          datosBloque.linksAPI[0].id_block=datosBloque.id_block;
+
+          
+          this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[0]).subscribe(response =>{
+            //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[0].links+'"}';
+            //console.log('Consulta: id_block-> '+datosBloque.id_block+', links-> '+datosBloque.linksAPI[0].links);
+            //console.log('consulta-> '+datos);
+            this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseB=> {                
+              for(let i=0;i<responseB.length;i++)
+                if(responseB[i].links == datosBloque.linksAPI[0].links && responseB[i].blocktype=='inputDinamico')
+                  datosBloque.linksAPI[0].id_link=responseB[i].id_link;
+              if(datosBloque.linksAPI.length==1 && credenciales.length==0){
+                this.guardarDatos(datosBloque);
+              }
+              else{
+
+              if(datosBloque.linksAPI.length==2){
+                datosBloque.linksAPI[1].id_block=datosBloque.id_block;
+                this.linksAPIService.addDatosLinksAPI(datosBloque.linksAPI[1]).subscribe(response =>{
+                  //const datos='{"id_block": "'+datosBloque.id_block+'", "links": "'+datosBloque.linksAPI[1].links+'"}';
+                  this.linksAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseC=> {
+                    for(let i=0;i<responseC.length;i++)
+                      if(responseC[i].links == datosBloque.linksAPI[1].links && responseC[i].blocktype=='inputDinamico')
+                        datosBloque.linksAPI[1].id_link=responseC[i].id_link;
+
+                  });
+                });
+              }
+              if(credenciales.length > 0){
+              datosBloque.credenciales[0].id_block=datosBloque.id_block;
+              this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[0]).subscribe(response =>{
+                //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[0].credencial+'"}';
+                this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseD=> {
+                  for(let i=0;i<responseD.length;i++)
+                      if(responseD[i].credencial == datosBloque.credenciales[0].credencial && responseD[i].blocktype=='inputDinamico')
+                        datosBloque.credenciales[0].id_credencial=responseD[i].id_credencial;
+                  
+                  
+
+                  if(credenciales.length>1){
+                    datosBloque.credenciales[1].id_block=datosBloque.id_block;
+                    this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[1]).subscribe(response =>{
+                      //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[1].credencial+'"}';
+                      this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseE=> {
+                        for(let i=0;i<responseE.length;i++)
+                          if(responseE[i].credencial == datosBloque.credenciales[1].credencial && responseE[i].blocktype=='inputDinamico')
+                            datosBloque.credenciales[1].id_credencial=responseE[i].id_credencial;
+                       
+                        
+
+                        if(credenciales.length==3){
+                          datosBloque.credenciales[2].id_block=datosBloque.id_block;
+                          this.credencialAPIService.addDatosCredencialAPI(datosBloque.credenciales[2]).subscribe(response =>{
+                            //const datos='{"id_block": "'+datosBloque.id_block+'", "credencial": "'+datosBloque.credenciales[2].credencial+'"}';
+                            this.credencialAPIService.getAll_ByBlock(datosBloque.id_block).subscribe(responseF=> {
+                              for(let i=0;i<responseF.length;i++)
+                                if(responseF[i].credencial == datosBloque.credenciales[2].credencial && responseF[i].blocktype=='inputDinamico')
+                                  datosBloque.credenciales[2].id_credencial=responseF[i].id_credencial;
+
+                              
+                              this.guardarDatos(datosBloque);                                
+                            });
+                          });
+    
+                        }
+                        else
+                          this.guardarDatos(datosBloque);
+
+                      });
+                    });
+
+                  }
+                  else
+                    this.guardarDatos(datosBloque);
+
+                });
+              });
+            }
+          }
+            });
+          });
+
+          
+        });
+      });
+    }
+  
+    editar_bloque(datosBloque: InterfazViewBlkInputDin){
+      console.log('ACTUALIZANDO EL BLOQUE SLIDE DINAMICO6');
         this.blkInputDinService.updateBlkInput(datosBloque).subscribe(response=>{
           for(let i=0;i<this.globals.AllBlocks.length;i++){
             for(let j=0;j<this.globals.AllBlocks[i].length;j++){
@@ -514,9 +586,15 @@ export class FromBlockInputDComponent implements OnInit {
           this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
         });
         this.handleSuccessfulEditTodo(datosBloque);
-          //.catch(err => console.error(err));
-      }
     }
+
+
+
+
+
+
+
+
 
     guardarDatos(datosBloque: any){
       datosBloque.tags_entradas=[]; 
