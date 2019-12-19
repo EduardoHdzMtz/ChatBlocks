@@ -3,7 +3,7 @@ const BloqueSlide = db.bloqueslideDin;
 const BloqueSlide2 = db.bloqueslideDin2;
 
 exports.create = (req, res) => {
-	console.log("Creando un bloque qr")	
+	console.log("Creando un bloque slide dinamico")	
 	// Save to PostgreSQL database
 	BloqueSlide.create({                
                 'namestate': req.body.namestate,

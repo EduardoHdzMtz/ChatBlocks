@@ -20,6 +20,9 @@ export class FromBlockInputComponent implements OnInit {
   edit_opcNX: string;
   edit_NX: string;
   edit_nom_estado: string;
+  list_cad: string[];
+  list_num: string[];
+  
 
   constructor(private formBuilder: FormBuilder, public activeModal: NgbActiveModal, private blkInputService: BlkInputService, public globals: Globals, private varService: variablesService) { }
 
@@ -59,6 +62,8 @@ export class FromBlockInputComponent implements OnInit {
       }
     }
 
+    this.cargar_var();
+
     let bloque_input: any={
       namestate: bloque.namestate,
       contenido: bloque.contenido,
@@ -77,6 +82,17 @@ export class FromBlockInputComponent implements OnInit {
     this.edit_opcNX=bloque.opc_nextid;
     this.edit_NX=bloque.next_id;
     this.edit_nom_estado=bloque.namestate;
+  }
+
+  cargar_var(){
+    this.list_cad=[];
+    this.list_num=[];
+      for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
+        if(this.globals.tabla_vars[cont_vars].opc_data == 'Cadena' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+          this.list_cad.push(this.globals.tabla_vars[cont_vars].var);}
+        else if(this.globals.tabla_vars[cont_vars].opc_data == 'Numero' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+          this.list_num.push(this.globals.tabla_vars[cont_vars].var);}
+      }
   }
 
   saveBlockInput() {
@@ -106,6 +122,8 @@ export class FromBlockInputComponent implements OnInit {
       this.control_variables(datosBloque);
     }
   }
+
+  
 
   control_variables(datosBloque: any){
     let busqueda_var = this.existencia_variables();

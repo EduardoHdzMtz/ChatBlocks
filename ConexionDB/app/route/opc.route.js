@@ -16,6 +16,7 @@ module.exports = function(app) {
     const Operaciones= require('../controller/Operaciones.controller');
     const Variables= require('../controller/variables.controller');
     const bloqueticket= require('../controller/bloqueTicket.controller.js'); 
+    const bloqueticketDin= require('../controller/bloqueTicketDin.controller.js'); 
  
     app.post('/api/chatbotsDB', robots.create);
 

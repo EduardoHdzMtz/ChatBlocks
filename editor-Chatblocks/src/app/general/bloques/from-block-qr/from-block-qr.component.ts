@@ -47,6 +47,8 @@ export class FromBlockQRComponent implements OnInit {
       next_id3: [''],
       typingtime: ['', Validators.required],
       default_id: [''],
+      new_exist: ['', Validators.required],
+      opc_data: ['', Validators.required],
       save_var: ['', Validators.required]
     });
 
@@ -83,7 +85,9 @@ export class FromBlockQRComponent implements OnInit {
     blocktype: bloque.blocktype,
     typingtime: bloque.typingtime,
     default_id: bloque.default_id,
-    save_var: bloque.save_var,
+    new_exist: 'existente',
+    opc_data: bloque.opc_data,
+    save_var: bloque.save_var
     }
     this.fromBlksQR.patchValue(bloque2);    
   }

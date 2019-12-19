@@ -88,12 +88,15 @@
         </div>
 
         <div class="form-group col-md-4">
-          <label for="save_var">Variable</label>
+          <label for="save_var">Nombre/Dato</label>
 
           <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'nueva'"/>
 
-          <select id="save_var" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'existente'">
-            <option *ngFor="let variable of globals.tabla_vars" [value]="variable.var">{{variable.var}}</option>
+          <select id="save_var" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'existente' && fromBlksInput.value.opc_data == 'Cadena'">
+            <option *ngFor="let cad of list_cad" [value]="cad">{{cad}}</option>
+          </select>
+          <select id="save_var" class="form-control" formControlName="save_var" *ngIf="fromBlksInput.value.new_exist == 'existente' && fromBlksInput.value.opc_data == 'Numero'">
+            <option *ngFor="let num of list_num" [value]="num">{{num}}</option>
           </select>
         </div>
       </div>

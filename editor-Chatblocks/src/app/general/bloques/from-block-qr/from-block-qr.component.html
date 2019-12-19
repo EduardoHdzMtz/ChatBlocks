@@ -95,10 +95,33 @@
         <span style="color:Red;" *ngIf="fromBlksQR.controls['default_id'].touched && fromBlksQR.controls['default_id'].errors?.required">Dato requerido.</span>
       </div> 
 
-      <div class="form-group">
-        <label for="save_var">Variable de almacenamiento</label>
-        <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" />
-        <span style="color:Red;" *ngIf="fromBlksQR.controls['save_var'].touched && fromBlksQR.controls['save_var'].errors?.required">Dato requerido.</span>
+      <label for="new_exist">Variable</label>
+      <div class="form-row">          
+        <div class="form-group col-md-4">
+          <label for="new_exist">Crear / Seleccionar</label>
+          <select id="new_exist" class="form-control" formControlName="new_exist">
+            <option value="nueva" selected>Crear variable</option>
+            <option value="existente">Seleccionar variable</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="opc_data">Tipo*</label>
+          <select id="opc_data" class="form-control" formControlName="opc_data">
+            <option value="Cadena" selected>Cadena</option>
+            <option value="Numero">Numero</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="save_var">Nombre/Dato</label>
+
+          <input type="text" id="save_var" placeholder="Var_correo" class="form-control" formControlName="save_var" *ngIf="fromBlksQR.value.new_exist == 'nueva'"/>
+
+          <select id="save_var" class="form-control" formControlName="save_var" *ngIf="fromBlksQR.value.new_exist == 'existente'">
+            <option *ngFor="let variable of globals.tabla_vars" [value]="variable.var">{{variable.var}}</option>
+          </select>
+        </div>
       </div>
 
     </form>

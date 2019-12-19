@@ -16,11 +16,11 @@ exports.create = (req, res) => {
 				"blocktype": req.body.blocktype,
                 "typingtime": req.body.typingtime,
                 "default_id": req.body.default_id,
-                "save_var": req.body.save_var,
+                "save_var": req.body.id_var,
 				"pos_y": req.body.pos_y,	
 				"pos_x": req.body.pos_x,
             }
-        ).then(bloqueqr => {
+        ).then(bloqueqrdinamico => {
 				// Send created customer to client
 				res.json(bloqueqrdinamico);
 		}).catch(err => {
