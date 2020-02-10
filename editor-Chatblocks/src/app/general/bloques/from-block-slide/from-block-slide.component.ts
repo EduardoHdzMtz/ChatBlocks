@@ -58,7 +58,8 @@ export class FromBlockSlideComponent implements OnInit {
       typingtime: ['', Validators.required],
       default_id: [''],
       save_var: ['', Validators.required],
-      elementos:['']
+      elementos:[''],
+      tag_active: [false]
     });
     if (!this.createMode) {
       this.loadBloque(this.bloque); 

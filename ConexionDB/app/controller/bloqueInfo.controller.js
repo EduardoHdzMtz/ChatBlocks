@@ -2,7 +2,8 @@ const db = require('../config/db.config.js');
 const BloqueInfo = db.bloqueinfo;
 const BloqueInfo2 = db.bloqueinfo2;
 
-exports.create = (req, res) => {	
+exports.create = (req, res) => {
+	console.log("INFO TAG_ACTIVE: "+req.body.tag_active);
 	// Save to PostgreSQL database
 	BloqueInfo.create({
 				//"id_block": req.body.id_block, 
@@ -16,6 +17,7 @@ exports.create = (req, res) => {
 				"typingtime": req.body.typingtime,
 				"pos_y": req.body.pos_y,	
 				"pos_x": req.body.pos_x,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueinfo => {
 				// Send created customer to client

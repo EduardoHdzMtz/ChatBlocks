@@ -54,7 +54,8 @@ export class FromBlockSlideDComponent implements OnInit {
         nomCredencial2: [''],
         credencial2: [''],
         nomCredencial3: [''],
-        credencial3: ['']
+        credencial3: [''],
+        tag_active: [false]
       });
   
       if (!this.createMode) {
@@ -112,7 +113,8 @@ export class FromBlockSlideDComponent implements OnInit {
       nomCredencial2: nomC[1],
       credencial2: credenciales[1],
       nomCredencial3: nomC[2],
-      credencial3: credenciales[2]
+      credencial3: credenciales[2],
+      tag_active: bloque.tag_active
     }
     this.fromBlksSlide.patchValue(bloque2);    
   }

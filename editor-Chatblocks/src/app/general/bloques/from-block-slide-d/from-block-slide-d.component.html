@@ -43,10 +43,21 @@
     </div>
 
     <div class="form-group">
-      <label for="typingtime">Tiempo de respuesta*</label>
-      <input type="text" id="typingtime" placeholder="4" class="form-control" formControlName="typingtime" />
-      <span style="color:Red;" *ngIf="fromBlksSlide.controls['typingtime'].touched && fromBlksSlide.controls['typingtime'].errors?.required">Dato requerido.</span>
-    </div>
+        <label for="typingtime">Tiempo de respuesta*</label>
+        <select name="OS" id="typingtime" placeholder="Selecciona una opción" class="form-control" formControlName="typingtime">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <span style="color:Red;" *ngIf="fromBlksSlide.controls['typingtime'].touched && fromBlksSlide.controls['typingtime'].errors?.required">Dato requerido.</span>
+      </div>
+
+      <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="tag_active" formControlName="tag_active">
+        <label class="form-check-label" for="tag_active">Activar el Tag identificador</label>
+      </div>
 
     <div class="form-group">
       <label for="default_id">Siguiente estado default*</label>

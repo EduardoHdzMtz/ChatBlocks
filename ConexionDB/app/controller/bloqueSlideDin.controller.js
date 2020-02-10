@@ -14,10 +14,11 @@ exports.create = (req, res) => {
                 'blocktype': req.body.blocktype,
                 'typingtime': req.body.typingtime,
                 'default_id': req.body.default_id,
-                'save_var': req.body.save_var,
+                'id_var': req.body.id_var,
                 'pos_y': req.body.pos_y,
                 'pos_x': req.body.pos_x,
-                'opc_elm': req.body.opc_elm
+				'opc_elm': req.body.opc_elm,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueslidedinamico => {
 				// Send created customer to client

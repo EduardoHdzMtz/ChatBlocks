@@ -20,6 +20,9 @@ module.exports = (sequelize, Sequelize) => {
         },
         pos_y: {
             type: Sequelize.STRING
+        },
+        tag_active: {
+            type: Sequelize.BOOLEAN
         }
     },
     {

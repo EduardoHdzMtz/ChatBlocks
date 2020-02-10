@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { InterfazViewBlkQR } from '../interfaces/interfaz-view-blk-info';
+import { InterfazViewBlkQR, InterfazVariables } from '../interfaces/interfaz-view-blk-info';
 import { BlkQRService } from 'src/app/sendToDB/blkQR.service';
+import { variablesService } from 'src/app/sendToDB/variables.service';
 import { Globals } from '../interfaces/Globals';
 
 @Component({
@@ -19,10 +20,13 @@ export class FromBlockQRComponent implements OnInit {
   edit_opcNX: string;
   edit_NX: string;
   edit_nom_estado: string;
+  list_cad: string[];
+  list_num: string[];
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
     private blkQRService: BlkQRService,
+    private varService: variablesService,
     public globals: Globals
     ) { }
 
@@ -49,12 +53,26 @@ export class FromBlockQRComponent implements OnInit {
       default_id: [''],
       new_exist: ['', Validators.required],
       opc_data: ['', Validators.required],
-      save_var: ['', Validators.required]
+      save_var: ['', Validators.required],
+      tag_active: [false]
     });
+
+    this.cargar_var();
 
     if (!this.createMode) {
       this.loadTodo(this.bloque); 
     }
+  }
+
+  cargar_var(){
+    this.list_cad=[];
+    this.list_num=[];
+      for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
+        if(this.globals.tabla_vars[cont_vars].opc_data == 'Cadena' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+          this.list_cad.push(this.globals.tabla_vars[cont_vars].var);}
+        else if(this.globals.tabla_vars[cont_vars].opc_data == 'Numero' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+          this.list_num.push(this.globals.tabla_vars[cont_vars].var);}
+      }
   }
 
   loadTodo(bloque){
@@ -63,6 +81,16 @@ export class FromBlockQRComponent implements OnInit {
     let opc=this.descomponerOPC(bloque.opciones);
     let nx_Id=this.descomponerOPC(bloque.next_id);
     let opcnxID=this.descomponerOPC(bloque.opc_nextid);
+    let opc_data_: string;
+    let save_var_: string;
+    for(let cont_var=0; cont_var<this.globals.tabla_vars.length; cont_var++){
+      console.log("Var-> "+this.globals.tabla_vars[cont_var].var);
+      if(this.globals.tabla_vars[cont_var].id_var == bloque.id_var){
+        opc_data_ = this.globals.tabla_vars[cont_var].opc_data;
+        save_var_ = this.globals.tabla_vars[cont_var].var;
+        console.log('Variable encontrada');        
+      }
+    }
 
     this.edit_opcNX=bloque.opc_nextid;
     this.edit_NX=bloque.next_id;
@@ -86,8 +114,9 @@ export class FromBlockQRComponent implements OnInit {
     typingtime: bloque.typingtime,
     default_id: bloque.default_id,
     new_exist: 'existente',
-    opc_data: bloque.opc_data,
-    save_var: bloque.save_var
+    opc_data: opc_data_,
+    save_var: save_var_,
+    tag_active: bloque.tag_active
     }
     this.fromBlksQR.patchValue(bloque2);    
   }
@@ -153,8 +182,9 @@ export class FromBlockQRComponent implements OnInit {
       datosBloque.pos_x=0;
       datosBloque.pos_y=this.globals.AllBlocks.length-1;
 
+      this.control_variables(datosBloque);
 
-      this.blkQRService.addDatosBlkQR(datosBloque).subscribe(response =>{
+      /*this.blkQRService.addDatosBlkQR(datosBloque).subscribe(response =>{
         const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
         this.blkQRService.getBlk(datos).subscribe(response=> {
           response[0].tags_entradas=[];
@@ -166,7 +196,7 @@ export class FromBlockQRComponent implements OnInit {
           this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id, datosBloque.namestate);
           this.handleSuccessfulSaveTodo(datosBloque);
         });
-      });
+      });*/
       
       //.catch(err => console.error(err));
     } else{
@@ -198,10 +228,12 @@ export class FromBlockQRComponent implements OnInit {
       datosBloque.blocktype='quickReply';
       datosBloque.pos_x=this.bloque.pos_x;
       datosBloque.pos_y=this.bloque.pos_y;  
-      datosBloque.tags_entradas=this.bloque.tags_entradas;    
+      datosBloque.tags_entradas=this.bloque.tags_entradas;
+
+      this.control_variables(datosBloque);
 
       //todo.updateAt = new Date();
-      this.blkQRService.updateBlkQR(datosBloque).subscribe(response=>{
+      /*this.blkQRService.updateBlkQR(datosBloque).subscribe(response=>{
         for(let i=0;i<this.globals.AllBlocks.length;i++){
           for(let j=0;j<this.globals.AllBlocks[i].length;j++){
             if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
@@ -213,10 +245,95 @@ export class FromBlockQRComponent implements OnInit {
         this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
       });
       //this.todoService.editTodo(todo)
-      this.handleSuccessfulEditTodo(datosBloque);
+      this.handleSuccessfulEditTodo(datosBloque);*/
         //.catch(err => console.error(err));
     }
   }
+
+
+
+
+  control_variables(datosBloque: any){
+    let busqueda_var = this.existencia_variables();
+    if(busqueda_var == 'no se encontro'){
+      let var_: InterfazVariables={
+        id_var: 'sin asignar',
+        id_robot: this.globals.RobotSelect.id_robot,
+        opc_type: 'Variable',
+        opc_data: this.fromBlksQR.value.opc_data,
+        var: this.fromBlksQR.value.save_var
+      }
+      this.varService.addDatosVar(var_).subscribe(response=> {
+        const datos='{"id_robot": "'+this.globals.RobotSelect.id_robot+'", "var": "'+var_.var+'", "opc_data": "'+var_.opc_data+'"}';
+          this.varService.getVar_data(datos).subscribe(responseVar=> {
+            console.log('datos var-> '+responseVar.id_var);
+            console.log('datos var2-> '+responseVar[0].id_var);
+            var_.id_var = responseVar[0].id_var;
+            datosBloque.id_var = responseVar[0].id_var;
+            this.globals.tabla_vars.push(var_);
+            if (this.createMode)
+              this.guardar_bloque(datosBloque);
+            else
+              this.editar_bloque(datosBloque);  
+          });
+      });      
+    }
+    else{
+      datosBloque.id_var = busqueda_var;
+      if (this.createMode)
+        this.guardar_bloque(datosBloque);
+      else
+        this.editar_bloque(datosBloque);
+    }
+  }
+
+  existencia_variables(){
+    let id_var: any= 'no se encontro';
+    for(let cont_var=0; cont_var<this.globals.tabla_vars.length; cont_var++)
+      if(this.globals.tabla_vars[cont_var].var == this.fromBlksQR.value.save_var && this.globals.tabla_vars[cont_var].opc_data == this.fromBlksQR.value.opc_data){
+        id_var = this.globals.tabla_vars[cont_var].id_var;
+      }
+    return id_var;
+  }
+
+  guardar_bloque(datosBloque: InterfazViewBlkQR){
+    this.blkQRService.addDatosBlkQR(datosBloque).subscribe(response =>{
+      const datos='{"id_robot": "'+datosBloque.id_robot+'", "namestate": "'+datosBloque.namestate+'"}';
+      this.blkQRService.getBlk(datos).subscribe(response=> {
+        response[0].tags_entradas=[];
+        this.globals.AllBlocks.pop();
+        this.globals.AllBlocks.push([response[0]]);
+        console.log('Nuevo QR-> '+this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].opc_nextid+', name: '+this.globals.AllBlocks[this.globals.AllBlocks.length-1][0].namestate);
+        this.globals.AllBlocks.push([]);
+        this.globals.generar_Id();
+        this.crear_tag(datosBloque.opc_nextid, datosBloque.next_id, datosBloque.namestate);
+        this.handleSuccessfulSaveTodo(datosBloque);
+      });
+    });
+  }
+
+  editar_bloque(datosBloque: InterfazViewBlkQR){
+    this.blkQRService.updateBlkQR(datosBloque).subscribe(response=>{
+      for(let i=0;i<this.globals.AllBlocks.length;i++){
+        for(let j=0;j<this.globals.AllBlocks[i].length;j++){
+          if(this.globals.AllBlocks[i][j].id_block == datosBloque.id_block && this.globals.AllBlocks[i][j].blocktype == datosBloque.blocktype){
+            this.globals.AllBlocks[i][j]=datosBloque;
+            this.globals.AllBlocks[i][j].tags_entradas=datosBloque.tags_entradas;
+          }
+        }
+      }
+      this.editar_tag(datosBloque.opc_nextid, datosBloque.next_id,datosBloque.namestate);
+    });
+    //this.todoService.editTodo(todo)
+    this.handleSuccessfulEditTodo(datosBloque);
+  }
+
+
+
+
+
+
+
 
 
   handleSuccessfulSaveTodo(datos: InterfazViewBlkQR) {

@@ -13,6 +13,7 @@ exports.create = (req, res) => {
 				"typingtime": req.body.typingtime,
 				"pos_y": req.body.pos_y,	
 				"pos_x": req.body.pos_x,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueticketdinamico => {
 				// Send created customer to client

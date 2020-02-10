@@ -111,7 +111,8 @@ export class ConstruccionCBComponent implements OnInit {
       contenttype: 'text',
       typingtime: '1',
       pos_x: 0,
-      pos_y: 0
+      pos_y: 0,
+      tag_active: false
     }
 
     this.blokInfoservice.addDatosBlkInfo(this.bloqueInicial).subscribe(response =>{

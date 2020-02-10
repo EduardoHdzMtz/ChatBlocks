@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵConsole } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { InterfazChatBot } from '../interfaces/interfaz-view-blk-info';
@@ -130,6 +130,7 @@ export class FromSaveCBComponent implements OnInit {
         }
         else if(this.globals.AllBlocks[i][j].blocktype=='quickReply'){
           this.blkQRService.updateBlkQR(this.globals.AllBlocks[i][j]).subscribe(response=>{});
+          console.log("QR-> "+this.globals.AllBlocks[i][j].id_var);
           id_vars.push(this.globals.AllBlocks[i][j].id_var);
         }
         else if(this.globals.AllBlocks[i][j].blocktype=='slide'){
@@ -168,9 +169,16 @@ export class FromSaveCBComponent implements OnInit {
         }
       }
     }  
-
+    let buscador=0;
     for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
-      if(id_vars.includes(this.globals.tabla_vars[cont_vars].id_var) == false)
+      buscador=0;
+      for(let cont_vars_ext=0; cont_vars_ext<id_vars.length; cont_vars_ext++){
+        if(id_vars[cont_vars_ext] == this.globals.tabla_vars[cont_vars].id_var){          
+          buscador=1;
+          break;
+        }
+      }
+      if(buscador == 0)
         this.varService.deleteVar(this.globals.tabla_vars[cont_vars].id_var).subscribe(responce=>{});
     }
     

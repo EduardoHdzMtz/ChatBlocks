@@ -23,6 +23,7 @@ export interface InterfazViewBlkInfo {
     typingtime: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -40,6 +41,7 @@ export interface InterfazViewBlkInfoDin {
     credenciales: any[];
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -73,6 +75,7 @@ export interface InterfazViewBlkInput {
     id_var: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -93,6 +96,7 @@ export interface InterfazViewBlkInputDin {
     credenciales: any[];
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -107,9 +111,10 @@ export interface InterfazViewBlkQR{
     blocktype: string,
     typingtime: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -124,11 +129,12 @@ export interface InterfazViewBlkQRDin{
     blocktype: string,
     typingtime: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -163,9 +169,10 @@ export interface InterfazViewBlkSlide{
     blocktype: string,
     typingtime: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tag_salida: boolean,
     tags_entradas: any[];
 }
@@ -180,11 +187,12 @@ export interface InterfazViewBlkSlideDin {
     blocktype: string,
     typingtime: string,
     default_id: string,
-    save_var: string
+    id_var: string
     linksAPI: any[];
     credenciales: any[];
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -199,10 +207,11 @@ export interface InterfazViewBlkSlideBuy{
     blocktype: string,
     typingtime: string,
     default_id: string,
-    save_var: string,
+    id_var: string,
     id_elements: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -228,6 +237,7 @@ export interface InterfazViewBlkTicket{
     nameu_var: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     tags_entradas: any[];
 }
 
@@ -240,6 +250,7 @@ export interface IntefazInternalProcess{
     blocktype: string,
     pos_x: number,
     pos_y: number,
+    tag_active: boolean,
     operaciones: any[];
     tag_salida: boolean,
     tags_entradas: any[];

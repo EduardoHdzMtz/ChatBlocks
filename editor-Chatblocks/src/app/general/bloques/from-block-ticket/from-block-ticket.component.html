@@ -38,8 +38,20 @@
 
     <div class="form-group">
       <label for="typingtime">Tiempo de respuesta*</label>
-      <input type="text" id="typingtime" placeholder="4" class="form-control" formControlName="typingtime" />
+      <select name="OS" id="typingtime" placeholder="Selecciona un estado" class="form-control" formControlName="typingtime">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
       <span style="color:Red;" *ngIf="fromBlksTicket.controls['typingtime'].touched && fromBlksTicket.controls['typingtime'].errors?.required">Dato requerido.</span>
+    </div>
+
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="tag_active" formControlName="tag_active">
+      <label class="form-check-label" for="tag_active">Activar el Tag identificador</label>
     </div>
 
     <div class="form-group">
@@ -62,12 +74,6 @@
       <label for="shipping_cost">Costo por envio*</label>
       <input type="text" id="shipping_cost" placeholder="4.50" class="form-control" formControlName="shipping_cost" />
       <span style="color:Red;" *ngIf="fromBlksTicket.controls['shipping_cost'].touched && fromBlksTicket.controls['shipping_cost'].errors?.required">Dato requerido.</span>
-    </div>
-
-    <div class="form-group">
-      <label for="total_taxes">Impuestos por compra*</label>
-      <input type="text" id="total_taxes" placeholder="6.19" class="form-control" formControlName="total_taxes" />
-      <span style="color:Red;" *ngIf="fromBlksTicket.controls['total_taxes'].touched && fromBlksTicket.controls['total_taxes'].errors?.required">Dato requerido.</span>
     </div>
 
     <div class="form-group">

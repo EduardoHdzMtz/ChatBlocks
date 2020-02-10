@@ -92,7 +92,25 @@
                                     </tbody>
                                 </table>
                             </div>
-    
+                            <div *ngIf="bloque.blocktype == 'quickReplyDinamico'" class="conf" style="background: #22e684e3" >
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>                                    
+                                              {{bloque.namestate}}
+                                            </td>
+                                            <td>
+                                                <button id="campo_btn" mat-button (click)="handleEditClickBlk(bloque)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button id="campo_btn" mat-button (click)="handleDeleteClickBlk(bloque, index2)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div *ngIf="bloque.blocktype == 'slide'" class="conf" style="background: rgb(166, 60, 225)" > 
                                 <table class="table table-striped">
                                     <tbody>
@@ -233,7 +251,7 @@
                                     <table class="table table-striped">
                                           <thead>
                                                 <tr>
-                                                    <th><h6 id="nombreU" class="card-header">Estado de salida 1</h6></th>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
                                                 </tr>
                                           </thead>
                                           <tbody>
@@ -256,7 +274,7 @@
                                     <table class="table table-striped">
                                           <thead>
                                                 <tr>
-                                                    <th><h6 id="nombreU" class="card-header">Estado de salida 2</h6></th>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
                                                 </tr>
                                           </thead>
                                           <tbody>
@@ -279,7 +297,7 @@
                                     <table class="table table-striped">
                                           <thead>
                                                 <tr>
-                                                    <th><h6 id="nombreU" class="card-header">Estado de salida 3</h6></th>
+                                                    <th><h6 id="nombreU" class="card-header">Estado de salida</h6></th>
                                                 </tr>
                                           </thead>
                                           <tbody style="width: 100%;">

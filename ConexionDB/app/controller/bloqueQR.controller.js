@@ -19,6 +19,7 @@ exports.create = (req, res) => {
                 "id_var": req.body.id_var,
 				"pos_y": req.body.pos_y,	
 				"pos_x": req.body.pos_x,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueqr => {
 				// Send created customer to client

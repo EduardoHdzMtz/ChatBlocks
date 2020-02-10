@@ -42,8 +42,10 @@ export class FromBlockInputComponent implements OnInit {
       default_id: [''],
       new_exist: ['', Validators.required],
       opc_data: ['', Validators.required],
-      save_var: ['', Validators.required]
+      save_var: ['', Validators.required],
+      tag_active: [false]
     });
+    this.cargar_var();
 
     if (!this.createMode) {
       this.loadTodo(this.bloque); 
@@ -62,7 +64,7 @@ export class FromBlockInputComponent implements OnInit {
       }
     }
 
-    this.cargar_var();
+    
 
     let bloque_input: any={
       namestate: bloque.namestate,
@@ -74,7 +76,8 @@ export class FromBlockInputComponent implements OnInit {
       default_id: bloque.default_id,
       new_exist: 'existente',
       opc_data: opc_data_,
-      save_var: save_var_
+      save_var: save_var_,
+      tag_active: bloque.tag_active
     }
 
     this.fromBlksInput.patchValue(bloque_input);

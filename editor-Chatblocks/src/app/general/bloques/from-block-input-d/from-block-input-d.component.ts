@@ -26,6 +26,8 @@ export class FromBlockInputDComponent implements OnInit {
   edit_opcNX: string;
   edit_NX: string;
   edit_nom_estado: string;
+  list_cad: string[];
+  list_num: string[];
 
   constructor(private formBuilder: FormBuilder, 
     public activeModal: NgbActiveModal, 
@@ -62,12 +64,26 @@ export class FromBlockInputDComponent implements OnInit {
         credencial3: [''],
         new_exist: ['', Validators.required],
         opc_data: ['', Validators.required],
-        save_var: ['', Validators.required]
+        save_var: ['', Validators.required],
+        tag_active: [false]
       });
+
+      this.cargar_var();
   
       if (!this.createMode) {
         this.loadBloque(this.bloque); 
       }
+    }
+
+    cargar_var(){
+      this.list_cad=[];
+      this.list_num=[];
+        for(let cont_vars=0; cont_vars<this.globals.tabla_vars.length; cont_vars++){
+          if(this.globals.tabla_vars[cont_vars].opc_data == 'Cadena' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+            this.list_cad.push(this.globals.tabla_vars[cont_vars].var);}
+          else if(this.globals.tabla_vars[cont_vars].opc_data == 'Numero' && this.globals.tabla_vars[cont_vars].opc_type == 'Variable'){
+            this.list_num.push(this.globals.tabla_vars[cont_vars].var);}
+        }
     }
   
   loadBloque(bloque){
@@ -133,13 +149,14 @@ export class FromBlockInputDComponent implements OnInit {
       credencial3: credenciales[2],
       new_exist: 'existente',
       opc_data: opc_data_,
-      save_var: save_var_
+      save_var: save_var_,
+      tag_active: bloque.tag_active
     }
     this.fromBlksInput.patchValue(bloque2);    
   }
     
   
-  saveBlockSlide() {
+  saveBlockInputDin() {
       if (this.fromBlksInput.invalid) {
         console.log('INVALIDO')
         return;

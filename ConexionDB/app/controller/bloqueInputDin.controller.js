@@ -16,9 +16,10 @@ exports.create = (req, res) => {
                 "typingtime": req.body.typingtime,
                 "validacion": req.body.validacion,
                 "default_id": req.body.default_id,
-                "save_var": req.body.save_var,
+                "id_var": req.body.id_var,
 				"pos_y": req.body.pos_y,	
 				"pos_x": req.body.pos_x,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueinput => {
 				// Send created customer to client

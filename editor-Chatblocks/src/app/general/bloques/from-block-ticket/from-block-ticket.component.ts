@@ -48,7 +48,8 @@ export class FromBlockTicketComponent implements OnInit {
       state_var: ['', Validators.required],
       country_var: ['', Validators.required],
       paymethod_var: ['', Validators.required],
-      nameu_var: ['', Validators.required]
+      nameu_var: ['', Validators.required],
+      tag_active: [false]
     });
 
     if (!this.createMode) {

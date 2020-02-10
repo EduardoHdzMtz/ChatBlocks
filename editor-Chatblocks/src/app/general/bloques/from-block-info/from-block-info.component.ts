@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { InterfazViewBlkInfo } from '../interfaces/interfaz-view-blk-info';
@@ -40,7 +40,8 @@ export class FromBlockInfoComponent implements OnInit {
       contenido: ['', Validators.required],
       opc_nextid: ['',Validators.required],
       next_id: [''],
-      typingtime: ['', Validators.required]
+      typingtime: ['', Validators.required],
+      tag_active: [false]
     });
 
     if (!this.createMode) {
@@ -55,7 +56,6 @@ export class FromBlockInfoComponent implements OnInit {
     this.edit_NX=bloque.next_id;
     this.edit_nom_estado=bloque.namestate;
   }
-  
 
   saveBlockInfo() {
     if (this.fromBlksInfo.invalid) {

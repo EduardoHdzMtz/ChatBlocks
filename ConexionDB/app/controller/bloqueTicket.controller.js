@@ -25,7 +25,8 @@ exports.create = (req, res) => {
                 "state_var": req.body.state_var,
                 "country_var": req.body.country_var,
                 "paymethod_var": req.body.paymethod_var,
-                "nameu_var": req.body.nameu_var
+				"nameu_var": req.body.nameu_var,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueticket => {
 				// Send created customer to client

@@ -12,8 +12,8 @@ exports.create = (req, res) => {
                 "default_nextid": req.body.default_nextid,
                 "blocktype": req.body.blocktype,
                 "pos_x": req.body.pos_x,
-                "pos_y": req.body.pos_y
-
+				"pos_y": req.body.pos_y,
+				"tag_active": req.body.tag_active,
             }
         ).then(bloqueInternalPrs => {
 				// Send created customer to client
