@@ -276,14 +276,13 @@ export class ConstruccionCBComponent implements OnInit {
   }
 
   loadTodosBlkInfoDin(ConsultaBloques: any, max_X: number, max_Y: number) {
-    let credenciales: any[]=[];
-    let links: any[]=[];
-
     this.blkInfoDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
       for(let i=0;i<response.length;i++){
-        credenciales=[];
-        links=[];
         ConsultaBloques.push(response[i]);
+        let cont = ConsultaBloques.length-1;
+        ConsultaBloques[cont].credenciales=[];
+        ConsultaBloques[cont].linksAPI=[];
+        
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -292,22 +291,14 @@ export class ConstruccionCBComponent implements OnInit {
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
             if(responseB[j].blocktype=='informativoDinamico')
-              links.push(responseB[j]);
-          
-          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
-            for(let k=0;k<responseC.length;k++)
-              if(responseC[k].blocktype=='informativoDinamico')
-                credenciales.push(responseC[k]);
-
-            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
-            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
-            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
-          });
+              ConsultaBloques[cont].linksAPI.push(responseB[j]);
         });
-
-        
+        this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+          for(let k=0;k<responseC.length;k++)
+            if(responseC[k].blocktype=='informativoDinamico')
+              ConsultaBloques[cont].credenciales.push(responseC[k]);
+        });
       }
-      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkSlideDin(ConsultaBloques, max_X, max_Y);
 
     });    
@@ -315,16 +306,13 @@ export class ConstruccionCBComponent implements OnInit {
 
 
   loadTodosBlkSlideDin(ConsultaBloques: any, max_X: number, max_Y: number) {
-    let credenciales: any[]=[];
-    let links: any[]=[];
-
     this.blokSlideDService.getAll_ByRobot(this.globals.RobotSelect.id_robot).subscribe(response=> {
-      
       for(let i=0;i<response.length;i++){
-        credenciales=[];
-        links=[];
         ConsultaBloques.push(response[i]);
-        //console.log(i+'-> resp: '+response[i].namestate);
+        let cont = ConsultaBloques.length-1;
+        ConsultaBloques[cont].credenciales=[];
+        ConsultaBloques[cont].linksAPI=[];
+
         if(max_X<response[i].pos_x)
           max_X=response[i].pos_x;
         if(max_Y<response[i].pos_y)
@@ -333,22 +321,16 @@ export class ConstruccionCBComponent implements OnInit {
         this.linksAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseB=> {
           for(let j=0;j<responseB.length;j++)
             if(responseB[j].blocktype=='slideDinamico')
-              links.push(responseB[j]);
-            
-          this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
-            for(let k=0;k<responseC.length;k++)
-              if(responseC[k].blocktype=='slideDinamico')
-                credenciales.push(responseC[k]);
-  
-            //console.log("Max_X-0: "+max_X+","+response[i].pos_x+", Max_Y-0: "+max_Y+","+response[i].pos_y);
-            ConsultaBloques[ConsultaBloques.length-1].linksAPI=links;
-            ConsultaBloques[ConsultaBloques.length-1].credenciales=credenciales;
-          });
+              ConsultaBloques[cont].linksAPI.push(responseB[j]);
         });
+        this.credencialAPIService.getAll_ByBlock(response[i].id_block).subscribe(responseC=> {
+          for(let k=0;k<responseC.length;k++)
+            if(responseC[k].blocktype=='slideDinamico')
+              ConsultaBloques[cont].credenciales.push(responseC[k]);
+        });
+        
       }
-      //console.log("Max_X-Slide: "+max_X+", Max_Y-Slide: "+max_Y);
       this.loadTodosBlkInputDin(ConsultaBloques, max_X, max_Y);
-
     });    
   }
 
